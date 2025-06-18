@@ -17,6 +17,7 @@ body {
     box-sizing: border-box;
     position: relative;
     overflow: hidden;
+    z-index: 9999;
 }
 
 .topo {
@@ -36,6 +37,7 @@ body {
     display: flex;
     height: 20px;
     margin: 1.3rem 1.3rem 0;
+    z-index: 10;
 }
 
 .logo-container {
@@ -169,6 +171,95 @@ body {
 }
 
 .icon-capa{
-    font-size: 18pt;
+    font-size: 16pt;
     color: #004080;
+}
+
+.dados-left p {
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.dados-right p {
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.detailheader {
+    position: absolute;
+    background-color: #bb961e;
+    left: 51px;
+    top: 0;
+    align-items: center;
+    width: 25px;
+    height: 10%;
+    transform: skewX(-20deg);
+    border-radius: 10px;
+    z-index: -2;
+}
+
+.detailheaderblue {
+    position: absolute;
+    background-color: #004080;
+    left: -26px;
+    top: 0;
+    align-items: center;
+    width: 75px;
+    height: 18%;
+    transform: skewX(-20deg);
+    border-radius: 10px;
+    z-index: -1;
+}
+
+.dados-cliente {
+    font-family: Arial, sans-serif;
+    font-size: 11pt;
+    color: #000;
+    margin: 20px 0;
+}
+
+.dados-cliente .linha1,
+.dados-cliente .linha2,
+.dados-cliente .linha3,
+.dados-cliente .linha4 {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 2px solid #c6c6c6;
+    padding: 6px;
+}
+
+.dados-cliente .linha4.destaque {
+    background-color: #004080;
+    color: #fff;
+    border: none;
+    border-radius: 0 0 6px 6px;
+}
+
+.item-orcamento {
+  font-family: Arial, sans-serif;
+  font-size: 10pt;
+  color: #000;
+  margin: 20px 0;
+  border-bottom: 1px solid #aaa;
+  padding-bottom: 15px;
+}
+
+
+.item-info{
+    width: 100%;
+}
+
+.item-info h4 {
+  margin: 0 0 15px 0;
+  font-size: 11pt;
+  font-weight: bold;
+}
+
+.item-info p {
+  margin: 4px 0;
+  color: #333;
+}
+
+.item-info-header{
+    min-height: 100px;
 }
