@@ -1,0 +1,174 @@
+@page {
+    size: A4;
+    margin: 0;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: rgb(163, 163, 163);
+}
+
+.page-relatorio {
+    width: 794px;
+    height: 1123px;
+    background-color: #fff;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+}
+
+.topo {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.topo-logo {
+    background-color: #004080;
+    height: 200px;
+    width: 100%;
+    position: relative;
+}
+
+.wvicon {
+    display: flex;
+    height: 20px;
+    margin: 1.3rem 1.3rem 0;
+}
+
+.logo-container {
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 470px;
+    height: 60%;
+    transform: skewX(-15deg);
+    justify-self: center;
+    border-radius: 10px;
+
+}
+
+.logo-container img {
+    transform: skewX(15deg);
+    height: 80px;
+}
+
+.title-container {
+    width: 100%;
+    height: 95px;
+}
+
+.middle {
+    height: 800px;
+    width: 100%;
+
+}
+
+
+.cards-container {
+    display: flex;
+    width: 100%;
+    height: 500px;
+    background-size: cover;
+    background-position: center;
+}
+
+
+
+.card-left {
+    position: absolute;
+    left: -16px;
+    top: 327px;
+    align-items: center;
+    width: 165px;
+    height: 32%;
+    background-image: url('public/12.png');
+    transform: skewX(-20deg);
+    border-radius: 10px;
+    z-index: 9;
+}
+
+
+.card-middle {
+    position: absolute;
+    left: 169px;
+    top: 298px;
+    align-items: center;
+    width: 436px;
+    height: 47%;
+    transform: skewX(-20deg);
+    border-radius: 10px;
+    background-image: url('public/12.png');
+    z-index: 9;
+}
+
+.card-right {
+    position: absolute;
+    right: 86px;
+    top: 382px;
+    align-items: center;
+    width: 65px;
+    height: 35%;
+    transform: skewX(-20deg);
+    background-image: url('public/12.png');
+    border-radius: 10px;
+    z-index: 9;
+}
+
+.detail1 {
+    position: absolute;
+    background-color: #bb961e;
+    left: 48px;
+    top: 567px;
+    align-items: center;
+    width: 65px;
+    height: 48%;
+    transform: skewX(-20deg);
+    border-radius: 10px;
+}
+
+.detail2 {
+    position: absolute;
+    background-color: #bb961e;
+    right: 138px;
+    top: 474px;
+    align-items: center;
+    width: 37px;
+    height: 20%;
+    transform: skewX(-20deg);
+    border-radius: 10px;
+}
+
+
+.detail3 {
+    position: absolute;
+    background-color: #bb961e;
+    right: 53px;
+    bottom: 357px;
+    align-items: center;
+    width: 25px;
+    height: 10%;
+    transform: skewX(-20deg);
+    border-radius: 10px;
+}
+
+
+.detail4 {
+    position: absolute;
+    background-color: #bb961e;
+    right: 53px;
+    top: 357px;
+    align-items: center;
+    width: 25px;
+    height: 10%;
+    transform: skewX(-20deg);
+    border-radius: 10px;
+}
+
+.icon-capa{
+    font-size: 18pt;
+    color: #004080;
+}
