@@ -6,359 +6,92 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./style.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="./script.js" defer></script>
     <title>Document</title>
 </head>
 
 <body>
-
     <!-- capa  -->
     <div class="page-relatorio">
-        <div class="topo">
-            <div class="topo-logo">
+        <div class="topo ">
+            <div class="topo-logo cor-primaria">
                 <div class="wvicon">
                     <img src="./public/logowhite_evo.svg" />
                 </div>
-                <div class="logo-container">
-                    <img src="./public/logowv.png" />
-                </div>
+                <div id="logo-capa" class="logo-container"></div>
             </div>
             <div class="title-container">
-                <svg xmlns="http://www.w3.org/2000/svg" width="336" height="63" viewBox="0 0 849 159" fill="none">
-                    <path d="M0 0H849L753.398 149.762C749.724 155.517 743.367 159 736.54 159H0V0Z" fill="#004080">
+                <svg xmlns="http://www.w3.org/2000/svg" width="331" height="62" viewBox="0 0 849 159" fill="none">
+                    <path d="M0 0H849L753.398 149.762C749.724 155.517 743.367 159 736.54 159H0V0Z" data-cor="primaria"
+                        fill="#004080">
                     </path>
                 </svg>
-                <div>
-                    <span
-                        style="position: absolute;left: 140px;top: 185px;color: #FFFF;font-size: 20pt;font-weight: 600;">PROPOSTA</span>
-                    <span
-                        style="position: absolute;left: 135px;top: 215px;color: #FFFF;font-size: 20pt;font-weight: 600;">COMERCIAL</span>
+                <div class="title-text">
+                    <span id="title"></span>
+                    <span id="subtitle"></span>
                 </div>
             </div>
         </div>
+
         <div class='middle'>
             <div class="orcamento">
-                <div
-                    style="position: absolute;right: 0;top: 249px;width: 387px;outline: 1px #BB961E solid;outline-offset: -0.5px;">
-                </div>
-                <div
-                    style="position: absolute;right: 370px;top: 280px;width: 70px;outline: 1px #BB961E solid;outline-offset: -0.5px;transform: rotate(120deg);">
-                </div>
+                <div class="middle-line1 borda-cor-secundaria"></div>
+                <div class="middle-line2 borda-cor-secundaria"></div>
             </div>
 
             <div>
                 <div class="cards-container">
 
-                    <div class=" recorte card-left"></div>
+                    <div class="card-left"></div>
                     <div class="card-middle"></div>
                     <div class="card-right"></div>
                 </div>
                 <div id="detalhes">
-                    <div class="detail1"></div>
-                    <div class="detail2"></div>
-                    <div class="detail3"></div>
+                    <div class="detail1 cor-secundaria"></div>
+                    <div class="detail2 cor-secundaria"></div>
+                    <div class="detail3 cor-secundaria"></div>
                 </div>
             </div>
+
             <div id="bottom">
                 <div id="line">
-                    <div
-                        style="position: absolute;left: 0;bottom: 80px;width: 90px;outline: 1px #BB961E solid;outline-offset: -0.5px;">
-                    </div>
-                    <div
-                        style="position: absolute;left: 15px;bottom: 190px;width: 235px;outline: 1px #BB961E solid;outline-offset: -0.5px;transform: rotate(111deg);">
-                    </div>
-                    <div
-                        style="position: absolute;left: 50px;bottom: 105px;width: 223px;outline: 1px #BB961E solid;outline-offset: -0.5px;transform: rotate(111deg);">
-                    </div>
-                    <div
-                        style="position: absolute;right: 0;bottom: 209px;width: 592px;outline: 1px #BB961E solid;outline-offset: -0.5px;">
-                    </div>
-                    <div
-                        style="position: absolute;right: 286px;bottom: 25px;height: 128px;outline: 1px #BB961E solid;outline-offset: -0.5px;">
-                    </div>
+                    <div class="bottom-line1 borda-cor-secundaria"></div>
+                    <div class="bottom-line2 borda-cor-secundaria"></div>
+                    <div class="bottom-line3 borda-cor-secundaria"></div>
+                    <div class="bottom-line4 borda-cor-secundaria"></div>
+                    <div class="bottom-line5 borda-cor-secundaria"></div>
                 </div>
                 <div>
-                    <div style="position: absolute;right: 0;bottom: 147px;display: flex;width: 568px;">
+                    <div class="card-canais">
                         <svg xmlns="http://www.w3.org/2000/svg" width="1164" height="131" viewBox="0 0 1164 131"
                             fill="none">
                             <path
                                 d="M64.0658 8.93536C67.7722 3.35444 74.0268 0 80.7264 0H1164V131H20.2912C4.33329 131 -5.19772 113.229 3.63071 99.9354L64.0658 8.93536Z"
-                                fill="#004080" />
+                                data-cor="primaria" fill="#004080" />
                         </svg>
+                        <span>Canais de comunicação</span>
                     </div>
-                    <span
-                        style="position: absolute;right: 140px;bottom: 198px;color: #FFFF;font-size: 18pt;font-weight: 600;">Canais
-                        de comunicação</span>
+
                 </div>
 
                 <div id="dados-cliente">
-                    <div class="dados-left"
-                        style="position: absolute;display: flex;flex-direction: column;right: 287px;bottom: 0;font-size: 11pt;color: #696969;width: 289px;height: 148px;padding: 1rem 0.5rem;">
-                        <p> <span style="margin-right: 20px;"><i class="icon-capa fab fa-whatsapp"></i> (41)
-                                99940-1420</span>
-                            <span><i class="icon-capa fas fa-phone"></i> (41) 3379-8818</span>
+                    <div class="dados-left">
+                        <p>
+                            <span id="licenca-whatsapp" style="margin-right: 20px;"></span>
+                            <span id="licenca-fone"></span>
                         </p>
-                        <p><i class="icon-capa fas fa-envelope"></i> financeirowvetro@gmail.com</p>
-                        <p><i class="icon-capa fas fa-globe"></i> www.wvetro_teste.com.br</p>
-                        <p><i class="icon-capa fa-brands fa-instagram"></i></p>
+                        <p id="licenca-email"></p>
+                        <p id="licenca-site"></p>
+                        <p id="licenca-instagram"></p>
                     </div>
-                    <div class="dados-right"
-                        style="position: absolute;display: flex;flex-direction: column;right: 0;bottom: 0;font-size: 12pt;color: #696969;width: 269px;height: 148px;padding: 1rem 0.5rem;">
-
-                        <p><i class="icon-capa fas fa-map-marker-alt"></i> RUA JOSÉ HAUER, 1625B</p>
+                    <div class="dados-right">
+                        <p id="licenca-cnpj"></p>
+                        <p id="licenca-endereco"></p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- Conteudo -->
-    <div class="page-relatorio">
-
-        <!--Cabeçalho-->
-
-        <div id="head">
-            <div id='details'>
-                <div class="wvicon">
-                    <img src="./public/logowhite_evo.svg" />
-                </div>
-                <div class="detailheader"></div>
-                <div class="detailheaderblue"></div>
-            </div>
-
-            <div style="display: flex;justify-content: space-between;">
-                <div style="padding-top: 54px;padding-left: 50px;font-size: 14px;width: 200px;">
-                    <h2>Proposta 1517</h2>
-                </div>
-                <div style="padding-top: 34px;padding-right: 50px;font-size: 14px;">
-                    <img src="./public/logowv.png" style="height: 100px;" />
-                </div>
-            </div>
-        </div>
-
-        <div id="content" style="height: 100%;margin: 3rem;">
-
-            <!--Dados do cliente-->
-
-            <div class="dados-cliente">
-                <div class="linha1">
-                    <span><strong>Obra:</strong> GESSO CAMPELO</span>
-                    <span><strong>Dt.Proposta:</strong> 08/05/2025</span>
-                </div>
-
-                <div class="linha2">
-                    <span><strong>Contato:</strong> GESSO CAMPELO</span>
-                    <span><strong>E-mail:</strong> sememail@hotmail.com</span>
-                    <span><strong>Telefone:</strong> (61) 3037-4922</span>
-                </div>
-
-                <div class="linha3">
-                    <span><strong>Endereço Obra:</strong> QUADRA QNE 24 LOTE 01 LOJA, 04 TAGUATINGA</span>
-                    <span><strong>Cidade:</strong> BRASILIA</span>
-                </div>
-
-                <div class="linha4 destaque">
-                    <span><strong>Vendedor:</strong> BRUNO COLOMBO</span>
-                    <span><strong>Telefone:</strong></span>
-                </div>
-            </div>
-
-
-            <!--Dados do Projeto-->
-
-            <div id="projetos" style="display: flex; flex-direction: column;">
-                <div id="item"
-                    style="font-family: Arial, sans-serif; font-size: 10pt; color: #000;margin: 15px 0; border-bottom: 2px solid #ccc;">
-                    <div id="item-topo" style="display: flex;gap: 25px; margin-bottom: 10px;">
-                        <div id="item-imagem">
-                            <img src="https://sistema.wvetro.com.br/concept/fotos/00001/ESQ_1127.jpg"
-                                style="height: 150px;" />
-                        </div>
-                        <div class="item-info">
-                            <div class="item-info-header">
-                                <h4>CAIXILHO JANELA INTEGRADA</h4>
-                                <p><strong>Perfil:</strong> PRETO</p>
-                                <p><strong>Acessórios:</strong> SEM ACESSORIOS</p>
-                                <p><strong>Vidro:</strong></p>
-                                <p><strong>Localização:</strong></p>
-                            </div>
-
-                            <div id="item-tabela">
-                                <div
-                                    style="display: flex; align-items: flex-start; font-family: Arial, sans-serif; font-size: 10pt; margin-top: 10px;">
-
-                                    <div
-                                        style="width: 30px; text-align: left; padding-right: 12px; font-weight: 400; color: #808080; align-self: center; text-align: end;">
-                                        1
-                                    </div>
-
-                                    <div
-                                        style="display: flex; flex-direction: column; flex: 1; border-left: 2px solid #ccc;">
-
-                                        <div style="display: flex; justify-content: space-between; height: 25px;">
-                                            <span style="flex: 1; text-align: center;"> <strong>Tipo:</strong> </span>
-                                            <span style="flex: 1; text-align: center; border-left: 2px solid #ccc;">
-                                                <strong>Qtd:</strong> </span>
-                                            <span style="flex: 1; text-align: center; border-left: 2px solid #ccc;">
-                                                <strong>L:</strong> </span>
-                                            <span style="flex: 1; text-align: center; border-left: 2px solid #ccc;">
-                                                <strong>H:</strong> </span>
-                                            <span style="flex: 1; text-align: center; border-left: 2px solid #ccc;">
-                                                <strong>Vlr Unt:</strong> </span>
-                                            <span style="flex: 1; text-align: center; border-left: 2px solid #ccc;">
-                                                <strong>Vlr Total:</strong> </span>
-                                        </div>
-                                        <div
-                                            style="display: flex;justify-content: space-between;height: 20px;color: #808080;">
-                                            <span style="flex: 1; text-align: center;">1</span>
-                                            <span
-                                                style="flex: 1; text-align: center; border-left: 2px solid #ccc;">1</span>
-                                            <span
-                                                style="flex: 1; text-align: center; border-left: 2px solid #ccc;">6100</span>
-                                            <span
-                                                style="flex: 1; text-align: center; border-left: 2px solid #ccc;">1000</span>
-                                            <span
-                                                style="flex: 1; text-align: center; border-left: 2px solid #ccc;">2.544,97</span>
-                                            <span
-                                                style="flex: 1; text-align: center; border-left: 2px solid #ccc;">2.544,97</span>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                    <div id="line" style="width: 100%; height: 2px; background: #ccc;"></div>
-
-                    <div id="item-obs">
-                        <p style="font-size: 10pt; color: #808080; margin-top: 10px;">
-                            <strong>Observações:</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                            do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet,
-                            consectetur adipiscing elit. Sed
-                            do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet,
-                            consectetur adipiscing elit. Sed
-                            do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet,
-                            consectetur adipiscing elit. Sed
-                            do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                        </p>
-                    </div>
-                    <div id="line" style="width: 100%; height: 2px; background: #ccc;"></div>
-                    <div id="item-variaveis" style="margin: 1rem;">
-                        <span style="font-size: 9pt; color: #000; font-weight: bold;">Lista de variáveis</span>
-                        <table
-                            style="width: 100%; font-size: 9pt; margin-top: 5px; border-collapse: separate;  border-spacing: 0 6px;">
-                            <tbody id="variaveis-lista">
-                                <tr>
-                                    <td>PERFIL MARCO LATERAL</td>
-                                    <td>MARCO ÚNICO</td>
-                                </tr>
-                                <tr>
-                                    <td>MONTAGEM DA JANELA</td>
-                                    <td>TODAS MÓVEIS</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!--Itens venda avulsa-->
-            <div id="venda-itens" style="font-family: Arial, sans-serif; font-size: 10pt; color: #000;margin: 15px 0;">
-                <div id="item-venda">
-                    <span style="font-size: 12pt; color: #000; font-weight: bold;">Venda de materiais</span>
-                    <table id="item-venda-lista"
-                        style="width: 100%; font-size: 9pt; border-collapse: separate; border-spacing: 0 6px; margin-top: 0.5rem;">
-                        <thead>
-                            <tr style="background-color: #eee;">
-                                <th style="text-align: left;padding: 10px;border-radius: 8px 0 0 8px;">Produto</th>
-                                <th style="padding: 6px;">Un.</th>
-                                <th style="padding: 6px;">Larg.</th>
-                                <th style="padding: 6px;">Alt.</th>
-                                <th style="padding: 6px;">Qtde.</th>
-                                <th style="padding: 6px;">Vlr unt.</th>
-                                <th style="padding: 6px; border-radius: 0 8px 8px 0;">Vlr. Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td style="display: flex; align-items: center; gap: 10px; padding: 6px;">
-                                    <img src="https://sistema.wvetro.com.br/concept/fotos/00001/1150.PNG"
-                                        alt="Imagem Produto" style="width: 40px; height: auto;">
-                                    <div>
-                                        <div style="margin-bottom: 5px;"><strong>Cor:</strong> ACESSÓRIO</div>
-                                        <div>1150 - ROLDANA CARRINHO QUADRUPLA P/ 1127 E 1341</div>
-                                    </div>
-                                </td>
-                                <td style="text-align: center;">UN</td>
-                                <td style="text-align: center;">0</td>
-                                <td style="text-align: center;">0</td>
-                                <td style="text-align: center;">10</td>
-                                <td style="text-align: right;">72,00</td>
-                                <td style="text-align: right;">720,00</td>
-
-                            </tr>
-                            <tr>
-                                <td id="item-obs" style="font-size: 9pt; color: #808080;">
-                                    <p style="margin: 0;"><strong>Observações:</strong> Lorem ipsum dolor sit amet,
-                                        consectetur adipiscing
-                                        elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <!-- Linha de total -->
-                    <div
-                        style=" justify-self: end; text-align:  right; font-weight: bold; font-size: 9pt; margin-top: 5px; border-top: 1px solid #ccc; padding-top: 4px; width: 30%;">
-                        720,00
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div id="parcela" style="font-family: Arial, sans-serif; font-size: 10pt; color: #000;margin: 15px 0;">
-                <table id="parcela-lista" style="width: 100%; font-size: 9pt; border-collapse: collapse; margin-top: 1rem;">
-                    <thead>
-                        <tr style="border-bottom: 1px solid #ccc;">
-                            <th style="text-align: left; padding: 6px;">Parcela</th>
-                            <th style="text-align: left; padding: 6px;">Vencimento</th>
-                            <th style="text-align: right; padding: 6px;">Valor</th>
-                            <th style="text-align: left; padding: 6px;">Forma de Pagamento</th>
-                            <th style="text-align: left; padding: 6px;">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td style="padding: 6px;">1</td>
-                            <td style="padding: 6px;">07/06/2025</td>
-                            <td style="text-align: right; padding: 6px;">6.000,00</td>
-                            <td style="padding: 6px;">Dinheiro</td>
-                            <td style="padding: 6px;">Em Aber</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 6px;">2</td>
-                            <td style="padding: 6px;">07/06/2025</td>
-                            <td style="text-align: right; padding: 6px;">-28.465,54</td>
-                            <td style="padding: 6px;">Carteira</td>
-                            <td style="padding: 6px;">Pago</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 6px;">3</td>
-                            <td style="padding: 6px;">22/06/2025</td>
-                            <td style="text-align: right; padding: 6px;">809,51</td>
-                            <td style="padding: 6px;">Pagamento Em Cheque</td>
-                            <td style="padding: 6px;">Em Aber</td>
-                        </tr>
-                        <!-- ... continue com as demais linhas -->
-                    </tbody>
-                </table>
-
-            </div>
-
-
-
-
 
 
 </body>
