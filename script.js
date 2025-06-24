@@ -1,15 +1,30 @@
-
 const DadosMock = {
   id: "4257",
   titulo: "PROPOSTA",
   subtitulo: "COMERCIAL",
   imagemCapa: "./public/12.png",
+  imagemTimbre: "./public/12.png",
   data: "20/06/2025",
-  valorTotal: "R$ 2.169,80",
-  desconto: "R$ 0,00",
-  valorFinal: "R$ 2.169,80",
+  valorTotal: 2.169.80,
+  desconto: 0.00,
+  valorFinal: 2.169.80,
   condicoesPagamento: "À vista ou em até 3x sem juros no cartão de crédito.",
-  observacoes: "Proposta válida por 30 dias. Preços sujeitos a alteração sem aviso prévio.",
+  observacoes:
+    "Proposta válida por 30 dias. Preços sujeitos a alteração sem aviso prévio.",
+  contratoHtml: "",
+  config: {
+    imprimirLogoEmTodas: false,
+    imprimirParcelas: true,
+    imprimirPromissorias: true,
+    imprimirValorTotal: true,
+    imprimirDesconto: true,
+    imprimirVariaveis: true,
+    imprimirValorUnitario: true,
+    imprimirMedidas: true,
+    imprimirVendaItens: true,
+    imprimirTimbre: false,
+    imprimirContrato: false,
+  },
   cores: {
     corPrimaria: "#004080",
     corSecundaria: "#bb961e",
@@ -45,26 +60,50 @@ const DadosMock = {
   },
   projetos: [
     {
+      ordem: 1,
       nome: "CAIXILHO JANELA INTEGRADA",
       imagem: "https://sistema.wvetro.com.br/concept/fotos/00001/ESQ_1127.jpg",
       perfil: "PRETO",
       acessorios: "SEM ACESSORIOS",
       vidro: "LAMINADO 4MM",
+      tipo: "1",
+      qtd: 1,
+      largura: 6100,
+      altura: 1000,
+      valorUnt:2.544,97,
+      valorTotal: 2.544,97,
       localizacao: "COZINHA",
       observacoes: "Verificar vão antes da instalação.",
-      itens: [
-        { tipo: "1", qtd: 1, largura: 6100, altura: 1000, valorUnt: "2.544,97", valorTotal: "2.544,97" }
-      ],
       variaveis: [
         { nome: "PERFIL MARCO LATERAL", valor: "MARCO ÚNICO" },
-        { nome: "MONTAGEM DA JANELA", valor: "TODAS MÓVEIS" }
-      ]
+        { nome: "MONTAGEM DA JANELA", valor: "TODAS MÓVEIS" },
+      ],
     },
-  ],
-  vendaItens: [
     {
-      observacoes: "Entrega em até 10 dias úteis",
-      total: "R$ 720,00",
+      ordem: 1,
+      nome: "CAIXILHO JANELA INTEGRADA",
+      imagem: "https://sistema.wvetro.com.br/concept/fotos/00001/ESQ_1127.jpg",
+      perfil: "PRETO",
+      acessorios: "SEM ACESSORIOS",
+      vidro: "LAMINADO 4MM",
+      tipo: "1",
+      qtd: 1,
+      largura: 6100,
+      altura: 1000,
+      valorUnt: 2.544,97,
+      valorTotal: 2.544,97,
+      localizacao: "COZINHA",
+      observacoes: "Verificar vão antes da instalação.",
+      variaveis: [
+        { nome: "PERFIL MARCO LATERAL", valor: "MARCO ÚNICO" },
+        { nome: "MONTAGEM DA JANELA", valor: "TODAS MÓVEIS" },
+      ],
+    },
+
+  ],
+  vendaItens: 
+    {
+      total: 720,00,
       itens: [
         {
           imagem: "https://sistema.wvetro.com.br/concept/fotos/00001/1150.PNG",
@@ -74,17 +113,60 @@ const DadosMock = {
           largura: 0,
           altura: 0,
           qtd: 10,
-          valorUnitario: "72,00",
-          valorTotal: "720,00"
-        }
-      ]
-    }
-  ],
+          valorUnitario: 72,00,
+          valorTotal: 720,00,
+          observacoes: "Entrega em até 10 dias úteis",
+        },
+        {
+          imagem: "https://sistema.wvetro.com.br/concept/fotos/00001/1150.PNG",
+          cor: "ACESSÓRIO",
+          descricao: "1150 - ROLDANA CARRINHO QUADRUPLA P/ 1127 E 1341",
+          unidade: "UN",
+          largura: 0,
+          altura: 0,
+          qtd: 10,
+          valorUnitario: 72,00
+          valorTotal: 720,00,
+          observacoes: "Entrega em até 10 dias úteis",
+        },
+        {
+          imagem: "https://sistema.wvetro.com.br/concept/fotos/00001/1150.PNG",
+          cor: "ACESSÓRIO",
+          descricao: "1150 - ROLDANA CARRINHO QUADRUPLA P/ 1127 E 1341",
+          unidade: "UN",
+          largura: 0,
+          altura: 0,
+          qtd: 10,
+          valorUnitario: 72,00,
+          valorTotal: 720,00,
+          observacoes: "Entrega em até 10 dias úteis",
+        },
+        
+      ],
+    },
   parcelas: [
-    { numero: 1, vencimento: "20/07/2025", valor: "R$ 1.000,00", formaPagamento: "Boleto", status: "Pendente" },
-    { numero: 2, vencimento: "20/08/2025", valor: "R$ 1.000,00", formaPagamento: "Boleto", status: "Pendente" },
-    { numero: 3, vencimento: "20/09/2025", valor: "R$ 1.000,00", formaPagamento: "Boleto", status: "Pendente" }
-  ]
+    {
+      numero: 1,
+      vencimento: "20/07/2025",
+      valor: 1.000,00,
+      formaPagamento: "Boleto",
+      status: "Pendente",
+    },
+    {
+      numero: 2,
+      vencimento: "20/08/2025",
+      valor: 1.000,00,
+      formaPagamento: "Boleto",
+      status: "Pendente",
+    },
+    {
+      numero: 3,
+      vencimento: "20/09/2025",
+      valor: 1.000,00,
+      formaPagamento: "Boleto",
+      status: "Pendente",
+    },
+  ],
 };
 
 // =====================
@@ -105,13 +187,20 @@ const Utils = {
     const el = document.querySelector(selector);
     if (el) el.style.backgroundPositionX = position;
   },
+  getParametroURL(parametro) {
+    const params = new URLSearchParams(window.location.search);
+    return params.get(parametro);
+  },
 };
 
 // =====================
 // GERADORES DE HTML
 // =====================
 const Geradores = {
-  gerarCabecalho(dados) {
+  gerarCabecalho(dados, pagina = 1) {
+    const mostrarLogo = dados.config.imprimirLogoEmTodas || pagina === 1;
+    const mostrarTitulo = pagina === 1;
+
     return `
       <header id="head">
         <div id="details">
@@ -121,14 +210,18 @@ const Geradores = {
           <div class="detailheader" style="background-color: ${dados.cores.corSecundaria};"></div>
           <div class="detailheaderblue" style="background-color: ${dados.cores.corPrimaria};"></div>
         </div>
-        <div style="display: flex; justify-content: space-between;">
-          <div style="padding-top: 54px; padding-left: 50px; font-size: 14px;">
-            <h2>Proposta ${dados.id}</h2>
-          </div>
-          <div style="padding-top: 34px; padding-right: 50px;">
-            <img src="${dados.licenca.logoUrl}" style="height: 100px;" />
-          </div>
-        </div>
+        ${
+          mostrarLogo
+            ? `<div style="display: flex; justify-content: space-between;">
+                <div style="padding-top: 54px; padding-left: 50px; font-size: 14px;">
+                  ${mostrarTitulo ? `<h2>Proposta ${dados.id}</h2>` : ''}
+                </div>
+                <div style="padding-top: 34px; padding-right: 50px;">
+                  <img src="${dados.licenca.logoUrl}" style="height: 100px;" />
+                </div>
+              </div>`
+            : ''
+        }
       </header>
     `;
   },
@@ -205,104 +298,106 @@ const Geradores = {
     `;
   },
 
-  gerarProjetos(projetos) {
+  gerarProjeto(p, config) {
     return `
-      <div id="projetos" class="projetos-container">
-        ${projetos.map((p, i) => `
-          <div class="projeto-item">
-            <div class="item-topo">
-              <div class="item-imagem">
-                <img src="${p.imagem}" alt="Imagem projeto ${i + 1}" class="imagem-projeto" />
+        <div class="projeto-item avoid-break">
+          <div class="item-topo">
+            <div class="item-imagem">
+              <img src="${p.imagem}" alt="Imagem projeto ${p.ordem}" class="imagem-projeto" />
+            </div>
+            <div class="item-info">
+              <div class="item-info-header">
+                <h4>${p.nome}</h4>
+                <p><strong>Perfil:</strong> ${p.perfil}</p>
+                <p><strong>Acessórios:</strong> ${p.acessorios}</p>
+                <p><strong>Vidro:</strong> ${p.vidro}</p>
+                <p><strong>Localização:</strong> ${p.localizacao}</p>
               </div>
-              <div class="item-info">
-                <div class="item-info-header">
-                  <h4>${p.nome}</h4>
-                  <p><strong>Perfil:</strong> ${p.perfil}</p>
-                  <p><strong>Acessórios:</strong> ${p.acessorios}</p>
-                  <p><strong>Vidro:</strong> ${p.vidro}</p>
-                  <p><strong>Localização:</strong> ${p.localizacao}</p>
-                </div>
-
-                <div class="item-tabela">
-                  ${p.itens.map((item, idx) => `
-                    <div class="tabela-item-linha">
-                      <div class="tabela-item-numero">${idx + 1}</div>
-                      <div class="tabela-item-valores">
-                        <div class="tabela-item-header">
-                          <span><strong>Tipo:</strong></span>
-                          <span><strong>Qtd:</strong></span>
-                          <span><strong>L:</strong></span>
-                          <span><strong>H:</strong></span>
-                          <span><strong>Vlr Unt:</strong></span>
-                          <span><strong>Vlr Total:</strong></span>
-                        </div>
-                        <div class="tabela-item-dados">
-                          <span>${item.tipo}</span>
-                          <span>${item.qtd}</span>
-                          <span>${item.largura}</span>
-                          <span>${item.altura}</span>
-                          <span>${item.valorUnt}</span>
-                          <span>${item.valorTotal}</span>
-                        </div>
-                      </div>
+              <div class="item-tabela allow-break">
+                <div class="tabela-item-linha">
+                  <div class="tabela-item-numero">${p.ordem}</div>
+                  <div class="tabela-item-valores">
+                    <div class="tabela-item-header">
+                      <span><strong>Tipo:</strong></span>
+                      <span><strong>Qtd:</strong></span>
+                      ${config.imprimirMedidas ? `
+                        <span><strong>L:</strong></span>
+                        <span><strong>H:</strong></span>` : ""}
+                      ${config.imprimirValorUnitario ? `
+                        <span><strong>Vlr Unt:</strong></span>
+                        <span><strong>Vlr Total:</strong></span>` : ""}
                     </div>
-                  `).join("")}
+                    <div class="tabela-item-dados">
+                      <span>${p.tipo}</span>
+                      <span>${p.qtd}</span>
+                      ${config.imprimirMedidas ? `
+                        <span>${p.largura}</span>
+                        <span>${p.altura}</span>` : ""}
+                      ${config.imprimirValorUnitario ? `
+                        <span>${p.valorUnt}</span>
+                        <span>${p.valorTotal}</span>` : ""}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-
-            ${p.observacoes ? `
-              <div class="item-obs">
-                <p><strong>Observações:</strong> ${p.observacoes}</p>
-              </div>` : ''
-            }
-
-            <div class="linha-separadora"></div>
-
-            ${p.variaveis && p.variaveis.length > 0 ? `
-              <div class="item-variaveis">
-                <span class="variaveis-titulo">Lista de variáveis</span>
-                <table class="tabela-variaveis">
-                  <tbody>
-                    ${p.variaveis.map(v => `
-                      <tr>
-                        <td>${v.nome}</td>
-                        <td>${v.valor}</td>
-                      </tr>`).join("")}
-                  </tbody>
-                </table>
-              </div>` : ''
-            }
-
           </div>
-        `).join("")}
+
+          ${p.observacoes ? `
+            <div class="item-obs allow-break">
+              <p><strong>Observações:</strong> ${p.observacoes}</p>
+            </div>` : ""}
+        </div>
+    `;
+  },
+
+  gerarVariaveis(lista, config) {
+    if (!lista || !lista.length || !config.imprimirVariaveis) return "";
+
+    return `
+      <div class="item-variaveis">
+        <span class="variaveis-titulo">Lista de variáveis</span>
+        <table class="tabela-variaveis">
+          <tbody>
+            ${lista
+              .map(v => `
+                <tr>
+                  <td>${v.nome}</td>
+                  <td>${v.valor}</td>
+                </tr>
+              `)
+              .join("")}
+          </tbody>
+        </table>
       </div>
     `;
   },
 
+
+
   gerarVendaMateriais(vendas) {
-    if (!vendas?.length) return "";
+    if (!vendas.itens) return "";
 
     return `
       <div id="venda-itens" class="venda-itens">
-        ${vendas.map(venda => `
-          <div class="item-venda">
-            <span class="item-venda-titulo">Venda de materiais</span>
-
-            <table class="item-venda-lista">
-              <thead>
-                <tr class="item-venda-cabecalho">
-                  <th class="produto">Produto</th>
-                  <th>Un.</th>
-                  <th>Larg.</th>
-                  <th>Alt.</th>
-                  <th>Qtde.</th>
-                  <th>Vlr unt.</th>
-                  <th class="valor-total">Vlr. Total</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${venda.itens.map(item => `
+        <div class="item-venda avoid-break">
+          <span class="item-venda-titulo">Venda de materiais</span>
+          <table class="item-venda-lista">
+            <thead>
+              <tr class="item-venda-cabecalho">
+                <th class="produto">Produto</th>
+                <th>Un.</th>
+                <th>Larg.</th>
+                <th>Alt.</th>
+                <th>Qtde.</th>
+                <th>Vlr unt.</th>
+                <th class="valor-total">Vlr. Total</th>
+              </tr>
+            </thead>
+            ${vendas.itens
+              .map(
+                (item) => `
+                <tbody class="venda-item-linha avoid-break">
                   <tr>
                     <td class="item-venda-produto">
                       <img src="${item.imagem}" alt="Imagem Produto" class="produto-imagem">
@@ -318,26 +413,30 @@ const Geradores = {
                     <td class="right">${item.valorUnitario}</td>
                     <td class="right">${item.valorTotal}</td>
                   </tr>
-                `).join("")}
-
-                ${venda.observacoes ? `
-                  <tr>
-                    <td class="item-obs" colspan="7">
-                      <p><strong>Observações:</strong> ${venda.observacoes}</p>
-                    </td>
-                  </tr>
-                ` : ""}
-              </tbody>
-            </table>
-
-            <div class="item-venda-total">
-              ${venda.total}
-            </div>
+                  ${
+                    item.observacoes
+                      ? `
+                    <tr>
+                      <td class="item-obs" colspan="7">
+                        <p><strong>Observações:</strong> ${item.observacoes}</p>
+                      </td>
+                    </tr>
+                  `
+                      : ""
+                  }
+                </tbody>
+              `
+              )
+              .join("")}
+          </table>
+          <div class="item-venda-total">
+            ${vendas.total}
           </div>
-        `).join("")}
+        </div>
       </div>
     `;
   },
+
 
   gerarParcelas(parcelas) {
     return `
@@ -353,7 +452,9 @@ const Geradores = {
             </tr>
           </thead>
           <tbody>
-            ${parcelas.map(p => `
+            ${parcelas
+              .map(
+                (p) => `
               <tr>
                 <td class="pd">${p.numero}</td>
                 <td class="pd">${p.vencimento}</td>
@@ -361,18 +462,21 @@ const Geradores = {
                 <td class="pd">${p.formaPagamento}</td>
                 <td class="pd">${p.status}</td>
               </tr>
-            `).join('')}
+            `
+              )
+              .join("")}
           </tbody>
         </table>
       </div>
     `;
   },
-  gerarTotais(dados) {
+  gerarTotais(dados, config = {}) {
     return `
         <div id="totais" class="totais-container">
           <div class="totais-valores">
+              ${config.imprimirDesconto ? `
               <p><strong>Valor Total:</strong> ${dados.valorTotal}</p>
-              <p><strong>Desconto:</strong> ${dados.desconto}</p>
+              <p><strong>Valor Desconto:</strong> ${dados.desconto}</p>` : ""} 
               <div class="valor-final-destaque ">
                   Valor Final: ${dados.valorFinal}
               </div>
@@ -380,6 +484,7 @@ const Geradores = {
       </div>
     `;
   },
+
   gerarCondicoesPagamento(condicoes) {
     return `
       <div id="condicoes" class="condicoes-pagamento">
@@ -387,7 +492,7 @@ const Geradores = {
       </div>
     `;
   },
-  gerarAssinatura(){ 
+  gerarAssinatura() {
     return `
       <div id="assinatura" class="assinatura-container">
         <div class="assinatura-bloco">
@@ -406,12 +511,128 @@ const Geradores = {
   },
 
   gerarObservacoes(observacoes) {
+    if (!observacoes || observacoes.trim() === "") return "";
     return `
       <div id="observacoes" class="observacoes">
           <p><strong>Observações:</strong>${observacoes}</p>
       </div>
     `;
+  },
+
+  gerarContrato() {
+    return `
+      <div id="contrato" class="contrato-container">
+        <h2>Contrato de Prestação de Serviços</h2>
+        <p>Este contrato é celebrado entre a empresa contratada e o contratante, conforme os termos e condições acordados.</p>
+        <p><strong>Data:</strong> ${new Date().toLocaleDateString()}</p>
+        <p><strong>Assinatura do Contratante:</strong></p>
+        <div class="assinatura-linha"></div>
+        <p><strong>Assinatura do Contratado:</strong></p>
+        <div class="assinatura-linha"></div>
+      </div>
+    `;
   }
+
+};
+
+const Paginador = {
+  inserirTimbre(pagina, imagemUrl) {
+      const fundo = document.createElement("div");
+      fundo.classList.add("timbre-background");
+      fundo.style.backgroundImage = `url('${imagemUrl}')`;
+      pagina.appendChild(fundo);
+  },
+
+adicionarConteudoPaginado(blocos, gerarCabecalho, gerarFooter, dadosLicenca, config = {}) {
+  let totalPaginas = 1;
+  let paginaAtual = this.criarNovaPagina(
+    gerarCabecalho(totalPaginas),
+    gerarFooter(dadosLicenca, totalPaginas, "?"),
+    config
+  );
+  let contentDiv = paginaAtual.querySelector(".content");
+  document.body.appendChild(paginaAtual);
+
+  let promessas = [];
+
+  blocos.forEach((bloco) => {
+    promessas.push(
+      new Promise((resolve) => {
+        const clone = bloco.cloneNode(true);
+        clone.style.visibility = "hidden";
+        clone.style.position = "absolute";
+        clone.style.left = "-9999px";
+        document.body.appendChild(clone);
+
+        requestAnimationFrame(() => {
+          const alturaBloco = clone.offsetHeight;
+          const alturaAtual = contentDiv.scrollHeight;
+          const LIMITE_PAGINA = 1000;
+          const isAvoidBreak = bloco.classList.contains("avoid-break");
+
+          document.body.removeChild(clone);
+
+          // Se for um bloco indivisível e não couber, vai para nova página
+          if (alturaAtual + alturaBloco > LIMITE_PAGINA && isAvoidBreak) {
+            // Se o bloco sozinho já ultrapassa o limite, deixa ele mesmo assim
+            if (alturaBloco > LIMITE_PAGINA) {
+              console.warn("Bloco maior que a página. Será forçado.");
+            } else {
+              totalPaginas++;
+              paginaAtual = Paginador.criarNovaPagina(
+                gerarCabecalho(totalPaginas),
+                gerarFooter(dadosLicenca, totalPaginas, "?"),
+                config
+              );
+              contentDiv = paginaAtual.querySelector(".content");
+              document.body.appendChild(paginaAtual);
+            }
+          } else if (alturaAtual + alturaBloco > LIMITE_PAGINA) {
+            // Para blocos quebráveis, vai normalmente
+            totalPaginas++;
+            paginaAtual = Paginador.criarNovaPagina(
+              gerarCabecalho(totalPaginas),
+              gerarFooter(dadosLicenca, totalPaginas, "?"),
+              config
+            );
+            contentDiv = paginaAtual.querySelector(".content");
+            document.body.appendChild(paginaAtual);
+          }
+
+          contentDiv.appendChild(bloco);
+          resolve();
+        });
+      })
+    );
+  });
+
+  Promise.all(promessas).then(() => {
+    document.querySelectorAll(".footer-page-number").forEach((el, i) => {
+      el.innerHTML = `<span>${i + 1} / ${totalPaginas}</span>`;
+    });
+  });
+},
+
+  criarNovaPagina(cabecalhoHTML, footerHTML, config) {
+    const pagina = document.createElement("div");
+    pagina.classList.add("page-relatorio");
+
+    if (config?.usarTimbre && config.imagemTimbre) {
+      pagina.classList.add("timbre");
+      this.inserirTimbre(pagina, config.imagemTimbre);
+    }
+
+    pagina.insertAdjacentHTML("beforeend", cabecalhoHTML);
+
+    const content = document.createElement("div");
+    content.classList.add("content");
+    pagina.appendChild(content);
+
+    pagina.insertAdjacentHTML("beforeend", footerHTML);
+
+    return pagina;
+  },
+
 
 };
 
@@ -421,82 +642,138 @@ const Geradores = {
 const PropostaApp = {
   dados: {},
 
-  init() {
-    this.dados = DadosMock;
+  async init() {
+    const dadosCarregados = await this.carregarDados();
+
+    if (!dadosCarregados) {
+      alert("Erro ao carregar dados da proposta.");
+      return;
+    }
+
+    this.dados = dadosCarregados;
     this.cores = this.dados.cores;
+    this.config = this.dados.config;
 
     this.preencherCapa();
     this.preencherRodape();
 
-    const novaPagina = document.createElement('div');
-    novaPagina.classList.add('page-relatorio');
+    const blocosHTML = [
+      criarBloco(Geradores.gerarDadosCliente(this.dados)),
+      ...this.dados.projetos.flatMap((projeto) => {
+        const blocos = [
+          criarBloco(Geradores.gerarProjeto(projeto, this.config, !projeto.variaveis?.length > 0))
+        ];
 
-    // Header
-    novaPagina.insertAdjacentHTML('beforeend', Geradores.gerarCabecalho(this.dados));
+        if (projeto.variaveis?.length > 0 && this.config.imprimirVariaveis) {
+          blocos.push(
+            criarBloco(Geradores.gerarVariaveis(projeto.variaveis, this.config))
+          );
+        }
 
-    // Content
-    const contentDiv = document.createElement('div');
-    contentDiv.classList.add('content');
-    contentDiv.insertAdjacentHTML('beforeend', Geradores.gerarDadosCliente(this.dados));
-    novaPagina.appendChild(contentDiv);
+        return blocos;
+      }),
+      (this.config.imprimirVendaItens ? criarBloco(Geradores.gerarVendaMateriais(this.dados.vendaItens, this.config)) : null),
+      (this.config.imprimirParcelas ? criarBloco(Geradores.gerarParcelas(this.dados.parcelas))  : null),
+      (this.config.imprimirValorTotal ? criarBloco(Geradores.gerarTotais(this.dados, this.config)) : null),
+      criarBloco(Geradores.gerarCondicoesPagamento(this.dados.condicoesPagamento)),
+      criarBloco(Geradores.gerarAssinatura()),
+      criarBloco(Geradores.gerarObservacoes(this.dados.observacoes)),
+      (this.config.imprimirContrato ? criarBloco(Geradores.gerarContrato()) : null),
+    ];
 
-    contentDiv.insertAdjacentHTML('beforeend', Geradores.gerarProjetos(this.dados.projetos));
-    contentDiv.insertAdjacentHTML('beforeend', Geradores.gerarVendaMateriais(this.dados.vendaItens));
-    contentDiv.insertAdjacentHTML('beforeend', Geradores.gerarParcelas(this.dados.parcelas));
-    
+    function criarBloco(htmlString) {
+      const wrapper = document.createElement("div");
+      wrapper.innerHTML = htmlString;
+      return wrapper;
+    }
 
-    // Footer
-    novaPagina.insertAdjacentHTML('beforeend', Geradores.gerarFooter(this.dados.licenca, 1, 1));
-   
+    Paginador.adicionarConteudoPaginado(
+      blocosHTML,
+      (pagina) => Geradores.gerarCabecalho(this.dados, pagina),
+      (licenca, pag, total) => Geradores.gerarFooter(licenca, pag, total),
+      this.dados.licenca,
+      {
+        usarTimbre: this.config.imprimirTimbre,
+        imagemTimbre: this.dados.imagemTimbre,
+      }
+    );
 
-    // Adicionar à página
-    document.body.appendChild(novaPagina);
-
-    const novaPagina2 = document.createElement('div');
-    novaPagina2.classList.add('page-relatorio');
-    novaPagina2.insertAdjacentHTML('beforeend', Geradores.gerarCabecalho(this.dados));
-
-    // Content
-    const contentDiv2 = document.createElement('div');
-    contentDiv2.classList.add('content');
-    contentDiv2.insertAdjacentHTML('beforeend', Geradores.gerarTotais(this.dados));
-    contentDiv2.insertAdjacentHTML('beforeend', Geradores.gerarCondicoesPagamento(this.dados.condicoesPagamento));
-    contentDiv2.insertAdjacentHTML('beforeend', Geradores.gerarAssinatura());
-    contentDiv2.insertAdjacentHTML('beforeend', Geradores.gerarObservacoes(this.dados.observacoes));
-    novaPagina2.appendChild(contentDiv2);
-    novaPagina2.insertAdjacentHTML('beforeend', Geradores.gerarFooter(this.dados.licenca, 1, 1));
-
-    document.body.appendChild(novaPagina2);
     // Aplicar cores
     this.aplicarCores(this.cores);
   },
 
+  async carregarDados() {
+     const dados = getDadosRelatorio();
+
+    if (!dados || !dados.licencaid || !dados.orcamentoid) {
+      alert("Parâmetros inválidos ou ausentes.");
+      return null;
+    }
+
+    try {
+      const response = await fetch(
+        `https://suaapi.com/relatorios?licencaid=${dados.licencaid}&orcamentoid=${dados.orcamentoid}`
+      );
+
+      if (!response.ok) {
+        throw new Error("Erro ao buscar os dados do relatório.");
+      }
+
+      const dadosRelatorio = await response.json();
+
+      // Opcional: incluir a config manual do usuário (vinda da URL)
+      dadosRelatorio.config = dados.config;
+
+      return dadosRelatorio;
+    } catch (erro) {
+      console.error("Erro no fetch:", erro);
+      return null;
+    }
+  },
+
+  getDadosRelatorio() {
+    const params = new URLSearchParams(window.location.search);
+    const dadosEncoded = params.get("dados");
+
+    if (!dadosEncoded) return null;
+
+    try {
+      return JSON.parse(decodeURIComponent(dadosEncoded));
+    } catch (e) {
+      console.error("Erro ao decodificar os dados:", e);
+      return null;
+    }
+  },
+
+
   aplicarCores(config) {
-    document.querySelectorAll(".cor-primaria").forEach(el => {
+    document.querySelectorAll(".cor-primaria").forEach((el) => {
       el.style.backgroundColor = config.corPrimaria;
     });
-    document.querySelectorAll(".cor-secundaria").forEach(el => {
+    document.querySelectorAll(".cor-secundaria").forEach((el) => {
       el.style.backgroundColor = config.corSecundaria;
     });
-    document.querySelectorAll(".color-primaria").forEach(el => {
+    document.querySelectorAll(".color-primaria").forEach((el) => {
       el.style.color = config.corPrimaria;
     });
-    document.querySelectorAll(".color-secundaria").forEach(el => {
+    document.querySelectorAll(".color-secundaria").forEach((el) => {
       el.style.color = config.corSecundaria;
     });
-    document.querySelectorAll(".borda-cor-primaria").forEach(el => {
+    document.querySelectorAll(".borda-cor-primaria").forEach((el) => {
       el.style.outlineColor = config.corPrimaria;
     });
-    document.querySelectorAll(".borda-cor-secundaria").forEach(el => {
+    document.querySelectorAll(".borda-cor-secundaria").forEach((el) => {
       el.style.outlineColor = config.corSecundaria;
     });
-    document.querySelectorAll('svg path[data-cor="primaria"]').forEach(el => {
+    document.querySelectorAll('svg path[data-cor="primaria"]').forEach((el) => {
       el.setAttribute("fill", config.corPrimaria);
     });
-    document.querySelectorAll('svg path[data-cor="secundaria"]').forEach(el => {
-      el.setAttribute("fill", config.corSecundaria);
-    });
-    document.querySelectorAll(".valor-final-destaque").forEach(el => {
+    document
+      .querySelectorAll('svg path[data-cor="secundaria"]')
+      .forEach((el) => {
+        el.setAttribute("fill", config.corSecundaria);
+      });
+    document.querySelectorAll(".valor-final-destaque").forEach((el) => {
       el.style.backgroundColor = config.corPrimaria;
       el.style.boxShadow = `-6px 6px 0px ${config.corSecundaria}`;
     });
@@ -509,14 +786,38 @@ const PropostaApp = {
     Utils.setText("title", this.dados.titulo);
     Utils.setText("subtitle", this.dados.subtitulo);
 
-    Utils.setHTML("licenca-whatsapp", `<i class="icon-capa color-primaria fab fa-whatsapp"></i> ${this.dados.licenca.whatsapp}`);
-    Utils.setHTML("licenca-fone", `<i class="icon-capa color-primaria fas fa-phone-alt"></i> ${this.dados.licenca.fone}`);
-    Utils.setHTML("licenca-email", `<i class="icon-capa color-primaria fas fa-envelope"></i> ${this.dados.licenca.email}`);
-    Utils.setHTML("licenca-site", `<i class="icon-capa color-primaria fas fa-globe"></i> ${this.dados.licenca.site}`);
-    Utils.setHTML("licenca-endereco", `<i class="icon-capa color-primaria fas fa-map-marker-alt"></i> ${this.dados.licenca.endereco}`);
-    Utils.setHTML("licenca-cnpj", `<i class="icon-capa color-primaria fas fa-building"></i> ${this.dados.licenca.cnpj}`);
-    Utils.setHTML("licenca-instagram", `<i class="icon-capa color-primaria fab fa-instagram"></i> <a href="https://www.instagram.com/${this.dados.licenca.instagram}/" target="_blank">${this.dados.licenca.instagram}</a>`);
-    Utils.setHTML("logo-capa", `<img src="${this.dados.licenca.logoUrl}" alt="Logo" class="logo-capa">`);
+    Utils.setHTML(
+      "licenca-whatsapp",
+      `<i class="icon-capa color-primaria fab fa-whatsapp"></i> ${this.dados.licenca.whatsapp}`
+    );
+    Utils.setHTML(
+      "licenca-fone",
+      `<i class="icon-capa color-primaria fas fa-phone-alt"></i> ${this.dados.licenca.fone}`
+    );
+    Utils.setHTML(
+      "licenca-email",
+      `<i class="icon-capa color-primaria fas fa-envelope"></i> ${this.dados.licenca.email}`
+    );
+    Utils.setHTML(
+      "licenca-site",
+      `<i class="icon-capa color-primaria fas fa-globe"></i> ${this.dados.licenca.site}`
+    );
+    Utils.setHTML(
+      "licenca-endereco",
+      `<i class="icon-capa color-primaria fas fa-map-marker-alt"></i> ${this.dados.licenca.endereco}`
+    );
+    Utils.setHTML(
+      "licenca-cnpj",
+      `<i class="icon-capa color-primaria fas fa-building"></i> ${this.dados.licenca.cnpj}`
+    );
+    Utils.setHTML(
+      "licenca-instagram",
+      `<i class="icon-capa color-primaria fab fa-instagram"></i> <a href="https://www.instagram.com/${this.dados.licenca.instagram}/" target="_blank">${this.dados.licenca.instagram}</a>`
+    );
+    Utils.setHTML(
+      "logo-capa",
+      `<img src="${this.dados.licenca.logoUrl}" alt="Logo" class="logo-capa">`
+    );
   },
 
   preencherTituloRelatorio() {
@@ -525,8 +826,10 @@ const PropostaApp = {
   },
 
   preencherCards() {
-    const cards = document.querySelectorAll(".card-left, .card-middle, .card-right");
-    cards.forEach(card => {
+    const cards = document.querySelectorAll(
+      ".card-left, .card-middle, .card-right"
+    );
+    cards.forEach((card) => {
       card.style.backgroundImage = `url('${this.dados.imagemCapa}')`;
       card.style.backgroundRepeat = "no-repeat";
       card.style.backgroundSize = "794px auto";
@@ -543,7 +846,7 @@ const PropostaApp = {
     Utils.setText("rodape-email", this.dados.contato.email);
     Utils.setText("rodape-site", this.dados.contato.site);
     Utils.setText("rodape-endereco", this.dados.contato.endereco);
-  }
+  },
 };
 
 // =====================

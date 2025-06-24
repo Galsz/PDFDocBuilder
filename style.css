@@ -106,7 +106,7 @@ a {
 
 .page-relatorio {
   width: 794px;
-  height: 1123px;
+  height: 1122px;
   background-color: #fff;
   box-sizing: border-box;
   position: relative;
@@ -116,20 +116,65 @@ a {
   break-after: page;
 }
 
+.page-relatorio.timbre {
+  position: relative;
+  overflow: hidden;
+}
+
+
+.page-relatorio .timbre-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: cover;
+  opacity: 0.1 ; /* controle a intensidade do timbre */
+  z-index: -9999;
+}
+
+.page-relatorio .content,
+.page-relatorio footer {
+  display: relative;
+  z-index: 1;
+}
+
 .avoid-break {
   page-break-inside: avoid;
   break-inside: avoid;
 }
 
+.allow-break {
+  break-inside: auto;
+  page-break-inside: auto;
+}
+
 @media print {
+  body {
+    margin: 0;
+    padding: 0;
+    background: white;
+  }
+
   .page-relatorio {
+    box-shadow: none;
     page-break-after: always;
+    break-after: page;
+  }
+
+  .no-print {
+    display: none !important;
   }
 }
 
 .content {
-  margin: 4rem 3rem;
+  margin: 0;
+  padding: 4rem 3rem 126px 3rem;
+  box-sizing: border-box;
 }
+
 
 .topo {
   display: flex;
@@ -660,6 +705,7 @@ a {
 .item-obs {
   font-size: 9pt;
   color: #808080;
+  margin-bottom: 8px;
 }
 
 .item-obs p {
