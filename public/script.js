@@ -1,173 +1,3 @@
-const DadosMock = {
-  id: "4257",
-  titulo: "PROPOSTA",
-  subtitulo: "COMERCIAL",
-  imagemCapa: "./public/12.png",
-  imagemTimbre: "./public/12.png",
-  data: "20/06/2025",
-  valorTotal: 2169.80,
-  desconto: 0.00,
-  valorFinal: 2169.80,
-  condicoesPagamento: "À vista ou em até 3x sem juros no cartão de crédito.",
-  observacoes:
-    "Proposta válida por 30 dias. Preços sujeitos a alteração sem aviso prévio.",
-  contratoHtml: "",
-  config: {
-    imprimirLogoEmTodas: false,
-    imprimirParcelas: true,
-    imprimirPromissorias: true,
-    imprimirValorTotal: true,
-    imprimirDesconto: true,
-    imprimirVariaveis: true,
-    imprimirValorUnitario: true,
-    imprimirMedidas: true,
-    imprimirVendaItens: true,
-    imprimirTimbre: false,
-    imprimirContrato: false,
-  },
-  cores: {
-    corPrimaria: "#004080",
-    corSecundaria: "#bb961e",
-  },
-  vendedor: {
-    nome: "Bruno Colombo",
-    telefone: "(61) 99999-9999",
-  },
-  licenca: {
-    nome: "Wvetro - Sistema para Vidraçarias e Serralherias",
-    whatsapp: "15 99821-1524",
-    fone: "15 99821-1524",
-    email: "geolimass03@gmail.com",
-    site: "www.wvetro_teste.com.br",
-    endereco: "Rua José Hauer, 1625B - Curitiba/PR",
-    cnpj: "12.345.678/0001-90",
-    logoUrl: "./public/logowv.png",
-    instagram: "Didjoo__",
-  },
-  cliente: {
-    contato: "Construtora Alpha",
-    obra: "Gesso Campelo",
-    enderecoObra: "Quadra QNE 24 Lote 01 Loja, 04 Taguatinga",
-    cidade: "Brasília/DF",
-    email: "",
-    telefone: "(61) 3037-4922",
-  },
-  contato: {
-    telefone: "(41) 99940-1420",
-    email: "financeirowvetro@gmail.com",
-    site: "www.wvetro_teste.com.br",
-    endereco: "Rua José Hauer, 1625B - Curitiba/PR",
-  },
-  projetos: [
-    {
-      ordem: 1,
-      nome: "CAIXILHO JANELA INTEGRADA",
-      imagem: "https://sistema.wvetro.com.br/concept/fotos/00001/ESQ_1127.jpg",
-      perfil: "PRETO",
-      acessorios: "SEM ACESSORIOS",
-      vidro: "LAMINADO 4MM",
-      tipo: "1",
-      qtd: 1,
-      largura: 6100,
-      altura: 1000,
-      valorUnt:2544.97,
-      valorTotal: 2544.97,
-      localizacao: "COZINHA",
-      observacoes: "Verificar vão antes da instalação.",
-      variaveis: [
-        { nome: "PERFIL MARCO LATERAL", valor: "MARCO ÚNICO" },
-        { nome: "MONTAGEM DA JANELA", valor: "TODAS MÓVEIS" },
-      ],
-    },
-    {
-      ordem: 1,
-      nome: "CAIXILHO JANELA INTEGRADA",
-      imagem: "https://sistema.wvetro.com.br/concept/fotos/00001/ESQ_1127.jpg",
-      perfil: "PRETO",
-      acessorios: "SEM ACESSORIOS",
-      vidro: "LAMINADO 4MM",
-      tipo: "1",
-      qtd: 1,
-      largura: 6100,
-      altura: 1000,
-      valorUnt: 2544.97,
-      valorTotal: 2544.97,
-      localizacao: "COZINHA",
-      observacoes: "Verificar vão antes da instalação.",
-      variaveis: [
-        { nome: "PERFIL MARCO LATERAL", valor: "MARCO ÚNICO" },
-        { nome: "MONTAGEM DA JANELA", valor: "TODAS MÓVEIS" },
-      ],
-    },
-
-  ],
-  vendaItens: 
-    {
-      total: 720.00,
-      itens: [
-        {
-          imagem: "https://sistema.wvetro.com.br/concept/fotos/00001/1150.PNG",
-          cor: "ACESSÓRIO",
-          descricao: "1150 - ROLDANA CARRINHO QUADRUPLA P/ 1127 E 1341",
-          unidade: "UN",
-          largura: 0,
-          altura: 0,
-          qtd: 10,
-          valorUnitario: 72.00,
-          valorTotal: 720.00,
-          observacoes: "Entrega em até 10 dias úteis",
-        },
-        {
-          imagem: "https://sistema.wvetro.com.br/concept/fotos/00001/1150.PNG",
-          cor: "ACESSÓRIO",
-          descricao: "1150 - ROLDANA CARRINHO QUADRUPLA P/ 1127 E 1341",
-          unidade: "UN",
-          largura: 0,
-          altura: 0,
-          qtd: 10,
-          valorUnitario: 72.00,
-          valorTotal: 720.00,
-          observacoes: "Entrega em até 10 dias úteis",
-        },
-        {
-          imagem: "https://sistema.wvetro.com.br/concept/fotos/00001/1150.PNG",
-          cor: "ACESSÓRIO",
-          descricao: "1150 - ROLDANA CARRINHO QUADRUPLA P/ 1127 E 1341",
-          unidade: "UN",
-          largura: 0,
-          altura: 0,
-          qtd: 10,
-          valorUnitario: 72.00,
-          valorTotal: 720.00,
-          observacoes: "Entrega em até 10 dias úteis",
-        },
-        
-      ],
-    },
-  parcelas: [
-    {
-      numero: 1,
-      vencimento: "20/07/2025",
-      valor: 1000.00,
-      formaPagamento: "Boleto",
-      status: "Pendente",
-    },
-    {
-      numero: 2,
-      vencimento: "20/08/2025",
-      valor: 1000.00,
-      formaPagamento: "Boleto",
-      status: "Pendente",
-    },
-    {
-      numero: 3,
-      vencimento: "20/09/2025",
-      valor: 1000.00,
-      formaPagamento: "Boleto",
-      status: "Pendente",
-    },
-  ],
-};
 
 // =====================
 // FUNÇÕES UTILITÁRIAS
@@ -284,13 +114,13 @@ const Geradores = {
         <div class="linha2">
           <span><strong>Contato:</strong> ${dados.cliente.contato}</span>
           <span><strong>E-mail:</strong> ${dados.cliente.email}</span>
-          <span><strong>Telefone:</strong> ${dados.cliente.telefone}</span>
+          <span style="min-width: 168px;"><strong>Telefone:</strong> ${dados.cliente.telefone}</span>
         </div>
         <div class="linha3">
           <span><strong>Endereço Obra:</strong> ${dados.cliente.enderecoObra}</span>
-          <span><strong>Cidade:</strong> ${dados.cliente.cidade}</span>
+          <span style="min-width: 165px;"><strong>Cidade:</strong> ${dados.cliente.cidade}</span>
         </div>
-        <div class="linha4 destaque cor-primaria">
+        <div class="linha4 destaque" style="background-color: ${dados.cores.corPrimaria};">
           <span><strong>Vendedor:</strong> ${dados.vendedor.nome}</span>
           <span><strong>Telefone:</strong> ${dados.vendedor.telefone}</span>
         </div>
@@ -479,7 +309,7 @@ const Geradores = {
               ${config.imprimirDesconto ? `
               <p><strong>Valor Total:</strong> ${dados.valorTotal}</p>
               <p><strong>Valor Desconto:</strong> ${dados.desconto}</p>` : ""} 
-              <div class="valor-final-destaque ">
+              <div class="valor-final-destaque">
                   Valor Final: ${dados.valorFinal}
               </div>
           </div>
@@ -545,83 +375,79 @@ const Paginador = {
       pagina.appendChild(fundo);
   },
 
-adicionarConteudoPaginado(blocos, gerarCabecalho, gerarFooter, dadosLicenca, config = {}) {
-  let totalPaginas = 1;
-  let paginaAtual = this.criarNovaPagina(
-    gerarCabecalho(totalPaginas),
-    gerarFooter(dadosLicenca, totalPaginas, "?"),
-    config
-  );
+  adicionarConteudoPaginado(
+    blocos,               
+    gerarCabecalho,      
+    gerarFooter,        
+    dadosLicenca,        
+    config = {}       
+  ) {
 
-  let contentDiv = paginaAtual.querySelector(".content");
-  document.body.appendChild(paginaAtual);
+    return new Promise(resolve => {
 
-  const paginas = [paginaAtual]; // Guardar referências das páginas
-  const footers = []; // Guardar referências dos elementos de footer
+      const LIMITE_PAGINA = 800;      
+      let totalPaginas = 1;
 
-  let promessas = [];
+      let paginaAtual = this.criarNovaPagina(
+        gerarCabecalho(totalPaginas),
+        gerarFooter(totalPaginas, "?"),    
+        { ...config }
+      );
+      let contentDiv = paginaAtual.querySelector(".content");
+      document.body.appendChild(paginaAtual);
 
-  blocos.forEach((bloco) => {
-    promessas.push(
-      new Promise((resolve) => {
-        const clone = bloco.cloneNode(true);
-        clone.style.visibility = "hidden";
-        clone.style.position = "absolute";
-        clone.style.left = "-9999px";
-        document.body.appendChild(clone);
+      const paginas  = [paginaAtual];     
+      const promessas = [];               
 
-        requestAnimationFrame(() => {
-          const alturaBloco = clone.offsetHeight;
-          const alturaAtual = contentDiv.scrollHeight;
-          const LIMITE_PAGINA = 1000;
-          const isAvoidBreak = bloco.classList.contains("avoid-break");
+      blocos.filter(Boolean).forEach(bloco => {
+        promessas.push(
+          new Promise(done => {
+            const medidor = bloco.cloneNode(true);
+            medidor.style.visibility = "hidden";
+            medidor.style.position   = "absolute";
+            medidor.style.left       = "-9999px";
+            document.body.appendChild(medidor);
 
-          document.body.removeChild(clone);
+            requestAnimationFrame(() => {
+              const alturaBloco  = medidor.offsetHeight;
+              const alturaAtual  = contentDiv.scrollHeight;
+              const evitarQuebra = bloco.classList.contains("avoid-break");
 
-          if (alturaAtual + alturaBloco > LIMITE_PAGINA) {
-            if (isAvoidBreak && alturaBloco <= LIMITE_PAGINA) {
-              totalPaginas++;
-              paginaAtual = this.criarNovaPagina(
-                gerarCabecalho(totalPaginas),
-                gerarFooter(dadosLicenca, totalPaginas, "?"),
-                config
-              );
-              contentDiv = paginaAtual.querySelector(".content");
-              document.body.appendChild(paginaAtual);
-              paginas.push(paginaAtual);
-            } else if (!isAvoidBreak) {
-              totalPaginas++;
-              paginaAtual = this.criarNovaPagina(
-                gerarCabecalho(totalPaginas),
-                gerarFooter(dadosLicenca, totalPaginas, "?"),
-                config
-              );
-              contentDiv = paginaAtual.querySelector(".content");
-              document.body.appendChild(paginaAtual);
-              paginas.push(paginaAtual);
-            }
+              document.body.removeChild(medidor); 
+
+              const ultrapassa = alturaAtual + alturaBloco > LIMITE_PAGINA;
+
+              if (ultrapassa && ( !evitarQuebra || alturaBloco <= LIMITE_PAGINA )) {
+                totalPaginas++;
+                paginaAtual = this.criarNovaPagina(
+                  gerarCabecalho(totalPaginas),
+                  gerarFooter(totalPaginas, "?"),
+                  { ...config }
+                );
+                contentDiv = paginaAtual.querySelector(".content");
+                document.body.appendChild(paginaAtual);
+                paginas.push(paginaAtual);
+              }
+
+              contentDiv.appendChild(bloco);
+              done();
+            });
+          })
+        );
+      });
+
+      Promise.all(promessas).then(() => {
+        paginas.forEach((pagina, idx) => {
+          const footerNumber = pagina.querySelector(".footer-page-number");
+          if (footerNumber) {
+            footerNumber.textContent = `${idx + 1} / ${paginas.length}`;
           }
-
-          contentDiv.appendChild(bloco);
-          resolve();
         });
-      })
-    );
-  });
 
-  Promise.all(promessas).then(() => {
-    // Atualiza rodapés com numeração correta
-    paginas.forEach((pagina, i) => {
-      const footerNumber = pagina.querySelector(".footer-page-number");
-      if (footerNumber) {
-      
-        el.textContent = `${i + 1} / ${paginas.length}`;
-
-      }
+        resolve();  
+      });
     });
-  });
-},
-
+  },
 
   criarNovaPagina(cabecalhoHTML, footerHTML, config) {
     const pagina = document.createElement("div");
@@ -661,9 +487,16 @@ const PropostaApp = {
       return;
     }
 
-    this.dados = dadosCarregados;
+    this.dados  = dadosCarregados ?? {};
+    this.dados.cores = this.dados.cores ?? {};
+
+    const coresPadrao = { corPrimaria: "#004080", corSecundaria: "#bb961e" };
+    this.dados.cores  = { ...coresPadrao, ...this.dados.cores };
+
     this.cores = this.dados.cores;
-    this.config = config;
+
+    this.config = config ?? {};
+
 
     this.preencherCapa();
     this.preencherRodape();
@@ -690,7 +523,7 @@ const PropostaApp = {
       criarBloco(Geradores.gerarAssinatura()),
       criarBloco(Geradores.gerarObservacoes(this.dados.observacoes)),
       (this.config.imprimirContrato ? criarBloco(Geradores.gerarContrato()) : null),
-    ];
+    ].filter(Boolean);
 
     function criarBloco(htmlString) {
       const wrapper = document.createElement("div");
@@ -698,18 +531,15 @@ const PropostaApp = {
       return wrapper;
     }
 
-    Paginador.adicionarConteudoPaginado(
+    await Paginador.adicionarConteudoPaginado(
       blocosHTML,
-      (pagina) => Geradores.gerarCabecalho(this.dados, config, pagina),
-      (licenca, pag, total) => Geradores.gerarFooter(licenca, pag, total),
+      pag => Geradores.gerarCabecalho(this.dados, this.config, pag),
+      (pag, tot) => Geradores.gerarFooter(this.dados.licenca, pag, tot),
       this.dados.licenca,
-      {
-        usarTimbre: this.config.imprimirTimbre,
-        imagemTimbre: this.dados.imagemTimbre,
-      }
+      { usarTimbre: this.config.imprimirTimbre, imagemTimbre: this.dados.imagemTimbre }
     );
 
-    // Aplicar cores
+ 
     this.aplicarCores(this.cores);
     window.readyForPDF = true;
     console.log("Relatório renderizado com sucesso.");  
@@ -759,6 +589,7 @@ const PropostaApp = {
 
 
   aplicarCores(config) {
+
     document.querySelectorAll(".cor-primaria").forEach((el) => {
       el.style.backgroundColor = config.corPrimaria;
     });
@@ -842,7 +673,9 @@ const PropostaApp = {
       ".card-left, .card-middle, .card-right"
     );
     cards.forEach((card) => {
-      card.style.backgroundImage = `url('${!this.dados.imagemCapa ? `./assets/building.png` : this.dados.imagemCapa }')`;
+      card.style.backgroundImage = `url('${
+        !this.dados.imagemCapa?.trim() ? './assets/building.png' : this.dados.imagemCapa
+      }')`;
       card.style.backgroundRepeat = "no-repeat";
       card.style.backgroundSize = "794px auto";
       card.style.backgroundPositionY = "center";

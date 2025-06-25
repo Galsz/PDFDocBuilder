@@ -20,14 +20,20 @@ app.post('/gerar-pdf', async (req, res) => {
 
     const browser = await puppeteer.launch({
       headless: 'new',
-      args: ['--no-sandbox', '--disable-setuid-sandbox']
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--ignore-certificate-errors'
+      ],
+      ignoreHTTPSErrors: true
     });
 
     const page = await browser.newPage();
 
-    await page.goto(url, { waitUntil: 'domcontentloaded' });
+    await page.goto(url, { waitUntil: 'networkidle0' });
 
     await page.waitForFunction('window.readyForPDF === true', { timeout: 15000 });
+
 
     const pdf = await page.pdf({
       format: 'A4',
