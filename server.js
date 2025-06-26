@@ -19,21 +19,14 @@ app.post('/gerar-pdf', async (req, res) => {
     const url = `http://localhost:3000/relatorio/index.html?licencaId=${licencaId}&orcamentoId=${orcamentoId}&config=${configStr}`;
 
     const browser = await puppeteer.launch({
-      headless: 'new',
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--ignore-certificate-errors'
-      ],
-      ignoreHTTPSErrors: true
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox']
     });
 
     const page = await browser.newPage();
 
-    await page.goto(url, { waitUntil: 'networkidle0' });
-
-    await page.waitForFunction('window.readyForPDF === true', { timeout: 15000 });
-
+    await page.goto(url, { waitUntil: 'domcontentloaded' });
+    await page.waitForFunction('window.readyForPDF === true', { timeout: 10000 });
 
     const pdf = await page.pdf({
       format: 'A4',
@@ -53,6 +46,7 @@ app.post('/gerar-pdf', async (req, res) => {
     res.status(500).json({ error: 'Erro ao gerar o PDF.' });
   }
 });
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Servidor rodando em http://localhost:${PORT}`));

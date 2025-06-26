@@ -21,6 +21,29 @@ const Utils = {
     const params = new URLSearchParams(window.location.search);
     return params.get(parametro);
   },
+  formatarTelefone(telefone) {
+    if (!telefone || typeof telefone !== 'string') return telefone;
+    telefone = telefone.replace(/\D/g, ''); 
+
+    if (telefone.length === 11) {
+      return telefone.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3');
+    } else if (telefone.length === 10) {
+      return telefone.replace(/^(\d{2})(\d{4})(\d{4})$/, '($1) $2-$3');
+    } else {
+      return telefone; 
+    }
+  },
+  formatarValor(valor, comSimbolo = true) {
+    if (!valor) return comSimbolo ? 'R$ 0,00' : '0,00';
+    if (typeof valor === 'string') valor = parseFloat(valor.replace(',', '.'));
+
+    return valor.toLocaleString('pt-BR', {
+      style: comSimbolo ? 'currency' : 'decimal',
+      currency: 'BRL',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+  }
 };
 
 // =====================
@@ -114,7 +137,7 @@ const Geradores = {
         <div class="linha2">
           <span><strong>Contato:</strong> ${dados.cliente.contato}</span>
           <span><strong>E-mail:</strong> ${dados.cliente.email}</span>
-          <span style="min-width: 168px;"><strong>Telefone:</strong> ${dados.cliente.telefone}</span>
+          <span style="min-width: 165px;"><strong>Telefone:</strong> ${Utils.formatarTelefone(dados.cliente.telefone)}</span>
         </div>
         <div class="linha3">
           <span><strong>Endereço Obra:</strong> ${dados.cliente.enderecoObra}</span>
@@ -122,7 +145,7 @@ const Geradores = {
         </div>
         <div class="linha4 destaque" style="background-color: ${dados.cores.corPrimaria};">
           <span><strong>Vendedor:</strong> ${dados.vendedor.nome}</span>
-          <span><strong>Telefone:</strong> ${dados.vendedor.telefone}</span>
+          <span><strong>Telefone:</strong> ${Utils.formatarTelefone(dados.vendedor.telefone)}</span>
         </div>
       </div>
     `;
@@ -164,8 +187,8 @@ const Geradores = {
                         <span>${p.largura}</span>
                         <span>${p.altura}</span>` : ""}
                       ${config.imprimirValorUnitario ? `
-                        <span>${p.valorUnt}</span>
-                        <span>${p.valorTotal}</span>` : ""}
+                        <span>${Utils.formatarValor(p.valorUnt, false)}</span>
+                        <span>${Utils.formatarValor(p.valorTotal, false)}</span>` : ""}
                     </div>
                   </div>
                 </div>
@@ -240,8 +263,8 @@ const Geradores = {
                     <td class="center">${item.largura}</td>
                     <td class="center">${item.altura}</td>
                     <td class="center">${item.qtd}</td>
-                    <td class="right">${item.valorUnitario}</td>
-                    <td class="right">${item.valorTotal}</td>
+                    <td class="right">${Utils.formatarValor(item.valorUnitario, false)}</td>
+                    <td class="right">${Utils.formatarValor(item.valorTotal, false)}</td>
                   </tr>
                   ${
                     item.observacoes
@@ -290,7 +313,7 @@ const Geradores = {
               <tr>
                 <td class="pd">${p.numero}</td>
                 <td class="pd">${p.vencimento}</td>
-                <td class="al-right pd">${p.valor}</td>
+                <td class="al-right pd">${Utils.formatarValor(p.valor, false)}</td>
                 <td class="pd">${p.formaPagamento}</td>
                 <td class="pd">${p.status}</td>
               </tr>
@@ -307,10 +330,10 @@ const Geradores = {
         <div id="totais" class="totais-container">
           <div class="totais-valores">
               ${config.imprimirDesconto ? `
-              <p><strong>Valor Total:</strong> ${dados.valorTotal}</p>
-              <p><strong>Valor Desconto:</strong> ${dados.desconto}</p>` : ""} 
+              <p><strong>Valor Total:</strong> ${Utils.formatarValor(dados.valorTotal)}</p>
+              <p><strong>Valor Desconto:</strong> ${Utils.formatarValor(dados.desconto)}</p>` : ""} 
               <div class="valor-final-destaque">
-                  Valor Final: ${dados.valorFinal}
+                  Valor Final: ${Utils.formatarValor(dados.valorFinal)}
               </div>
           </div>
       </div>
@@ -346,22 +369,15 @@ const Geradores = {
     if (!observacoes || observacoes.trim() === "") return "";
     return `
       <div id="observacoes" class="observacoes">
-          <p><strong>Observações:</strong>${observacoes}</p>
+          <p><strong>Observações: </strong>${observacoes}</p>
       </div>
     `;
   },
 
-  gerarContrato() {
+  gerarContrato(contrato) {
     return `
-      <div id="contrato" class="contrato-container">
-        <h2>Contrato de Prestação de Serviços</h2>
-        <p>Este contrato é celebrado entre a empresa contratada e o contratante, conforme os termos e condições acordados.</p>
-        <p><strong>Data:</strong> ${new Date().toLocaleDateString()}</p>
-        <p><strong>Assinatura do Contratante:</strong></p>
-        <div class="assinatura-linha"></div>
-        <p><strong>Assinatura do Contratado:</strong></p>
-        <div class="assinatura-linha"></div>
-      </div>
+
+      <div id="contrato" class="contrato-content">${contrato}</div>
     `;
   }
 
@@ -385,7 +401,7 @@ const Paginador = {
 
     return new Promise(resolve => {
 
-      const LIMITE_PAGINA = 800;      
+      const LIMITE_PAGINA = 869;      
       let totalPaginas = 1;
 
       let paginaAtual = this.criarNovaPagina(
@@ -522,7 +538,7 @@ const PropostaApp = {
       criarBloco(Geradores.gerarCondicoesPagamento(this.dados.condicoesPagamento)),
       criarBloco(Geradores.gerarAssinatura()),
       criarBloco(Geradores.gerarObservacoes(this.dados.observacoes)),
-      (this.config.imprimirContrato ? criarBloco(Geradores.gerarContrato()) : null),
+      
     ].filter(Boolean);
 
     function criarBloco(htmlString) {
@@ -539,7 +555,14 @@ const PropostaApp = {
       { usarTimbre: this.config.imprimirTimbre, imagemTimbre: this.dados.imagemTimbre }
     );
 
- 
+    if (this.config.imprimirContrato && this.dados.contratoHtml) {
+      const contratoPagina = document.createElement("div");
+      contratoPagina.classList.add("contrato-page");
+
+      contratoPagina.innerHTML = Geradores.gerarContrato(this.dados.contratoHtml);
+      document.body.appendChild(contratoPagina);
+    }
+
     this.aplicarCores(this.cores);
     window.readyForPDF = true;
     console.log("Relatório renderizado com sucesso.");  
@@ -687,7 +710,7 @@ const PropostaApp = {
   },
 
   preencherRodape() {
-    Utils.setText("rodape-telefone", this.dados.licenca.telefone);
+    Utils.setText("rodape-telefone", Utils.formatarTelefone(this.dados.licenca.telefone));
     Utils.setText("rodape-email", this.dados.licenca.email);
     Utils.setText("rodape-site", this.dados.licenca.site);
     Utils.setText("rodape-endereco", this.dados.licenca.endereco);
