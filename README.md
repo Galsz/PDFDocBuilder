@@ -1,21 +1,34 @@
+
 # 📄 PDF Generator Service
 
 Este projeto é um microserviço em Node.js que gera documentos em PDF (como orçamentos e contratos) a partir de páginas HTML dinâmicas, utilizando o Puppeteer para renderização headless via Chromium.
 
+## 📦 Tecnologias Utilizadas
+
+- **Node.js**
+- **Express**
+- **Puppeteer**
+- **Docker**
+- **Docker Compose**
+- **HTML/CSS** (estruturação visual dos documentos)
+
+---
 
 ## 📁 Estrutura do Projeto
 
 ```
 
 .
-├── server.js              # Servidor Express + Puppeteer
-├── package.json           # Dependências do projeto
+├── Dockerfile               # Imagem do serviço com Puppeteer + Chromium
+├── docker-compose.yml       # Orquestração do container
+├── server.js                # Servidor Express + Puppeteer
+├── package.json             # Dependências do projeto
 ├── public/
-│   ├── index.html         # Página HTML usada como base do contrato
-│   ├── index-inline.html  # Alternativa com conteúdo embutido
-│   ├── style.css          # Estilos para impressão/PDF
-│   ├── script.js          # Scripts de carregamento/dinâmica
-│   └── assets/            # Imagens e logos utilizados
+│   ├── index.html           # Página HTML usada como base do contrato
+│   ├── index-inline.html    # Alternativa com conteúdo embutido
+│   ├── style.css            # Estilos para impressão/PDF
+│   ├── script.js            # Scripts de carregamento dinâmico
+│   └── assets/              # Imagens e logos utilizados
 │       ├── building.png
 │       ├── logowhite\_evo.svg
 │       └── logoww\.png
@@ -23,52 +36,72 @@ Este projeto é um microserviço em Node.js que gera documentos em PDF (como or�
 
 ```
 
-## Instalação
+
+## 🚀 Como Rodar com Docker Compose
+
+> Pré-requisitos: `Docker` e `docker-compose` instalados na máquina (ou EC2).
+
+### 1. Clone o repositório
 
 ```bash
 git clone https://github.com/Galsz/PDFDocBuilder.git
 cd PDFDocBuilder
-npm install
+````
+
+### 2. Construa a imagem
+
+```bash
+docker-compose build
+```
+
+### 3. Inicie o container
+
+```bash
+docker-compose up -d
+```
+
+### 4. Verifique se está rodando
+
+```bash
+curl http://localhost:8095/gerar-pdf
+```
+
+---
+
+## Configurações
+
+O PDF é gerado a partir da seguinte rota:
+
+```
+POST /gerar-pdf
+Content-Type: application/json
+```
+
+### Exemplo de payload:
+
+```json
+{
+  "licencaId": 123,
+  "orcamentoId": 456,
+  "config": {
+    "imprimirContrato": true
+  }
+}
+```
+
+A resposta será um PDF em `application/pdf` pronto para download.
+
+
+## Integração
+
+Se a aplicação estiver na mesma EC2, basta fazer requisições internas para:
+
+```
+http://localhost:8095/gerar-pdf
 ```
 
 
-## ☁️ Deploy
+## 📄 Licença
 
-1. Suba os arquivos via Git ou SFTP
-2. Instale dependências:
+Distribuição interna restrita – uso autorizado para projetos Wvetro.
 
-   ```bash
-   sudo yum install -y nodejs
-   npm install
-   ```
-3. Instale libs do Chromium para o Puppeteer:
-
-   ```bash
-   sudo yum install -y gtk3 xorg-x11-fonts* libXcomposite ...
-   ```
-4. Execute com `pm2`:
-
-   ```bash
-   pm2 start index.js
-   pm2 save
-   ```
-
----
-
-
-## Tecnologias Utilizadas
-
-- **Node.js**
-- **Express**
-- **Puppeteer**
-- **HTML/CSS** (para estruturação visual dos documentos)
-
----
-
-## Funcionalidades
-
-- Geração automática de PDFs a partir de URLs HTML
-- Suporte a parâmetros dinâmicos via query string
-- Estilização avançada para contratos e relatórios
-- Espera pelo carregamento total da página e sinal de prontidão
-- Retorno direto do PDF para download como resposta HTTP
