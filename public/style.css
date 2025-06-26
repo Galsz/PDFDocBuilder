@@ -451,10 +451,10 @@ a {
 
 .card-canais span {
   position: absolute;
-  right: 140px;
+  right: 161px;
   bottom: 53px;
   color: #ffff;
-  font-size: 18pt;
+  font-size: 16pt;
   font-weight: 600;
   z-index: 999;
 }
@@ -564,7 +564,7 @@ a {
 
 .item-info h4 {
   margin: 0 0 15px 0;
-  font-size: 11pt;
+  font-size: 10pt;
   font-weight: bold;
 }
 
@@ -606,10 +606,12 @@ a {
   font-size: 10pt;
 }
 
+
 .tabela-item-linha {
   display: flex;
   align-items: flex-start;
 }
+
 
 .tabela-item-numero {
   width: 30px;
@@ -620,6 +622,7 @@ a {
   align-self: center;
 }
 
+
 .tabela-item-valores {
   display: flex;
   flex-direction: column;
@@ -627,25 +630,52 @@ a {
   border-left: 2px solid #ccc;
 }
 
+
 .tabela-item-header,
 .tabela-item-dados {
   display: flex;
-  justify-content: space-between;
-  height: 25px;
+  align-items: center;
+  height: 19px;
+
 }
+
 
 .tabela-item-header span,
 .tabela-item-dados span {
-  flex: 1;
+  flex: 0 0 auto;
+  white-space: nowrap;
+  padding: 2px;
   text-align: center;
   border-left: 2px solid #ccc;
-  padding: 2px;
 }
+
 
 .tabela-item-header span:first-child,
 .tabela-item-dados span:first-child {
   border-left: none;
 }
+
+
+.col-tipo {
+  min-width: 80px;
+  text-align: left;
+}
+
+.col-qtd {
+  min-width: 50px;
+}
+
+.col-l,
+.col-h {
+  min-width: 60px;
+}
+
+.col-vlr-unt,
+.col-vlr-total {
+  min-width: 90px;
+  text-align: right;
+}
+
 
 .tabela-item-dados {
   color: #808080;
@@ -806,7 +836,7 @@ a {
 }
 
 .totais-valores {
-  width: 30%;
+  min-width: 30%;
   text-align: right;
 
   p {

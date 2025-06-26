@@ -171,24 +171,24 @@ const Geradores = {
                   <div class="tabela-item-numero">${p.ordem}</div>
                   <div class="tabela-item-valores">
                     <div class="tabela-item-header">
-                      <span><strong>Tipo:</strong></span>
-                      <span><strong>Qtd:</strong></span>
+                      <span class="col-tipo"><strong>Tipo:</strong></span>
+                      <span class="col-qtd"><strong>Qtd:</strong></span>
                       ${config.imprimirMedidas ? `
-                        <span><strong>L:</strong></span>
-                        <span><strong>H:</strong></span>` : ""}
+                        <span class="col-l"><strong>L:</strong></span>
+                        <span class="col-h"><strong>H:</strong></span>` : ""}
                       ${config.imprimirValorUnitario ? `
-                        <span><strong>Vlr Unt:</strong></span>
-                        <span><strong>Vlr Total:</strong></span>` : ""}
+                        <span class="col-vlr-unt"><strong>Vlr Unt:</strong></span>
+                        <span class="col-vlr-total"><strong>Vlr Total:</strong></span>` : ""}
                     </div>
                     <div class="tabela-item-dados">
-                      <span>${p.tipo}</span>
-                      <span>${p.qtd}</span>
+                      <span class="col-tipo">${p.tipo}</span>
+                      <span class="col-qtd">${p.qtd}</span>
                       ${config.imprimirMedidas ? `
-                        <span>${p.largura}</span>
-                        <span>${p.altura}</span>` : ""}
+                        <span class="col-l">${p.largura}</span>
+                        <span class="col-h">${p.altura}</span>` : ""}
                       ${config.imprimirValorUnitario ? `
-                        <span>${Utils.formatarValor(p.valorUnt, false)}</span>
-                        <span>${Utils.formatarValor(p.valorTotal, false)}</span>` : ""}
+                        <span class="col-vlr-unt">${Utils.formatarValor(p.valorUnt, false)}</span>
+                        <span class="col-vlr-total">${Utils.formatarValor(p.valorTotal, false)}</span>` : ""}
                     </div>
                   </div>
                 </div>
@@ -577,7 +577,7 @@ const PropostaApp = {
     }
 
     try {
-      const response = await fetch("https://dev.wvetro.com.br/geovaneconcept/app.wvetro.arelorcamentoconcepthtml", {
+      const response = await fetch("https://api.wvetro.com.br/wvetro/app.wvetro.arelorcamentoconcepthtml", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

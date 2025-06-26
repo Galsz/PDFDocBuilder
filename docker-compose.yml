@@ -2,8 +2,8 @@ version: '3.8'
 
 services:
   pdf-doc-generator:
-    build: .
     container_name: pdf-doc-builder
+    build: .
     ports:
-      - "8095:8095"
+      - "8092:8095"
     restart: unless-stopped
