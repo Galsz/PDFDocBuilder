@@ -85,14 +85,14 @@ const Geradores = {
         <div class="footer-image">
           <svg xmlns="http://www.w3.org/2000/svg" width="794" height="78" viewBox="0 0 1637 158" fill="none">
               <g clip-path="url(#clip0_44_103)">
-                  <line x1="100.999" y1="13.2461" x2="1229" y2="13.2461" stroke="#BB961E" stroke-width="5" />
+                  <line x1="100.999" y1="13.2461" x2="1229" y2="13.2461" stroke="#BB961E" stroke-width="5" data-cor="secundaria"/>
                   <path
                       d="M1221.68 12.4055C1224.76 4.90059 1232.07 0 1240.18 0H1646C1657.05 0 1666 8.95431 1666 20V111C1666 122.046 1657.05 131 1646 131H1202.83C1188.6 131 1178.92 116.566 1184.33 103.406L1221.68 12.4055Z"
                       data-cor="primaria" fill="#004080" />
                   <path
                       d="M1221.68 12.4055C1224.76 4.90059 1232.07 0 1240.18 0H1646C1657.05 0 1666 8.95431 1666 20V111C1666 122.046 1657.05 131 1646 131H1202.83C1188.6 131 1178.92 116.566 1184.33 103.406L1221.68 12.4055Z"
                       data-cor="primaria" fill="#004080" />
-                  <line x1="103.324" y1="12.9216" x2="57.3239" y2="128.922" stroke="#BB961E" stroke-width="5"  />
+                  <line x1="103.324" y1="12.9216" x2="57.3239" y2="128.922" stroke="#BB961E" stroke-width="5" data-cor="secundaria"/>
                   <path
                       d="M101.215 551.462C96.5717 547.584 93.9327 541.814 94.037 535.765L100.651 151.997C100.841 140.953 109.949 132.154 120.993 132.345L143.766 132.737C154.81 132.927 163.609 142.035 163.418 153.079L156.488 555.206C156.198 572.009 136.571 580.984 123.672 570.213L101.215 551.462Z"
                       data-cor="secundaria" fill="#BB961E" />
@@ -577,7 +577,7 @@ const PropostaApp = {
     }
 
     try {
-      const response = await fetch("https://api.wvetro.com.br/wvetro/app.wvetro.arelorcamentoconcepthtml", {
+      const response = await fetch("https://dev.wvetro.com.br/geovaneconcept/app.wvetro.arelorcamentoconcepthtml", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -631,14 +631,22 @@ const PropostaApp = {
     document.querySelectorAll(".borda-cor-secundaria").forEach((el) => {
       el.style.outlineColor = config.corSecundaria;
     });
-    document.querySelectorAll('svg path[data-cor="primaria"]').forEach((el) => {
-      el.setAttribute("fill", config.corPrimaria);
+    document.querySelectorAll('[data-cor="primaria"]').forEach((el) => {
+      if (el.hasAttribute("fill")) {
+        el.setAttribute("fill", config.corPrimaria);
+      }
+      if (el.hasAttribute("stroke")) {
+        el.setAttribute("stroke", config.corPrimaria);
+      }
     });
-    document
-      .querySelectorAll('svg path[data-cor="secundaria"]')
-      .forEach((el) => {
+    document.querySelectorAll('[data-cor="secundaria"]').forEach((el) => {
+      if (el.hasAttribute("fill")) {
         el.setAttribute("fill", config.corSecundaria);
-      });
+      }
+      if (el.hasAttribute("stroke")) {
+        el.setAttribute("stroke", config.corSecundaria);
+      }
+    });
     document.querySelectorAll(".valor-final-destaque").forEach((el) => {
       el.style.backgroundColor = config.corPrimaria;
       el.style.boxShadow = `-6px 6px 0px ${config.corSecundaria}`;
@@ -654,11 +662,11 @@ const PropostaApp = {
 
     Utils.setHTML(
       "licenca-whatsapp",
-      `<i class="icon-capa color-primaria fab fa-whatsapp"></i> ${this.dados.licenca.whatsapp}`
+      `<i class="icon-capa color-primaria fab fa-whatsapp"></i> ${Utils.formatarTelefone(this.dados.licenca.whatsapp)}`
     );
     Utils.setHTML(
       "licenca-fone",
-      `<i class="icon-capa color-primaria fas fa-phone-alt"></i> ${this.dados.licenca.fone}`
+      `<i class="icon-capa color-primaria fas fa-phone-alt"></i> ${Utils.formatarTelefone(this.dados.licenca.fone)}`
     );
     Utils.setHTML(
       "licenca-email",
