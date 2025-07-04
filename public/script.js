@@ -343,7 +343,7 @@ const Geradores = {
   gerarCondicoesPagamento(condicoes) {
     return `
       <div id="condicoes" class="condicoes-pagamento">
-          <p><strong>Condições de pagamento: </strong>${condicoes}</p>
+          <p><h3>Condições de pagamento: </h3>${condicoes}</p>
       </div>
     `;
   },
@@ -369,7 +369,47 @@ const Geradores = {
     if (!observacoes || observacoes.trim() === "") return "";
     return `
       <div id="observacoes" class="observacoes">
-          <p><strong>Observações: </strong>${observacoes}</p>
+          <h3>Observações: </h3>
+          ${observacoes}
+      </div>
+    `;
+  },
+
+  gerarPromissoria(dados) {
+    if (!dados) return "";
+
+    return `
+      <div class="promissoria">
+        <div style="display: flex; justify-content: space-between;">
+          <div><strong>Nº:</strong> 800</div>
+          <div><strong>Vencimento:</strong> 10/025/25</div>
+          <div><strong>R$</strong> ${Utils.formatarValor(dados.valor)}</div>
+        </div>
+
+        <div style="text-align: center; margin: 10px 0;">
+          <strong>POR ESTA VIA DE: <span style="letter-spacing: 10px;">NOTA PROMISSÓRIA</span></strong>
+        </div>
+
+        <p>blablabla</p>
+        <p>blablabla</p>
+
+        <p>ou à sua ordem <strong>blablabla</strong></p>
+        <p>A quantia de <strong>blablabla</strong> EM MOEDA CORRENTE DESTE PAÍS</p>
+
+        <p>blablabla</p>
+
+        <p><strong>EMITENTE:</strong> Geovane</p>
+        <p><strong>CPF/CNPJ:</strong> 46411914842</p>
+        <p><strong>Endereço:</strong> Rua</p>
+        <p><strong>CEP:</strong> 18190000</p>
+
+        <div style="display: flex; justify-content: space-between; margin-top: 40px;">
+          <div><strong>Sorocaba, 102/01/20</strong></div>
+          <div style="text-align: center;">
+            ___________________________<br/>
+            Assinatura
+          </div>
+        </div>
       </div>
     `;
   },
@@ -400,10 +440,12 @@ const Paginador = {
   ) {
 
     return new Promise(resolve => {
-
-      const LIMITE_PAGINA = 869;      
+      const LIMITE_PAGINA = config.imprimirLogoEmTodas === true ? 765 : 780; 
       let totalPaginas = 1;
+      
+      console.log(config.imprimirLogoEmTodas)
 
+      console.log(LIMITE_PAGINA)
       let paginaAtual = this.criarNovaPagina(
         gerarCabecalho(totalPaginas),
         gerarFooter(totalPaginas, "?"),    
@@ -425,10 +467,11 @@ const Paginador = {
             document.body.appendChild(medidor);
 
             requestAnimationFrame(() => {
+            
               const alturaBloco  = medidor.offsetHeight;
               const alturaAtual  = contentDiv.scrollHeight;
               const evitarQuebra = bloco.classList.contains("avoid-break");
-
+            
               document.body.removeChild(medidor); 
 
               const ultrapassa = alturaAtual + alturaBloco > LIMITE_PAGINA;
@@ -513,13 +556,15 @@ const PropostaApp = {
 
     this.config = config ?? {};
 
+    console.log(this.dados.observacoes)
+
 
     this.preencherCapa();
     this.preencherRodape();
 
     const blocosHTML = [
       criarBloco(Geradores.gerarDadosCliente(this.dados)),
-      ...this.dados.projetos.flatMap((projeto) => {
+      ...(this.dados.projetos ?? []).flatMap((projeto) => {
         const blocos = [
           criarBloco(Geradores.gerarProjeto(projeto, this.config, !projeto.variaveis?.length > 0))
         ];
@@ -538,6 +583,8 @@ const PropostaApp = {
       criarBloco(Geradores.gerarCondicoesPagamento(this.dados.condicoesPagamento)),
       criarBloco(Geradores.gerarAssinatura()),
       criarBloco(Geradores.gerarObservacoes(this.dados.observacoes)),
+      (this.config.imprimirPromissorias && this.dados
+      ? criarBloco(Geradores.gerarPromissoria(this.dados)) : null),
       
     ].filter(Boolean);
 
@@ -552,7 +599,7 @@ const PropostaApp = {
       pag => Geradores.gerarCabecalho(this.dados, this.config, pag),
       (pag, tot) => Geradores.gerarFooter(this.dados.licenca, pag, tot),
       this.dados.licenca,
-      { usarTimbre: this.config.imprimirTimbre, imagemTimbre: this.dados.imagemTimbre }
+      this.config
     );
 
     if (this.config.imprimirContrato && this.dados.contratoHtml) {
@@ -654,11 +701,12 @@ const PropostaApp = {
   },
 
   preencherCapa() {
-    this.preencherTituloRelatorio();
+
     this.preencherCards();
 
     Utils.setText("title", this.dados.titulo);
     Utils.setText("subtitle", this.dados.subtitulo);
+    Utils.setText("orcamento-nro", this.dados.id)
 
     Utils.setHTML(
       "licenca-whatsapp",
@@ -694,10 +742,6 @@ const PropostaApp = {
     );
   },
 
-  preencherTituloRelatorio() {
-    Utils.setText("title", this.dados.titulo);
-    Utils.setText("subtitle", this.dados.subtitulo);
-  },
 
   preencherCards() {
     const cards = document.querySelectorAll(
