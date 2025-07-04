@@ -376,38 +376,56 @@ const Geradores = {
   },
 
   gerarPromissoria(dados) {
-    if (!dados) return "";
+    if (!dados || !dados.promissoria) return "";
 
     return `
-      <div class="promissoria">
-        <div style="display: flex; justify-content: space-between;">
-          <div><strong>Nº:</strong> 800</div>
-          <div><strong>Vencimento:</strong> 10/025/25</div>
-          <div><strong>R$</strong> ${Utils.formatarValor(dados.valor)}</div>
+      <div class="promissoria-container">
+        <div class="promissoria-left">
+          <span>AVALISTA(S)</span>
+          <p>NOME________________________________________________________</p>
+          <p>CPF/CNPJ_____________________________________________________</p>
+          <p>ENDEREÇO___________________________________________________</p>
         </div>
+        <div class="promissoria-right ">
 
-        <div style="text-align: center; margin: 10px 0;">
-          <strong>POR ESTA VIA DE: <span style="letter-spacing: 10px;">NOTA PROMISSÓRIA</span></strong>
-        </div>
+          <div style="display: flex;justify-content: space-between;margin-bottom: 20px;font-size: 9pt;">
+            <div><strong>Nº:</strong> <span style="border: 1px solid black;border-radius: 8px;padding: 5px 18px;">${dados.promissoria.documento}</span></div>
+            <div><strong>Vencimento,</strong> 10/05/2025</div>
+            <div><strong>R$</strong> <span style="border: 1px solid black;border-radius: 8px;padding: 5px 18px;">${Utils.formatarValor(dados.promissoria.valor)}</span></div>
+          </div>
 
-        <p>blablabla</p>
-        <p>blablabla</p>
+          <p>${dados.promissoria.descricao}</p>
 
-        <p>ou à sua ordem <strong>blablabla</strong></p>
-        <p>A quantia de <strong>blablabla</strong> EM MOEDA CORRENTE DESTE PAÍS</p>
+          <div style="display: flex; justify-content: flex-end">
+            <span style="background: #ccc;padding: 3px 10px">por esta via de:</span>
+            <span style="letter-spacing: 10px; padding: 4px 10px; font-weight: bold;">NOTA PROMISSÓRIA</span>
+          </div>
 
-        <p>blablabla</p>
+          <p>${dados.licenca.nome} | CNPJ: ${dados.licenca.cnpj}</p>
 
-        <p><strong>EMITENTE:</strong> Geovane</p>
-        <p><strong>CPF/CNPJ:</strong> 46411914842</p>
-        <p><strong>Endereço:</strong> Rua</p>
-        <p><strong>CEP:</strong> 18190000</p>
+          <p style="display: flex;margin: 2px;">
+            <span style="width: 131px">ou à sua ordem, a quantia de</span>
+            <span style="background: #ccc; padding: 7px; width: 100%">${dados.promissoria.valorExtenso1}</span>
+          </p>
 
-        <div style="display: flex; justify-content: space-between; margin-top: 40px;">
-          <div><strong>Sorocaba, 102/01/20</strong></div>
-          <div style="text-align: center;">
-            ___________________________<br/>
-            Assinatura
+          <div style="display: flex; gap: 5px">
+             <span style="background: #ccc; padding: 7px; width: 75%">${dados.promissoria.valorExtenso2}</span>
+            <span style="text-align: left;">EM MOEDA CORRENTE<br />DESTE PAÍS</span>
+          </div>
+         
+
+          <p>Pagável em Sorocaba</p>
+          <div style="margin-top: 20px">
+            <p>EMITENTE: ${dados.cliente.contato}</p>
+            <p>CPF/CNPJ: ${dados.cliente.cpfcnpj}</p>
+            <p>Endereço: ${dados.cliente.endereco}</p>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+            <div>Sorocaba, 10/05/205</div>
+            <div style="text-align: center;">
+              _______________________________________________________<br/>
+              Assinatura
+            </div>
           </div>
         </div>
       </div>
@@ -443,9 +461,6 @@ const Paginador = {
       const LIMITE_PAGINA = config.imprimirLogoEmTodas === true ? 765 : 780; 
       let totalPaginas = 1;
       
-      console.log(config.imprimirLogoEmTodas)
-
-      console.log(LIMITE_PAGINA)
       let paginaAtual = this.criarNovaPagina(
         gerarCabecalho(totalPaginas),
         gerarFooter(totalPaginas, "?"),    
@@ -556,9 +571,6 @@ const PropostaApp = {
 
     this.config = config ?? {};
 
-    console.log(this.dados.observacoes)
-
-
     this.preencherCapa();
     this.preencherRodape();
 
@@ -583,9 +595,6 @@ const PropostaApp = {
       criarBloco(Geradores.gerarCondicoesPagamento(this.dados.condicoesPagamento)),
       criarBloco(Geradores.gerarAssinatura()),
       criarBloco(Geradores.gerarObservacoes(this.dados.observacoes)),
-      (this.config.imprimirPromissorias && this.dados
-      ? criarBloco(Geradores.gerarPromissoria(this.dados)) : null),
-      
     ].filter(Boolean);
 
     function criarBloco(htmlString) {
@@ -601,6 +610,14 @@ const PropostaApp = {
       this.dados.licenca,
       this.config
     );
+
+    if (this.config.imprimirPromissorias && this.dados) {
+      const Pagina = document.createElement("div");
+      Pagina.classList.add("contrato-page");
+
+      Pagina.innerHTML = Geradores.gerarPromissoria(this.dados)
+      document.body.appendChild(Pagina);
+    }
 
     if (this.config.imprimirContrato && this.dados.contratoHtml) {
       const contratoPagina = document.createElement("div");
