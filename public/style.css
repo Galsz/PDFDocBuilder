@@ -607,7 +607,7 @@ header {
 
 .item-topo {
   display: flex;
-  gap: 25px;
+  gap: 15px;
   margin-bottom: 10px;
 }
 
@@ -627,7 +627,7 @@ header {
 }
 
 .tabela-item-numero {
-  width: 30px;
+  width: 15px;
   text-align: end;
   padding-right: 12px;
   font-weight: 400;
@@ -664,7 +664,7 @@ header {
 }
 
 .col-tipo {
-  min-width: 80px;
+  min-width: 50px;
   text-align: left;
 }
 
@@ -835,7 +835,7 @@ header {
 
 .totais-container {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   margin-top: 2rem;
   font-family: Arial, sans-serif;
   font-size: 11pt;
@@ -848,6 +848,11 @@ header {
   p {
     margin: 1em;
   }
+}
+
+.logo-tempera {
+  padding-left: 2rem;
+  height: 150px;
 }
 
 .valor-final-destaque {

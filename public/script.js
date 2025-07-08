@@ -174,6 +174,7 @@ const Geradores = {
                       <span class="col-tipo"><strong>Tipo:</strong></span>
                       <span class="col-qtd"><strong>Qtd:</strong></span>
                       ${config.imprimirMedidas ? `
+                        <span class="col-qtd"><strong>M2:</strong></span>
                         <span class="col-l"><strong>L:</strong></span>
                         <span class="col-h"><strong>H:</strong></span>` : ""}
                       ${config.imprimirValorUnitario ? `
@@ -184,6 +185,7 @@ const Geradores = {
                       <span class="col-tipo">${p.tipo}</span>
                       <span class="col-qtd">${p.qtd}</span>
                       ${config.imprimirMedidas ? `
+                        <span class="col-qtd">${p.m2}</span>
                         <span class="col-l">${p.largura}</span>
                         <span class="col-h">${p.altura}</span>` : ""}
                       ${config.imprimirValorUnitario ? `
@@ -326,8 +328,15 @@ const Geradores = {
     `;
   },
   gerarTotais(dados, config = {}) {
+
+    console.log(dados.logoTempera)
     return `
         <div id="totais" class="totais-container">
+          <div class="logo-tempera">
+            ${dados.logoTempera ?`
+              <img src="${dados.logoTempera}" style="height: 150px" alt="logo-tempera"/>`
+            : ''}
+          </div>
           <div class="totais-valores">
               ${config.imprimirDesconto ? `
               <p><strong>Valor Total:</strong> ${Utils.formatarValor(dados.valorTotal)}</p>
