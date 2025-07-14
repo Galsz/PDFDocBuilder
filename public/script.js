@@ -43,6 +43,36 @@ const Utils = {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     });
+  },
+  dividirEmBlocosQuebraveis(texto, {
+    paragrafosPorBloco = 5,
+    className = "allow-break",
+    titulo = null
+  } = {}) {
+    if (!texto || typeof texto !== "string") return [];
+
+    // Divide por linhas
+    const linhas = texto
+      .split(/\r?\n/)
+      .map(l => l.trim())
+      .filter(l => l.length > 0);
+
+    const blocos = [];
+
+    for (let i = 0; i < linhas.length; i += paragrafosPorBloco) {
+      const grupo = linhas.slice(i, i + paragrafosPorBloco);
+      const wrapper = document.createElement("div");
+      wrapper.className = className;
+      wrapper.innerHTML = `
+        ${titulo && i === 0 ? `<h3 class="observacoes">${titulo}</h3>` : ""}
+        <div class="observacoes-conteudo">
+          ${grupo.map(linha => `<p>${linha}</p>`).join("")}
+        </div>
+      `;
+      blocos.push(wrapper);
+    }
+
+    return blocos;
   }
 };
 
@@ -368,9 +398,11 @@ const Geradores = {
   gerarObservacoes(observacoes) {
     if (!observacoes || observacoes.trim() === "") return "";
     return `
-      <div id="observacoes" class="observacoes">
+      <div id="observacoes" class="observacoes allow-break">
           <h3>Observações: </h3>
-          ${observacoes}
+          <div class="observacoes-conteudo">
+            ${observacoes}
+          </div>
       </div>
     `;
   },
@@ -382,9 +414,9 @@ const Geradores = {
       <div class="promissoria-container">
         <div class="promissoria-left">
           <span>AVALISTA(S)</span>
-          <p>NOME________________________________________________________</p>
-          <p>CPF/CNPJ_____________________________________________________</p>
-          <p>ENDEREÇO___________________________________________________</p>
+          <p>NOME__________________________________________</p>
+          <p>CPF/CNPJ______________________________________</p>
+          <p>ENDEREÇO_____________________________________</p>
         </div>
         <div class="promissoria-right ">
 
@@ -453,7 +485,7 @@ const Paginador = {
     blocos,               
     gerarCabecalho,      
     gerarFooter,        
-    dadosLicenca,        
+    dados = {},        
     config = {}       
   ) {
 
@@ -463,8 +495,8 @@ const Paginador = {
       
       let paginaAtual = this.criarNovaPagina(
         gerarCabecalho(totalPaginas),
-        gerarFooter(totalPaginas, "?"),    
-        { ...config }
+        gerarFooter(totalPaginas, "?"),
+        dados.imagemTimbre,    
       );
       let contentDiv = paginaAtual.querySelector(".content");
       document.body.appendChild(paginaAtual);
@@ -491,12 +523,12 @@ const Paginador = {
 
               const ultrapassa = alturaAtual + alturaBloco > LIMITE_PAGINA;
 
-              if (ultrapassa && ( !evitarQuebra || alturaBloco <= LIMITE_PAGINA )) {
+              if (ultrapassa && (!evitarQuebra || alturaBloco > LIMITE_PAGINA)) {
                 totalPaginas++;
                 paginaAtual = this.criarNovaPagina(
                   gerarCabecalho(totalPaginas),
                   gerarFooter(totalPaginas, "?"),
-                  { ...config }
+                  dados.imagemTimbre, 
                 );
                 contentDiv = paginaAtual.querySelector(".content");
                 document.body.appendChild(paginaAtual);
@@ -523,13 +555,13 @@ const Paginador = {
     });
   },
 
-  criarNovaPagina(cabecalhoHTML, footerHTML, config) {
+  criarNovaPagina(cabecalhoHTML, footerHTML, imagemTimbre) {
     const pagina = document.createElement("div");
     pagina.classList.add("page-relatorio");
 
-    if (config?.usarTimbre && config.imagemTimbre) {
+    if (imagemTimbre) {
       pagina.classList.add("timbre");
-      this.inserirTimbre(pagina, config.imagemTimbre);
+      this.inserirTimbre(pagina, imagemTimbre);
     }
 
     pagina.insertAdjacentHTML("beforeend", cabecalhoHTML);
@@ -571,6 +603,8 @@ const PropostaApp = {
 
     this.config = config ?? {};
 
+    console.log(this.config)
+
     this.preencherCapa();
     this.preencherRodape();
 
@@ -594,7 +628,11 @@ const PropostaApp = {
       (this.config.imprimirValorTotal ? criarBloco(Geradores.gerarTotais(this.dados, this.config)) : null),
       criarBloco(Geradores.gerarCondicoesPagamento(this.dados.condicoesPagamento)),
       criarBloco(Geradores.gerarAssinatura()),
-      criarBloco(Geradores.gerarObservacoes(this.dados.observacoes)),
+      ...Utils.dividirEmBlocosQuebraveis(this.dados.observacoes, {
+        paragrafosPorBloco: 3,
+        className: "allow-break",
+        titulo: "Observações:"
+      }),
     ].filter(Boolean);
 
     function criarBloco(htmlString) {
@@ -603,11 +641,39 @@ const PropostaApp = {
       return wrapper;
     }
 
+    function quebrarObservacoesEmBlocos(observacoesHtml) {
+      const tempDiv = document.createElement("div");
+      tempDiv.innerHTML = observacoesHtml;
+
+      const fragmentos = [];
+
+      tempDiv.childNodes.forEach(node => {
+        if (
+          node.nodeType === Node.ELEMENT_NODE ||
+          (node.nodeType === Node.TEXT_NODE && node.textContent.trim())
+        ) {
+          const wrapper = document.createElement("div");
+          wrapper.classList.add("observacoes", "allow-break");
+          wrapper.innerHTML = `
+            <h3>Observações:</h3>
+            <div class="observacoes-conteudo">
+              ${node.outerHTML || node.textContent}
+            </div>`;
+          fragmentos.push(wrapper);
+        }
+      });
+
+      console.log("Blocos de observações gerados:", fragmentos.length);
+
+      return fragmentos;
+    }
+
+
     await Paginador.adicionarConteudoPaginado(
       blocosHTML,
       pag => Geradores.gerarCabecalho(this.dados, this.config, pag),
       (pag, tot) => Geradores.gerarFooter(this.dados.licenca, pag, tot),
-      this.dados.licenca,
+      this.dados,
       this.config
     );
 

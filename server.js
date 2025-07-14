@@ -29,7 +29,7 @@ app.post('/gerar-pdf', async (req, res) => {
     const browser = await puppeteer.launch(browserOptions);
     const page = await browser.newPage();
 
-    await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 20000 });
+    await page.goto(url, { waitUntil: 'networkidle0', timeout: 30000 });
     await page.emulateMediaType('screen');
 
     await page.waitForFunction('window.readyForPDF === true', { timeout: 15000 });

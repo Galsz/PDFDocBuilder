@@ -13,7 +13,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: anchor-center;
-  font-family: "Segoe UI", sans-serif;
+  font-family: "Liberation Sans", sans-serif;
   background-color: rgb(43 42 42);
 }
 
@@ -109,6 +109,7 @@ header {
 
 .contrato-page {
   width: 794px;
+  min-height: 1122px;
   background-color: white;
   box-sizing: border-box;
   page-break-after: always;
@@ -861,8 +862,8 @@ header {
   margin-top: 5px;
 }
 
-.condicoes-pagamento,
-.observacoes {
+.condicoes-pagamento {
+  page-break-inside: auto;
   margin-top: 2rem;
   font-family: Arial, sans-serif;
   font-size: 9pt;
@@ -870,6 +871,30 @@ header {
   line-height: 1.3;
   white-space: pre-line;
   text-align: justify;
+}
+
+.observacoes {
+  page-break-inside: auto;
+  margin-top: 2rem;
+  font-family: Arial, sans-serif;
+  font-size: 9pt;
+  color: #333;
+  line-height: 1.3;
+  white-space: pre-line;
+  text-align: justify;
+}
+
+.observacoes-conteudo {
+  page-break-inside: auto;
+  font-family: Arial, sans-serif;
+  font-size: 9pt;
+  color: #333;
+  line-height: 1.3;
+  text-align: justify;
+}
+
+.observacoes-conteudo p {
+  margin: 0;
 }
 
 .assinatura-container {
@@ -905,7 +930,6 @@ header {
 .promissoria-container p {
   margin: 10px 2px;
 }
-
 
 .promissoria-left {
   background-color: #be9a2305;
