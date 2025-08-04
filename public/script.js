@@ -73,6 +73,11 @@ const Utils = {
     }
 
     return blocos;
+  },
+  getDataFormatada() {
+    const dataAtual = new Date();
+    const dataFormatada = dataAtual.toLocaleDateString(); 
+    return dataFormatada;
   }
 };
 
@@ -358,8 +363,6 @@ const Geradores = {
     `;
   },
   gerarTotais(dados, config = {}) {
-
-    console.log(dados.logoTempera)
     return `
         <div id="totais" class="totais-container">
           <div class="logo-tempera">
@@ -380,12 +383,15 @@ const Geradores = {
   },
 
   gerarCondicoesPagamento(condicoes) {
+    if (!condicoes || condicoes.trim() === "") return "";
+
     return `
       <div id="condicoes" class="condicoes-pagamento">
           <p><h3>Condições de pagamento: </h3>${condicoes}</p>
       </div>
     `;
   },
+
   gerarAssinatura() {
     return `
       <div id="assinatura" class="assinatura-container">
@@ -431,7 +437,7 @@ const Geradores = {
 
           <div style="display: flex;justify-content: space-between;margin-bottom: 20px;font-size: 9pt;">
             <div><strong>Nº:</strong> <span style="border: 1px solid black;border-radius: 8px;padding: 5px 18px;">${dados.promissoria.documento}</span></div>
-            <div><strong>Vencimento,</strong> 10/05/2025</div>
+            <div>${dados.promissoria.vencimento}</div>
             <div><strong>R$</strong> <span style="border: 1px solid black;border-radius: 8px;padding: 5px 18px;">${Utils.formatarValor(dados.promissoria.valor)}</span></div>
           </div>
 
@@ -455,14 +461,14 @@ const Geradores = {
           </div>
          
 
-          <p>Pagável em Sorocaba</p>
+          <p>Pagável em ${dados.licenca.cidade}</p>
           <div style="margin-top: 20px">
             <p>EMITENTE: ${dados.cliente.contato}</p>
             <p>CPF/CNPJ: ${dados.cliente.cpfcnpj}</p>
             <p>Endereço: ${dados.cliente.endereco}</p>
           </div>
           <div style="display: flex; justify-content: space-between; margin-top: 20px;">
-            <div>Sorocaba, 10/05/205</div>
+            <div>${dados.licenca.cidade}, ${Utils.getDataFormatada()}</div>
             <div style="text-align: center;">
               _______________________________________________________<br/>
               Assinatura
@@ -612,8 +618,6 @@ const PropostaApp = {
 
     this.config = config ?? {};
 
-    console.log(this.config)
-
     this.preencherCapa();
     this.preencherRodape();
 
@@ -671,8 +675,6 @@ const PropostaApp = {
           fragmentos.push(wrapper);
         }
       });
-
-      console.log("Blocos de observações gerados:", fragmentos.length);
 
       return fragmentos;
     }
