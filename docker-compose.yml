@@ -7,3 +7,36 @@ services:
     ports:
       - "8092:8095"
     restart: unless-stopped
+    # Limites otimizados para Playwright (melhor que Puppeteer)
+    deploy:
+      resources:
+        limits:
+          memory: 1G        # Playwright é mais eficiente que Puppeteer
+          cpus: '1.0'       
+        reservations:
+          memory: 512M      
+          cpus: '0.5'       
+    environment:
+      - NODE_ENV=production
+      - NODE_OPTIONS=--max-old-space-size=512
+      - MAX_CONCURRENT_BROWSERS=2    # Máximo 2 browsers simultâneos
+      - PLAYWRIGHT_BROWSERS_PATH=/home/appuser/.cache/ms-playwright
+      # Configurações anti-zombie processes
+      - PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+    # Configuração de health check
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8095/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s   # Playwright demora mais para inicializar
+    # Logs otimizados
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    # Configurações de segurança
+    security_opt:
+      - seccomp:unconfined  # Necessário para Chromium
+    shm_size: '2gb'         # CRÍTICO: Evita problemas de memória compartilhada

@@ -1,67 +1,124 @@
+/**
+ * PDF Generator Service - Servidor Principal
+ * Arquitetura modular com Playwright
+ */
+
+// Carrega variáveis de ambiente primeiro
+require('dotenv').config();
+
 const express = require("express");
-const puppeteer = require("puppeteer-core");
 const path = require("path");
 
-const PORT = 8095;
-const HOST = "0.0.0.0";
-const app = express();
+// Importações dos módulos
+const config = require("./src/config/app");
+const Logger = require("./src/utils/logger");
+const BrowserPool = require("./src/services/browserPool");
+const PDFController = require("./src/controllers/pdfController");
+const RateLimiter = require("./src/middleware/rateLimiter");
 
-app.use(express.json({ limit: "10mb" }));
-app.use("/relatorio", express.static(path.join(__dirname, "public")));
-
-app.post("/gerar-pdf", async (req, res) => {
-  const { licencaId, orcamentoId, config } = req.body;
-
-  if (!licencaId || !orcamentoId || !config) {
-    return res.status(400).json({ error: "Parâmetros ausentes." });
+class PDFServer {
+  constructor() {
+    this.app = express();
+    this.browserPool = new BrowserPool();
+    this.pdfController = new PDFController(this.browserPool);
+    this.rateLimiter = new RateLimiter();
+    
+    this.setupMiddleware();
+    this.setupRoutes();
+    this.setupGracefulShutdown();
+    this.startMonitoring();
   }
 
-  const browserOptions = {
-    headless: true,
-    executablePath:
-      process.env.PUPPETEER_EXECUTABLE_PATH || "/usr/bin/chromium",
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
-  };
+  setupMiddleware() {
+    // Middleware básico
+    this.app.use(express.json({ limit: "10mb" }));
+    this.app.use("/relatorio", express.static(path.join(__dirname, "public")));
+    
+    // Rate limiting
+    this.app.use("/gerar-pdf", this.rateLimiter.middleware());
+    
+    // Disponibiliza browserPool para controllers
+    this.app.locals.browserPool = this.browserPool;
+    
+    Logger.info("Middleware configurado");
+  }
 
-  let browser;
-  try {
-    browser = await puppeteer.launch(browserOptions);
-    const page = await browser.newPage();
+  setupRoutes() {
+    // Health check
+    this.app.get("/health", (req, res) => this.pdfController.healthCheck(req, res));
+    
+    // Geração de PDF
+    this.app.post("/gerar-pdf", (req, res) => this.pdfController.generatePDF(req, res));
+    
+    Logger.info("Rotas configuradas");
+  }
 
-    const cfg = encodeURIComponent(JSON.stringify(config));
-    const url = `http://127.0.0.1:${PORT}/relatorio/index.html?licencaId=${licencaId}&orcamentoId=${orcamentoId}&config=${cfg}`;
-
-    await page.goto(url, { waitUntil: "networkidle0", timeout: 30000 });
-    await page.emulateMediaType("screen");
-    await page.waitForFunction("window.readyForPDF === true", {
-      timeout: 15000,
-    });
-
-    const pdfBuffer = await page.pdf({
-      format: "A4",
-      printBackground: true,
-      scale: 1,
-    });
-
-    res.set({
-      "Content-Type": "application/pdf",
-      "Content-Disposition": `attachment; filename="ORCAMENTO-${orcamentoId}.pdf"`,
-    });
-    res.send(pdfBuffer);
-  } catch (err) {
-    console.error("Erro ao gerar PDF:", err);
-    res.status(500).json({ error: "Erro ao gerar o PDF." });
-  } finally {
-    if (browser) {
+  setupGracefulShutdown() {
+    const shutdown = async (signal) => {
+      Logger.info(`Recebido ${signal}, iniciando graceful shutdown...`);
+      
       try {
-        await browser.close();
+        await this.browserPool.closeAll();
+        Logger.info("Browsers fechados com sucesso");
+        process.exit(0);
       } catch (err) {
-        console.warn("Erro ao fechar o navegador:", err);
+        Logger.error("Erro durante shutdown:", err);
+        process.exit(1);
       }
-    }
-  }
-});
+    };
 
-app.listen(PORT, HOST, () => {
-  console.log(`PDF service rodando em http://localhost:${PORT}`);
-});
+    process.on('SIGTERM', () => shutdown('SIGTERM'));
+    process.on('SIGINT', () => shutdown('SIGINT'));
+    
+    Logger.info("Graceful shutdown configurado");
+  }
+
+  startMonitoring() {
+    // Monitoramento de memória
+    setInterval(() => {
+      const memUsage = process.memoryUsage();
+      const stats = this.browserPool.getStats();
+      
+      Logger.info(`MEMORY - RSS: ${Math.round(memUsage.rss / 1024 / 1024)}MB, Heap: ${Math.round(memUsage.heapUsed / 1024 / 1024)}MB`, {
+        browsers: stats.activeBrowsers,
+        pages: stats.totalPages,
+        queue: stats.queueLength
+      });
+    }, config.logging.memoryLogInterval);
+
+    // Limpeza periódica
+    setInterval(async () => {
+      try {
+        await this.browserPool.cleanupIdleBrowsers();
+      } catch (err) {
+        Logger.error("Erro na limpeza periódica:", err);
+      }
+    }, config.logging.cleanupInterval);
+
+    // Inicia limpeza do rate limiter
+    this.rateLimiter.startCleanup();
+    
+    Logger.info("Monitoramento iniciado");
+  }
+
+  start() {
+    this.app.listen(config.server.port, config.server.host, () => {
+      Logger.info(`🚀 PDF Generator Service iniciado`);
+      Logger.info(`Engine: Playwright + Chromium`);
+      Logger.info(`Servidor: http://${config.server.host}:${config.server.port}`);
+      Logger.info(`Ambiente: ${config.server.environment}`);
+      Logger.info(`Health check: http://${config.server.host}:${config.server.port}/health`);
+      Logger.info('Configurações:', {
+        maxBrowsers: config.browser.maxConcurrentBrowsers,
+        maxPagesPerBrowser: config.browser.maxPagesPerBrowser,
+        rateLimit: config.rateLimit.maxRequestsPerMinute
+      });
+    });
+  }
+}
+
+// Inicia o servidor
+const server = new PDFServer();
+server.start();
+
+module.exports = PDFServer;

@@ -1,8 +1,47 @@
 
-# 📄 PDF Generator Service
+# 📄 PDF Generator Service - Playwright Edition
 
-Microserviço em **Node.js** que gera PDFs (propostas / orçamentos, contratos, listas de materiais…) a partir de páginas HTML totalmente dinâmicas.  
-A renderização é feita em modo *headless* via **Puppeteer + Chromium**; assim o resultado final no PDF é exatamente igual ao exibido no browser.
+## 🚀 **Solução Otimizada para EC2 com Múltiplos Usuários**
+
+Microserviço em **Node.js + Playwright** que gera PDFs (propostas / orçamentos, contratos, listas de materiais…) a partir de páginas HTML totalmente dinâmicas.  
+A renderização é feita em modo *headless* via **Playwright + Chromium**; assim o resultado final no PDF é exatamente igual ao exibido no browser.
+
+**✅ OTIMIZADO para EC2 com múltiplos usuários simultâneos**  
+**✅ Pool de browsers inteligente para reduzir consumo de memória**  
+**✅ Prevenção de processos zumbi e vazamentos de memória**  
+**✅ Suporte completo a CSS moderno e SVGs**
+
+## 🎯 **Por que Playwright?**
+
+| Característica | Playwright | Puppeteer | wkhtmltopdf |
+|---------------|------------|-----------|-------------|
+| **CSS Moderno** | ✅ Excelente | ✅ Excelente | ❌ Limitado |
+| **SVG Support** | ✅ Completo | ✅ Completo | ⚠️ Básico |
+| **Uso de Memória** | ✅ Otimizado | ❌ Alto | ✅ Baixo |
+| **Processos Zumbi** | ✅ Prevenido | ⚠️ Possível | ✅ Raro |
+| **Performance** | ✅ Rápido | ⚠️ Médio | ✅ Muito Rápido |
+| **Estabilidade** | ✅ Excelente | ⚠️ Boa | ✅ Boa |
+
+## 📊 **Otimizações Implementadas**
+
+### **1. Pool de Browsers Inteligente**
+- Máximo de 2 browsers simultâneos (configurável)
+- Até 5 páginas por browser para reutilização
+- Cleanup automático de browsers ociosos
+
+### **2. Prevenção de Vazamentos**
+- Graceful shutdown com fechamento adequado
+- Limpeza periódica de recursos não utilizados
+- Monitoramento contínuo de memória
+
+### **3. Configurações Anti-Zombie**
+- `--single-process` para evitar múltiplos processos
+- `--no-zygote` para prevenção de processos zumbi
+- Timeout e cleanup adequados
+
+### **4. Rate Limiting Inteligente**
+- Máximo 15 PDFs por minuto por IP
+- Fila de requisições para controle de concorrência
 
 
 

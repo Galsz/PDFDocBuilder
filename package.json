@@ -1,17 +1,26 @@
 {
-  "name": "relorc",
-  "version": "1.0.0",
+  "name": "pdf-generator-service",
+  "version": "2.0.0",
+  "description": "Microserviço para geração de PDFs com Playwright - Arquitetura modular",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "NODE_ENV=development node server.js",
+    "prod": "NODE_ENV=production node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "pdf",
+    "generator",
+    "playwright",
+    "microservice",
+    "nodejs"
+  ],
+  "author": "Geovane Silva",
   "license": "ISC",
-  "description": "",
   "dependencies": {
+    "dotenv": "^17.2.1",
     "express": "^5.1.0",
-    "puppeteer": "^24.15.0"
+    "playwright": "^1.55.0"
   }
 }
