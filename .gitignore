@@ -50,6 +50,4 @@ server.js.backup
 server-old.js
 
 # Development files
-/public/assets/
-!public/assets/images/
-!public/assets/fonts/
+
