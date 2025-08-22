@@ -1,10 +1,15 @@
 FROM node:20-slim
 
-# Otimizações de memória para Node.js com Playwright
-ENV NODE_OPTIONS="--max-old-space-size=512 --gc-interval=100"
+# Ambiente
 ENV NODE_ENV=production
+ENV NODE_OPTIONS="--max-old-space-size=512"
 
-# Playwright: Instala dependências para Chromium (mais otimizado que Puppeteer)
+# Onde o Playwright guardará os browsers (baked na imagem)
+ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
+# Porta padrão do app (combine com seu compose)
+ENV PORT=8095
+
+# Dependências de sistema necessárias (inclui curl pro healthcheck)
 RUN apt-get update && apt-get install -y \
     curl \
     wget \
@@ -26,35 +31,34 @@ RUN apt-get update && apt-get install -y \
     libasound2 \
     --no-install-recommends && \
     apt-get clean && rm -rf /var/lib/apt/lists/* && \
-    # Remove arquivos desnecessários para economizar espaço
     rm -rf /usr/share/doc/* /usr/share/man/* /var/cache/debconf/*
 
 WORKDIR /app
 
-# Copia e instala dependências primeiro (melhor cache de layers)
+# Instala dependências do Node primeiro (melhor cache)
 COPY package*.json ./
 RUN npm ci --only=production && npm cache clean --force
 
-# Instala browsers do Playwright (só Chromium para economizar espaço)
+# Instala somente o Chromium do Playwright e suas deps de SO
+# (USANDO a versão do Playwright do seu package.json)
 RUN npx playwright install chromium && \
     npx playwright install-deps chromium
 
-# Copia código da aplicação
+# Copia o código da aplicação
 COPY . .
 
-# Cria usuário não-root para segurança
+# Cria usuário não-root e dá acesso ao app e aos browsers
 RUN groupadd -r appuser && useradd -r -g appuser appuser && \
-    chown -R appuser:appuser /app
+    chown -R appuser:appuser /app /ms-playwright
 USER appuser
 
-# Variáveis de ambiente para Playwright
-ENV PLAYWRIGHT_BROWSERS_PATH=/home/appuser/.cache/ms-playwright
+# Em runtime não baixa nada (já está bakeado)
 ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 
 EXPOSE 8095
 
-# Healthcheck para monitoramento
+# Healthcheck interno
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-    CMD curl -f http://localhost:8095/health || exit 1
+  CMD curl -f http://localhost:8095/health || exit 1
 
 CMD ["npm", "start"]

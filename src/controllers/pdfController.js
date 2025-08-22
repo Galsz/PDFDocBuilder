@@ -11,18 +11,19 @@ class PDFController {
   }
 
   async generatePDF(req, res) {
-    const { licencaId, orcamentoId, config } = req.body;
+    const { licencaId, orcamentoId, config, dadosHash } = req.body;
 
     // Validação de parâmetros
     if (!licencaId || !orcamentoId || !config) {
       return res.status(400).json({ 
         error: "Parâmetros ausentes.",
-        required: ["licencaId", "orcamentoId", "config"]
+        required: ["licencaId", "orcamentoId", "config"],
+        optional: ["dadosHash"]
       });
     }
 
     try {
-      const result = await this.pdfService.generatePDF(licencaId, orcamentoId, config);
+      const result = await this.pdfService.generatePDF(licencaId, orcamentoId, config, dadosHash);
 
       res.set({
         "Content-Type": "application/pdf",

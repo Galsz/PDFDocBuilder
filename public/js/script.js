@@ -88,7 +88,7 @@ const Geradores = {
       <header id="head">
         <div id="details">
           <div class="wvicon">
-            <img src="./assets/images/logowhite_evo.svg" />
+            <img style="z-index: 10;"src="./assets/images/logowhite_evo.svg" />
           </div>
           <div class="detailheader" style="background-color: ${dados.cores.corSecundaria};"></div>
           <div class="detailheaderblue" style="background-color: ${dados.cores.corPrimaria};"></div>
@@ -113,29 +113,22 @@ const Geradores = {
     return `
       <footer class="footer">
         <div class="footer-image">
-          <svg xmlns="http://www.w3.org/2000/svg" width="794" height="78" viewBox="0 0 1637 158" fill="none">
-              <g clip-path="url(#clip0_44_103)">
-                  <line x1="100.999" y1="13.2461" x2="1229" y2="13.2461" stroke="#BB961E" stroke-width="5" data-cor="secundaria"/>
-                  <path
-                      d="M1221.68 12.4055C1224.76 4.90059 1232.07 0 1240.18 0H1646C1657.05 0 1666 8.95431 1666 20V111C1666 122.046 1657.05 131 1646 131H1202.83C1188.6 131 1178.92 116.566 1184.33 103.406L1221.68 12.4055Z"
-                      data-cor="primaria" fill="#004080" />
-                  <path
-                      d="M1221.68 12.4055C1224.76 4.90059 1232.07 0 1240.18 0H1646C1657.05 0 1666 8.95431 1666 20V111C1666 122.046 1657.05 131 1646 131H1202.83C1188.6 131 1178.92 116.566 1184.33 103.406L1221.68 12.4055Z"
-                      data-cor="primaria" fill="#004080" />
-                  <line x1="103.324" y1="12.9216" x2="57.3239" y2="128.922" stroke="#BB961E" stroke-width="5" data-cor="secundaria"/>
-                  <path
-                      d="M101.215 551.462C96.5717 547.584 93.9327 541.814 94.037 535.765L100.651 151.997C100.841 140.953 109.949 132.154 120.993 132.345L143.766 132.737C154.81 132.927 163.609 142.035 163.418 153.079L156.488 555.206C156.198 572.009 136.571 580.984 123.672 570.213L101.215 551.462Z"
-                      data-cor="secundaria" fill="#BB961E" />
-                  <path
-                      d="M12.9924 544.703C5.64594 541.446 0.962086 534.109 1.10056 526.074L7.65114 145.997C7.84148 134.953 16.9488 126.154 27.9928 126.345L107.67 127.718C118.715 127.908 127.513 137.016 127.323 148.06L120.192 561.827C119.945 576.142 105.178 585.568 92.0894 579.767L12.9924 544.703Z"
-                      data-cor="primaria" fill="#004080" />
-              </g>
-              <defs>
-                  <clipPath id="clip0_44_103">
-                      <rect width="1637" height="158" fill="white" />
-                  </clipPath>
-              </defs>
-          </svg>
+      <svg xmlns="http://www.w3.org/2000/svg" width="794" height="78" viewBox="0 0 1637 158" fill="none" style="shape-rendering:geometricPrecision">
+        <line x1="100.999" y1="13.2461" x2="1229" y2="13.2461" stroke="#BB961E" stroke-width="3" data-cor="secundaria" vector-effect="non-scaling-stroke" />
+        <path
+          d="M1221.68 12.4055C1224.76 4.90059 1232.07 0 1240.18 0H1646C1657.05 0 1666 8.95431 1666 20V111C1666 122.046 1657.05 131 1646 131H1202.83C1188.6 131 1178.92 116.566 1184.33 103.406L1221.68 12.4055Z"
+          data-cor="primaria" fill="#004080" />
+        <path
+          d="M1221.68 12.4055C1224.76 4.90059 1232.07 0 1240.18 0H1646C1657.05 0 1666 8.95431 1666 20V111C1666 122.046 1657.05 131 1646 131H1202.83C1188.6 131 1178.92 116.566 1184.33 103.406L1221.68 12.4055Z"
+          data-cor="primaria" fill="#004080" />
+        <line x1="103.324" y1="12.9216" x2="57.3239" y2="128.922" stroke="#BB961E" stroke-width="3" data-cor="secundaria" vector-effect="non-scaling-stroke" />
+        <path
+          d="M101.215 551.462C96.5717 547.584 93.9327 541.814 94.037 535.765L100.651 151.997C100.841 140.953 109.949 132.154 120.993 132.345L143.766 132.737C154.81 132.927 163.609 142.035 163.418 153.079L156.488 555.206C156.198 572.009 136.571 580.984 123.672 570.213L101.215 551.462Z"
+          data-cor="secundaria" fill="#BB961E" />
+        <path
+          d="M12.9924 544.703C5.64594 541.446 0.962086 534.109 1.10056 526.074L7.65114 145.997C7.84148 134.953 16.9488 126.154 27.9928 126.345L107.67 127.718C118.715 127.908 127.513 137.016 127.323 148.06L120.192 561.827C119.945 576.142 105.178 585.568 92.0894 579.767L12.9924 544.703Z"
+          data-cor="primaria" fill="#004080" />
+      </svg>
         </div>
         <div class="footer-page-number" >
           <span>${pagina} / ${totalPaginas}</span>
@@ -765,24 +758,26 @@ const PropostaApp = {
       el.style.color = config.corSecundaria;
     });
     document.querySelectorAll(".borda-cor-primaria").forEach((el) => {
-      el.style.outlineColor = config.corPrimaria;
+      el.style.borderColor = config.corPrimaria;
+      el.style.backgroundColor = config.corPrimaria;
     });
     document.querySelectorAll(".borda-cor-secundaria").forEach((el) => {
-      el.style.outlineColor = config.corSecundaria;
+      el.style.borderColor = config.corSecundaria;
+      el.style.backgroundColor = config.corSecundaria;
     });
     document.querySelectorAll('[data-cor="primaria"]').forEach((el) => {
-      if (el.hasAttribute("fill")) {
+      if (el.hasAttribute("fill") || el.tagName.toLowerCase() === 'path' || el.tagName.toLowerCase() === 'rect') {
         el.setAttribute("fill", config.corPrimaria);
       }
-      if (el.hasAttribute("stroke")) {
+      if (el.hasAttribute("stroke") || el.tagName.toLowerCase() === 'line' || el.tagName.toLowerCase() === 'polyline' || el.tagName.toLowerCase() === 'path') {
         el.setAttribute("stroke", config.corPrimaria);
       }
     });
     document.querySelectorAll('[data-cor="secundaria"]').forEach((el) => {
-      if (el.hasAttribute("fill")) {
+      if (el.hasAttribute("fill") || el.tagName.toLowerCase() === 'path' || el.tagName.toLowerCase() === 'rect') {
         el.setAttribute("fill", config.corSecundaria);
       }
-      if (el.hasAttribute("stroke")) {
+      if (el.hasAttribute("stroke") || el.tagName.toLowerCase() === 'line' || el.tagName.toLowerCase() === 'polyline' || el.tagName.toLowerCase() === 'path') {
         el.setAttribute("stroke", config.corSecundaria);
       }
     });

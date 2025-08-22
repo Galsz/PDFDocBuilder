@@ -12,7 +12,7 @@ body {
   padding: 0;
   display: flex;
   flex-direction: column;
-  align-items: anchor-center;
+  align-items: center;
   font-family: "Liberation Sans", sans-serif;
   background-color: rgb(43 42 42);
 }
@@ -104,7 +104,7 @@ header {
 }
 
 .borda-cor-secundaria {
-  offset: 1px solid #bb961e;
+  border: 1px solid #bb961e;
 }
 
 .contrato-page {
@@ -178,7 +178,8 @@ header {
   background-position: center top;
   background-size: cover;
   opacity: 0.1;
-  z-index: -9999;
+  z-index: 0;
+  pointer-events: none;
 }
 
 .page-relatorio .content,
@@ -200,7 +201,15 @@ header {
   body {
     margin: 0;
     padding: 0;
-    background: white;
+  background: white;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  }
+
+  /* Evita que linhas SVG sumam como "hairlines" na impressão */
+  .page-relatorio svg [stroke] {
+    vector-effect: non-scaling-stroke;
+    shape-rendering: geometricPrecision;
   }
 
   .page-relatorio {
@@ -296,8 +305,10 @@ header {
   right: 0;
   top: 249px;
   width: 387px;
-  outline: 1px #bb961e solid;
-  outline-offset: -0.5px;
+  height: 1px;
+  background-color: #bb961e;
+  border: 1px solid #bb961e;
+  z-index: 8;
 }
 
 .middle-line2 {
@@ -305,9 +316,11 @@ header {
   right: 370px;
   top: 280px;
   width: 70px;
-  outline: 1px #bb961e solid;
-  outline-offset: -0.5px;
+  height: 1px;
+  background-color: #bb961e;
+  border: 1px solid #bb961e;
   transform: rotate(120deg);
+  z-index: 8;
 }
 
 .cards-container {
@@ -321,7 +334,7 @@ header {
 .card-left,
 .card-middle,
 .card-right {
-  background-image: url("./public/12.png");
+  background-image: url("../assets/images/building.png");
   background-repeat: no-repeat;
   background-size: 794px auto;
   background-position-y: center;
@@ -367,6 +380,7 @@ header {
   height: 48%;
   transform: skewX(-20deg);
   border-radius: 10px;
+  z-index: 8;
 }
 
 .detail2 {
@@ -379,6 +393,7 @@ header {
   height: 20%;
   transform: skewX(-20deg);
   border-radius: 10px;
+  z-index: 8;
 }
 
 .detail3 {
@@ -391,6 +406,7 @@ header {
   height: 10%;
   transform: skewX(-20deg);
   border-radius: 10px;
+  z-index: 8;
 }
 
 .detail4 {
@@ -403,6 +419,7 @@ header {
   height: 10%;
   transform: skewX(-20deg);
   border-radius: 10px;
+  z-index: 8;
 }
 
 .bottom-line1 {
@@ -410,8 +427,10 @@ header {
   left: 0;
   bottom: 80px;
   width: 90px;
-  outline: 1px #bb961e solid;
-  outline-offset: -0.5px;
+  height: 1px;
+  background-color: #bb961e;
+  border: 1px solid #bb961e;
+  z-index: 8;
 }
 
 .bottom-line2 {
@@ -419,9 +438,11 @@ header {
   left: 15px;
   bottom: 190px;
   width: 235px;
-  outline: 1px #bb961e solid;
-  outline-offset: -0.5px;
+  height: 1px;
+  background-color: #bb961e;
+  border: 1px solid #bb961e;
   transform: rotate(111deg);
+  z-index: 8;
 }
 
 .bottom-line3 {
@@ -429,9 +450,11 @@ header {
   left: 50px;
   bottom: 105px;
   width: 223px;
-  outline: 1px #bb961e solid;
-  outline-offset: -0.5px;
+  height: 1px;
+  background-color: #bb961e;
+  border: 1px solid #bb961e;
   transform: rotate(111deg);
+  z-index: 8;
 }
 
 .bottom-line4 {
@@ -439,17 +462,21 @@ header {
   right: 0;
   bottom: 209px;
   width: 592px;
-  outline: 1px #bb961e solid;
-  outline-offset: -0.5px;
+  height: 1px;
+  background-color: #bb961e;
+  border: 1px solid #bb961e;
+  z-index: 0;
 }
 
 .bottom-line5 {
   position: absolute;
   right: 286px;
   bottom: 25px;
+  width: 1px;
   height: 128px;
-  outline: 1px #bb961e solid;
-  outline-offset: -0.5px;
+  background-color: #bb961e;
+  border: 1px solid #bb961e;
+  z-index: 8;
 }
 
 .icon-capa {
@@ -521,7 +548,7 @@ header {
   height: 10%;
   transform: skewX(-20deg);
   border-radius: 10px;
-  z-index: -2;
+  z-index: 1;
 }
 
 .detailheaderblue {
@@ -534,7 +561,7 @@ header {
   height: 18%;
   transform: skewX(-20deg);
   border-radius: 10px;
-  z-index: -1;
+  z-index: 2;
 }
 
 .dados-cliente {
@@ -845,10 +872,10 @@ header {
 .totais-valores {
   min-width: 30%;
   text-align: right;
+}
 
-  p {
-    margin: 1em;
-  }
+.totais-valores p {
+  margin: 1em;
 }
 
 .logo-tempera {

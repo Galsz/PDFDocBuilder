@@ -101,7 +101,12 @@ class PDFServer {
     Logger.info("Monitoramento iniciado");
   }
 
-  start() {
+  async start() {
+    // Pre-warm de browsers para evitar cold start, se habilitado
+    if (typeof this.browserPool.prewarmIfEnabled === 'function') {
+      await this.browserPool.prewarmIfEnabled();
+    }
+    
     this.app.listen(config.server.port, config.server.host, () => {
       Logger.info(`🚀 PDF Generator Service iniciado`);
       Logger.info(`Engine: Playwright + Chromium`);
@@ -119,6 +124,9 @@ class PDFServer {
 
 // Inicia o servidor
 const server = new PDFServer();
-server.start();
+server.start().catch(err => {
+  Logger.error('Falha ao iniciar servidor:', err);
+  process.exit(1);
+});
 
 module.exports = PDFServer;

@@ -55,7 +55,8 @@ Content-Type: application/json
     "imprimirVendaItens": boolean,
     "imprimirTimbre": boolean,
     "imprimirContrato": boolean
-  }
+  },
+  "dadosHash": "string (optional)"
 }
 ```
 
@@ -97,6 +98,16 @@ Binary PDF data
   "details": "Error message (only in development)"
 }
 ```
+
+## 🧠 Cache
+
+Para evitar gerar o mesmo PDF repetidas vezes, o serviço mantém um cache em memória por um período (TTL). A chave do cache é composta por:
+- `licencaId`
+- `orcamentoId`
+- um hash do objeto `config`
+- `dadosHash` (quando informado)
+
+Assim, qualquer alteração nas configurações ou nos dados de origem invalida automaticamente o cache. Você pode fornecer o `dadosHash` baseado no conteúdo dos dados da proposta (ex.: hash SHA-256 do JSON) para garantir que mudanças sejam detectadas.
 
 ## 🔧 **Configuration**
 
