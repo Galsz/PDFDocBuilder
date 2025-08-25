@@ -10,6 +10,8 @@ const config = require('../config/app');
 class MemoryCache {
   constructor() {
     this.cache = new Map();
+  // Índice secundário por chave primária (licencaId:orcamentoId)
+  this.primaryIndex = new Map();
     this.stats = {
       hits: 0,
       misses: 0,
@@ -50,7 +52,9 @@ class MemoryCache {
 
     // Verifica se não expirou
     if (Date.now() > cached.expires) {
-      this.cache.delete(key);
+  this.cache.delete(key);
+  // Remove do índice primário se apontar para esta chave
+  this.removeFromPrimaryIndex(cached.metadata, key);
       this.stats.evictions++;
       return null;
     }
@@ -70,6 +74,22 @@ class MemoryCache {
     // Remove entrada mais antiga se atingiu limite
     if (this.cache.size >= config.cache.maxSize) {
       this.evictOldest();
+    }
+
+    // Garante exclusividade por (licencaId,orcamentoId)
+    if (metadata.licencaId !== undefined && metadata.orcamentoId !== undefined) {
+      const baseKey = `${metadata.licencaId}:${metadata.orcamentoId}`;
+      const prevKey = this.primaryIndex.get(baseKey);
+      if (prevKey && prevKey !== key) {
+        const prevEntry = this.cache.get(prevKey);
+        if (prevEntry) {
+          this.cache.delete(prevKey);
+          this.stats.evictions++;
+          this.stats.totalSize -= prevEntry.size;
+          Logger.debug(`Cache OVERWRITE (primary ${baseKey}): ${prevKey} -> ${key}`);
+        }
+      }
+      this.primaryIndex.set(baseKey, key);
     }
 
     const entry = {
@@ -104,6 +124,7 @@ class MemoryCache {
     if (oldestKey) {
       const entry = this.cache.get(oldestKey);
       this.cache.delete(oldestKey);
+  this.removeFromPrimaryIndex(entry.metadata, oldestKey);
       this.stats.evictions++;
       this.stats.totalSize -= entry.size;
       Logger.debug(`Cache EVICT: ${oldestKey}`);
@@ -118,6 +139,7 @@ class MemoryCache {
     for (const [key, entry] of this.cache.entries()) {
       if (now > entry.expires) {
         this.cache.delete(key);
+  this.removeFromPrimaryIndex(entry.metadata, key);
         this.stats.evictions++;
         this.stats.totalSize -= entry.size;
         cleaned++;
@@ -148,6 +170,7 @@ class MemoryCache {
   // Força limpeza completa
   clear() {
     this.cache.clear();
+  this.primaryIndex.clear();
     this.stats.totalSize = 0;
     Logger.info('Cache completamente limpo');
   }
@@ -160,11 +183,22 @@ class MemoryCache {
     // Verifica expiração
     if (Date.now() > cached.expires) {
       this.cache.delete(key);
+      this.removeFromPrimaryIndex(cached.metadata, key);
       this.stats.evictions++;
       return false;
     }
     
     return true;
+  }
+
+  // Remove índice primário se correspondente à chave fornecida
+  removeFromPrimaryIndex(metadata = {}, key) {
+    if (metadata.licencaId === undefined || metadata.orcamentoId === undefined) return;
+    const baseKey = `${metadata.licencaId}:${metadata.orcamentoId}`;
+    const mapped = this.primaryIndex.get(baseKey);
+    if (mapped === key) {
+      this.primaryIndex.delete(baseKey);
+    }
   }
 }
 

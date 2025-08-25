@@ -79,8 +79,9 @@ module.exports = {
     enabled: process.env.CACHE_ENABLED !== 'false',
     ttl: parseInt(process.env.CACHE_TTL) || 1800, // 30 minutos
     maxSize: parseInt(process.env.CACHE_MAX_SIZE) || 100, // 100 PDFs em memória
-  // Inclui configData e dadosHash para evitar servir PDF desatualizado quando config/dados mudam
-  hashFields: (process.env.CACHE_HASH_FIELDS || 'licencaId,orcamentoId,configData,dadosHash').split(',')
+    // Chave baseada em licencaId, orcamentoId e hash estável de config
+    // Inclua um campo "dataVersion" dentro de config para refletir mudanças de dados
+    hashFields: (process.env.CACHE_HASH_FIELDS || 'licencaId,orcamentoId,configData').split(',')
   },
 
   // Configurações de PDF

@@ -55,8 +55,7 @@ Content-Type: application/json
     "imprimirVendaItens": boolean,
     "imprimirTimbre": boolean,
     "imprimirContrato": boolean
-  },
-  "dadosHash": "string (optional)"
+  }
 }
 ```
 
@@ -104,10 +103,9 @@ Binary PDF data
 Para evitar gerar o mesmo PDF repetidas vezes, o serviço mantém um cache em memória por um período (TTL). A chave do cache é composta por:
 - `licencaId`
 - `orcamentoId`
-- um hash do objeto `config`
-- `dadosHash` (quando informado)
+- um hash estável do objeto `config`
 
-Assim, qualquer alteração nas configurações ou nos dados de origem invalida automaticamente o cache. Você pode fornecer o `dadosHash` baseado no conteúdo dos dados da proposta (ex.: hash SHA-256 do JSON) para garantir que mudanças sejam detectadas.
+Recomendação: inclua `dataVersion` dentro de `config` (ex.: ISO-8601 ou versão numérica). Quando `dataVersion` mudar, o hash de `config` muda e o cache é invalidado automaticamente.
 
 ## 🔧 **Configuration**
 
@@ -118,12 +116,13 @@ Assim, qualquer alteração nas configurações ou nos dados de origem invalida 
 | `PORT` | 8095 | Porta do servidor |
 | `HOST` | 0.0.0.0 | Host do servidor |
 | `NODE_ENV` | development | Ambiente (development/production) |
-| `MAX_CONCURRENT_BROWSERS` | 2 | Máximo de browsers simultâneos |
-| `MAX_PAGES_PER_BROWSER` | 5 | Máximo de páginas por browser |
-| `BROWSER_TIMEOUT` | 30000 | Timeout do browser (ms) |
-| `PAGE_TIMEOUT` | 15000 | Timeout da página (ms) |
+| `MAX_CONCURRENT_BROWSERS` | 4 | Máximo de browsers simultâneos |
+| `MAX_PAGES_PER_BROWSER` | 10 | Máximo de páginas por browser |
+| `BROWSER_TIMEOUT` | 45000 | Timeout do browser (ms) |
+| `PAGE_TIMEOUT` | 20000 | Timeout da página (ms) |
+| `QUEUE_TIMEOUT` | 45000 | Janela de espera da fila (ms) |
 | `RATE_LIMIT_WINDOW` | 60000 | Janela de rate limit (ms) |
-| `MAX_REQUESTS_PER_MINUTE` | 15 | Máximo de requests por minuto |
+| `MAX_REQUESTS_PER_MINUTE` | 300 | Máximo de requests por minuto |
 | `LOG_LEVEL` | info | Nível de log |
 | `MEMORY_LOG_INTERVAL` | 30000 | Intervalo de log de memória (ms) |
 | `CLEANUP_INTERVAL` | 300000 | Intervalo de limpeza (ms) |

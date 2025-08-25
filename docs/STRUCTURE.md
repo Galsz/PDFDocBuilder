@@ -13,7 +13,9 @@ PDFDocBuilder/
 │   │   └── rateLimiter.js            # Rate limiting
 │   ├── 📁 services/                  # Lógica de negócio
 │   │   ├── browserPool.js            # Pool de browsers Playwright
-│   │   └── pdfGenerator.js           # Serviço de geração de PDF
+│   │   ├── pdfGenerator.js           # Serviço de geração de PDF
+│   │   ├── memoryCache.js            # Cache em memória (TTL + LRU simples)
+│   │   └── pagePool.js               # Pool de páginas Playwright
 │   └── 📁 utils/                     # Utilitários
 │       └── logger.js                 # Sistema de logs
 ├── 📁 public/                        # Arquivos estáticos (reorganizados)
@@ -27,8 +29,7 @@ PDFDocBuilder/
 │   │   │   ├── logowv.png
 │   │   │   └── building.png
 │   │   └── 📁 fonts/                 # Fontes (futuro)
-│   ├── index.html                    # Template principal
-│   └── index-inline.html             # Template inline
+│   └── index.html                    # Template principal
 ├── 📁 tests/                         # Testes automatizados
 │   └── basic.test.js                 # Testes básicos
 ├── 📁 docs/                          # Documentação
@@ -91,6 +92,7 @@ PDFDocBuilder/
 - Documentação da API
 - Monitoramento estruturado
 - Graceful shutdown melhorado
+- Cache com chave baseada em `licencaId`,`orcamentoId` e hash de `config` (use `config.dataVersion` para invalidar)
 
 ## 📊 **Comparação: Antes vs Depois**
 
@@ -108,7 +110,7 @@ PDFDocBuilder/
 
 1. **Implementar testes unitários** para cada service
 2. **Adicionar middleware de autenticação** se necessário
-3. **Criar service de cache** para PDFs frequentes
+3. **Aprimorar o service de cache** (deduplicação in-flight, métricas)
 4. **Implementar métricas** (Prometheus/Grafana)
 5. **Adicionar CI/CD pipeline**
 6. **Criar docker-compose para desenvolvimento**

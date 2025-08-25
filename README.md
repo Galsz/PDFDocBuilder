@@ -1,12 +1,12 @@
 
 # 📄 PDF Generator Service - Playwright Edition
 
-## 🚀 **Solução Otimizada para EC2 com Múltiplos Usuários**
+## 🚀 **Solução Otimizada com Múltiplos Usuários**
 
 Microserviço em **Node.js + Playwright** que gera PDFs (propostas / orçamentos, contratos, listas de materiais…) a partir de páginas HTML totalmente dinâmicas.  
 A renderização é feita em modo *headless* via **Playwright + Chromium**; assim o resultado final no PDF é exatamente igual ao exibido no browser.
 
-**✅ OTIMIZADO para EC2 com múltiplos usuários simultâneos**  
+**✅ OTIMIZADO para múltiplos usuários simultâneos**  
 **✅ Pool de browsers inteligente para reduzir consumo de memória**  
 **✅ Prevenção de processos zumbi e vazamentos de memória**  
 **✅ Suporte completo a CSS moderno e SVGs**
@@ -50,7 +50,7 @@ A renderização é feita em modo *headless* via **Playwright + Chromium**; assi
 | Camada | Tecnologias |
 |--------|-------------|
 | Back-end | Node.js · Express |
-| Renderização | Puppeteer (core) · Chromium |
+| Renderização | Playwright · Chromium |
 | Front-end dos PDFs | HTML · CSS (Grid & Flex) · JavaScript |
 | Contêiner | Docker · Docker Compose |
 
@@ -83,20 +83,20 @@ Caso você possua variantes (ex.: `index-inline.html`) ou outros assets, inclua-
 
 ## 🚀 Subindo com Docker Compose
 
-> Pré-requisitos: **Docker** ≥ 20 e **docker-compose** instalados (na sua máquina ou na instância EC2).
+> Pré-requisitos: **Docker** ≥ 20 e **docker-compose** instalados (na sua máquina ou na instância).
 
 ```bash
 git clone https://github.com/Galsz/PDFDocBuilder.git
 cd PDFDocBuilder
 docker-compose up --build -d
-````
+```
 
-O serviço ficará disponível em **[http://localhost:8092](http://localhost:8092)** (ou no IP público da EC2).
+O serviço ficará disponível em http://localhost:8092 (externo no host). Internamente o app escuta em 8095 e o compose faz o mapeamento 8092:8095.
 
 ### Teste rápido
 
 ```bash
-curl -X POST http://localhost:8095/gerar-pdf \
+curl -X POST http://localhost:8092/gerar-pdf \
      -H "Content-Type: application/json" \
      -d '{
            "licencaId": 123,
@@ -128,6 +128,7 @@ POST /gerar-pdf         (Content-Type: application/json)
 | `licencaId`   | int    | ✔           | Identificador da licença (empresa)       |
 | `orcamentoId` | int    | ✔           | Identificador do orçamento/proposta      |
 | `config`      | objeto | ✔           | Opções de renderização (detalhes abaixo) |
+| `dadosHash`   | string | opcional    | Hash dos dados (usado para cache)        |
 
 #### Possíveis chaves em `config`
 
@@ -153,9 +154,43 @@ Essas mesmas configurações são serializadas em **query-string** quando a pág
 2. Envie requisições para:
 
 ```
-http://<IP-da-EC2>:8092/gerar-pdf
+http://<IP>:8092/gerar-pdf
 ```
 
 3. Internamente (entre containers ou serviços no mesmo servidor) use `http://localhost:8092`.
+
+---
+
+## 🧠 Cache
+
+- Cache em memória com TTL padrão de 1800s e tamanho máximo de 100 PDFs.
+- Chave do cache: `licencaId` + `orcamentoId` + hash estável de `config`.
+- Inclua um campo `dataVersion` dentro de `config` (ex.: ISO 8601 ou número de versão). Qualquer mudança nele invalida o cache.
+
+Regra de unicidade:
+- Existe no máximo 1 entrada por par primário (`licencaId`,`orcamentoId`).
+- Se chegar um PDF novo (com `config` diferente, p.ex. `dataVersion` alterado) para o mesmo par, o item antigo é removido e o novo sobrescreve no cache.
+
+Variáveis relevantes (padrões):
+- CACHE_ENABLED=true
+- CACHE_TTL=1800
+- CACHE_MAX_SIZE=100
+- CACHE_HASH_FIELDS="licencaId,orcamentoId,configData,dadosHash"
+
+---
+
+## ⚙️ Defaults importantes
+
+- MAX_CONCURRENT_BROWSERS=4, MAX_PAGES_PER_BROWSER=10
+- BROWSER_TIMEOUT=45000ms, PAGE_TIMEOUT=20000ms, QUEUE_TIMEOUT=45000ms
+- ENABLE_PAGE_POOL=true, MAX_PAGE_POOL=20
+- MAX_REQUESTS_PER_MINUTE=300
+
+---
+
+## 💡 Dicas (Windows/PowerShell)
+
+- Local sem Docker: `npm start` (escuta em 8095)
+- Ajuste envs no PowerShell: `$env:PORT=8095; $env:NODE_ENV="development"; node server.js`
 
 
