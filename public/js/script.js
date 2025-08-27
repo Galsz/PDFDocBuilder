@@ -1,4 +1,3 @@
-
 // =====================
 // FUNÇÕES UTILITÁRIAS
 // =====================
@@ -22,40 +21,39 @@ const Utils = {
     return params.get(parametro);
   },
   formatarTelefone(telefone) {
-    if (!telefone || typeof telefone !== 'string') return telefone;
-    telefone = telefone.replace(/\D/g, ''); 
+    if (!telefone || typeof telefone !== "string") return telefone;
+    telefone = telefone.replace(/\D/g, "");
 
     if (telefone.length === 11) {
-      return telefone.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3');
+      return telefone.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3");
     } else if (telefone.length === 10) {
-      return telefone.replace(/^(\d{2})(\d{4})(\d{4})$/, '($1) $2-$3');
+      return telefone.replace(/^(\d{2})(\d{4})(\d{4})$/, "($1) $2-$3");
     } else {
-      return telefone; 
+      return telefone;
     }
   },
   formatarValor(valor, comSimbolo = true) {
-    if (!valor) return comSimbolo ? 'R$ 0,00' : '0,00';
-    if (typeof valor === 'string') valor = parseFloat(valor.replace(',', '.'));
+    if (!valor) return comSimbolo ? "R$ 0,00" : "0,00";
+    if (typeof valor === "string") valor = parseFloat(valor.replace(",", "."));
 
-    return valor.toLocaleString('pt-BR', {
-      style: comSimbolo ? 'currency' : 'decimal',
-      currency: 'BRL',
+    return valor.toLocaleString("pt-BR", {
+      style: comSimbolo ? "currency" : "decimal",
+      currency: "BRL",
       minimumFractionDigits: 2,
-      maximumFractionDigits: 2
+      maximumFractionDigits: 2,
     });
   },
-  dividirEmBlocosQuebraveis(texto, {
-    paragrafosPorBloco = 5,
-    className = "allow-break",
-    titulo = null
-  } = {}) {
+  dividirEmBlocosQuebraveis(
+    texto,
+    { paragrafosPorBloco = 5, className = "allow-break", titulo = null } = {}
+  ) {
     if (!texto || typeof texto !== "string") return [];
 
     // Divide por linhas
     const linhas = texto
       .split(/\r?\n/)
-      .map(l => l.trim())
-      .filter(l => l.length > 0);
+      .map((l) => l.trim())
+      .filter((l) => l.length > 0);
 
     const blocos = [];
 
@@ -66,14 +64,14 @@ const Utils = {
       wrapper.innerHTML = `
         ${titulo && i === 0 ? `<h3 class="observacoes">${titulo}</h3>` : ""}
         <div class="observacoes-conteudo">
-          ${grupo.map(linha => `<p>${linha}</p>`).join("")}
+          ${grupo.map((linha) => `<p>${linha}</p>`).join("")}
         </div>
       `;
       blocos.push(wrapper);
     }
 
     return blocos;
-  }
+  },
 };
 
 // =====================
@@ -90,20 +88,24 @@ const Geradores = {
           <div class="wvicon">
             <img style="z-index: 10;"src="./assets/images/logowhite_evo.svg" />
           </div>
-          <div class="detailheader" style="background-color: ${dados.cores.corSecundaria};"></div>
-          <div class="detailheaderblue" style="background-color: ${dados.cores.corPrimaria};"></div>
+          <div class="detailheader" style="background-color: ${
+            dados.cores.corSecundaria
+          };"></div>
+          <div class="detailheaderblue" style="background-color: ${
+            dados.cores.corPrimaria
+          };"></div>
         </div>
         ${
           mostrarLogo
             ? `<div style="display: flex; justify-content: space-between;">
                 <div style="padding-top: 54px; padding-left: 50px; font-size: 14px;">
-                  ${mostrarTitulo ? `<h2>Proposta ${dados.id}</h2>` : ''}
+                  ${mostrarTitulo ? `<h2>Proposta ${dados.id}</h2>` : ""}
                 </div>
                 <div style="padding-top: 34px; padding-right: 50px;">
                   <img src="${dados.licenca.logoUrl}" style="height: 100px;" />
                 </div>
               </div>`
-            : ''
+            : ""
         }
       </header>
     `;
@@ -152,23 +154,49 @@ const Geradores = {
 
   gerarDadosCliente(dados) {
     return `
+
+      <div class="cliente-info">
+          <span>
+            <strong>Cliente:</strong> ${dados.cliente.contato}<br />
+          </span>
+          <div style="display: flex; gap: 5px;">
+          <span><strong>Endereço:</strong> ${dados.cliente.endereco}</span>
+            <span><strong>Cidade:</strong> ${dados.cliente.cidade}</span>
+          </div>
+        <div style="display: flex">
+          <span style="min-width: 145px;"><strong>Telefone:</strong> ${
+            dados.cliente.telefone
+          }</span>
+          <span><strong>Email:</strong> ${dados.cliente.email}</span>
+        </div>
+      </div>
+
       <div class="dados-cliente">
         <div class="linha1">
-          <span><strong>Obra:</strong> ${dados.cliente.obra}</span>
+          <span><strong>Obra:</strong> ${dados.cliente.obra.nome}</span>
           <span><strong>Dt.Proposta:</strong> ${dados.data}</span>
         </div>
         <div class="linha2">
-          <span><strong>Contato:</strong> ${dados.cliente.contato}</span>
-          <span><strong>E-mail:</strong> ${dados.cliente.email}</span>
-          <span style="min-width: 165px;"><strong>Telefone:</strong> ${Utils.formatarTelefone(dados.cliente.telefone)}</span>
+          <span><strong>Contato:</strong> ${dados.cliente.obra.responsavel}</span>
+          <span style="min-width: 165px;"><strong>Telefone:</strong> ${Utils.formatarTelefone(
+            dados.cliente.obra.responsavelFone
+          )}</span>
         </div>
         <div class="linha3">
-          <span><strong>Endereço Obra:</strong> ${dados.cliente.enderecoObra}</span>
-          <span style="min-width: 165px;"><strong>Cidade:</strong> ${dados.cliente.cidade}</span>
+          <span><strong>Endereço Obra:</strong> ${
+            dados.cliente.obra.endereco
+          }</span>
+          <span style="min-width: 165px;"><strong>Cidade:</strong> ${
+            dados.cliente.obra.cidade
+          }</span>
         </div>
-        <div class="linha4 destaque" style="background-color: ${dados.cores.corPrimaria};">
+        <div class="linha4 destaque" style="background-color: ${
+          dados.cores.corPrimaria
+        };">
           <span><strong>Vendedor:</strong> ${dados.vendedor.nome}</span>
-          <span><strong>Telefone:</strong> ${Utils.formatarTelefone(dados.vendedor.telefone)}</span>
+          <span><strong>Telefone:</strong> ${Utils.formatarTelefone(
+            dados.vendedor.telefone
+          )}</span>
         </div>
       </div>
     `;
@@ -179,7 +207,9 @@ const Geradores = {
         <div class="projeto-item avoid-break">
           <div class="item-topo">
             <div class="item-imagem">
-              <img src="${p.imagem}" alt="Imagem projeto ${p.ordem}" class="imagem-projeto" />
+              <img src="${p.imagem}" alt="Imagem projeto ${
+      p.ordem
+    }" class="imagem-projeto" />
             </div>
             <div class="item-info">
               <div class="item-info-header">
@@ -196,24 +226,46 @@ const Geradores = {
                     <div class="tabela-item-header">
                       <span class="col-tipo"><strong>Tipo:</strong></span>
                       <span class="col-qtd"><strong>Qtd:</strong></span>
-                      ${config.imprimirMedidas ? `
+                      ${
+                        config.imprimirMedidas
+                          ? `
                         <span class="col-qtd"><strong>M2:</strong></span>
                         <span class="col-l"><strong>L:</strong></span>
-                        <span class="col-h"><strong>H:</strong></span>` : ""}
-                      ${config.imprimirValorUnitario ? `
+                        <span class="col-h"><strong>H:</strong></span>`
+                          : ""
+                      }
+                      ${
+                        config.imprimirValorUnitario
+                          ? `
                         <span class="col-vlr-unt"><strong>Vlr Unt:</strong></span>
-                        <span class="col-vlr-total"><strong>Vlr Total:</strong></span>` : ""}
+                        <span class="col-vlr-total"><strong>Vlr Total:</strong></span>`
+                          : ""
+                      }
                     </div>
                     <div class="tabela-item-dados">
                       <span class="col-tipo">${p.tipo}</span>
                       <span class="col-qtd">${p.qtd}</span>
-                      ${config.imprimirMedidas ? `
+                      ${
+                        config.imprimirMedidas
+                          ? `
                         <span class="col-qtd">${p.m2}</span>
                         <span class="col-l">${p.largura}</span>
-                        <span class="col-h">${p.altura}</span>` : ""}
-                      ${config.imprimirValorUnitario ? `
-                        <span class="col-vlr-unt">${Utils.formatarValor(p.valorUnt, false)}</span>
-                        <span class="col-vlr-total">${Utils.formatarValor(p.valorTotal, false)}</span>` : ""}
+                        <span class="col-h">${p.altura}</span>`
+                          : ""
+                      }
+                      ${
+                        config.imprimirValorUnitario
+                          ? `
+                        <span class="col-vlr-unt">${Utils.formatarValor(
+                          p.valorUnt,
+                          false
+                        )}</span>
+                        <span class="col-vlr-total">${Utils.formatarValor(
+                          p.valorTotal,
+                          false
+                        )}</span>`
+                          : ""
+                      }
                     </div>
                   </div>
                 </div>
@@ -221,10 +273,14 @@ const Geradores = {
             </div>
           </div>
 
-          ${p.observacoes ? `
+          ${
+            p.observacoes
+              ? `
             <div class="item-obs allow-break">
               <p><strong>Observações:</strong> ${p.observacoes}</p>
-            </div>` : ""}
+            </div>`
+              : ""
+          }
         </div>
     `;
   },
@@ -238,20 +294,20 @@ const Geradores = {
         <table class="tabela-variaveis">
           <tbody>
             ${lista
-              .map(v => `
+              .map(
+                (v) => `
                 <tr>
                   <td>${v.nome}</td>
                   <td>${v.valor}</td>
                 </tr>
-              `)
+              `
+              )
               .join("")}
           </tbody>
         </table>
       </div>
     `;
   },
-
-
 
   gerarVendaMateriais(vendas) {
     if (!vendas.itens) return "";
@@ -278,9 +334,13 @@ const Geradores = {
                 <tbody class="venda-item-linha avoid-break">
                   <tr>
                     <td class="item-venda-produto">
-                      <img src="${item.imagem}" alt="Imagem Produto" class="produto-imagem">
+                      <img src="${
+                        item.imagem
+                      }" alt="Imagem Produto" class="produto-imagem">
                       <div>
-                        <div class="produto-cor"><strong>Cor:</strong> ${item.cor}</div>
+                        <div class="produto-cor"><strong>Cor:</strong> ${
+                          item.cor
+                        }</div>
                         <div>${item.descricao}</div>
                       </div>
                     </td>
@@ -288,8 +348,14 @@ const Geradores = {
                     <td class="center">${item.largura}</td>
                     <td class="center">${item.altura}</td>
                     <td class="center">${item.qtd}</td>
-                    <td class="right">${Utils.formatarValor(item.valorUnitario, false)}</td>
-                    <td class="right">${Utils.formatarValor(item.valorTotal, false)}</td>
+                    <td class="right">${Utils.formatarValor(
+                      item.valorUnitario,
+                      false
+                    )}</td>
+                    <td class="right">${Utils.formatarValor(
+                      item.valorTotal,
+                      false
+                    )}</td>
                   </tr>
                   ${
                     item.observacoes
@@ -315,7 +381,6 @@ const Geradores = {
     `;
   },
 
-
   gerarParcelas(parcelas) {
     if (!parcelas) return "";
 
@@ -338,7 +403,10 @@ const Geradores = {
               <tr>
                 <td class="pd">${p.numero}</td>
                 <td class="pd">${p.vencimento}</td>
-                <td class="al-right pd">${Utils.formatarValor(p.valor, false)}</td>
+                <td class="al-right pd">${Utils.formatarValor(
+                  p.valor,
+                  false
+                )}</td>
                 <td class="pd">${p.formaPagamento}</td>
                 <td class="pd">${p.status}</td>
               </tr>
@@ -351,19 +419,29 @@ const Geradores = {
     `;
   },
   gerarTotais(dados, config = {}) {
-
-    console.log(dados.logoTempera)
+    console.log(dados.logoTempera);
     return `
         <div id="totais" class="totais-container">
           <div class="logo-tempera">
-            ${dados.logoTempera ?`
+            ${
+              dados.logoTempera
+                ? `
               <img src="${dados.logoTempera}" style="height: 150px" alt="logo-tempera"/>`
-            : ''}
+                : ""
+            }
           </div>
           <div class="totais-valores">
-              ${config.imprimirDesconto ? `
-              <p><strong>Valor Total:</strong> ${Utils.formatarValor(dados.valorTotal)}</p>
-              <p><strong>Valor Desconto:</strong> ${Utils.formatarValor(dados.desconto)}</p>` : ""} 
+              ${
+                config.imprimirDesconto
+                  ? `
+              <p><strong>Valor Total:</strong> ${Utils.formatarValor(
+                dados.valorTotal
+              )}</p>
+              <p><strong>Valor Desconto:</strong> ${Utils.formatarValor(
+                dados.desconto
+              )}</p>`
+                  : ""
+              } 
               <div class="valor-final-destaque">
                   Valor Final: ${Utils.formatarValor(dados.valorFinal)}
               </div>
@@ -423,9 +501,13 @@ const Geradores = {
         <div class="promissoria-right ">
 
           <div style="display: flex;justify-content: space-between;margin-bottom: 20px;font-size: 9pt;">
-            <div><strong>Nº:</strong> <span style="border: 1px solid black;border-radius: 8px;padding: 5px 18px;">${dados.promissoria.documento}</span></div>
+            <div><strong>Nº:</strong> <span style="border: 1px solid black;border-radius: 8px;padding: 5px 18px;">${
+              dados.promissoria.documento
+            }</span></div>
             <div><strong>Vencimento,</strong> 10/05/2025</div>
-            <div><strong>R$</strong> <span style="border: 1px solid black;border-radius: 8px;padding: 5px 18px;">${Utils.formatarValor(dados.promissoria.valor)}</span></div>
+            <div><strong>R$</strong> <span style="border: 1px solid black;border-radius: 8px;padding: 5px 18px;">${Utils.formatarValor(
+              dados.promissoria.valor
+            )}</span></div>
           </div>
 
           <p>${dados.promissoria.descricao}</p>
@@ -439,11 +521,15 @@ const Geradores = {
 
           <p style="display: flex;margin: 2px;">
             <span style="width: 131px">ou à sua ordem, a quantia de</span>
-            <span style="background: #ccc; padding: 7px; width: 100%">${dados.promissoria.valorExtenso1}</span>
+            <span style="background: #ccc; padding: 7px; width: 100%">${
+              dados.promissoria.valorExtenso1
+            }</span>
           </p>
 
           <div style="display: flex; gap: 5px">
-             <span style="background: #ccc; padding: 7px; width: 75%">${dados.promissoria.valorExtenso2}</span>
+             <span style="background: #ccc; padding: 7px; width: 75%">${
+               dados.promissoria.valorExtenso2
+             }</span>
             <span style="text-align: left;">EM MOEDA CORRENTE<br />DESTE PAÍS</span>
           </div>
          
@@ -471,66 +557,66 @@ const Geradores = {
 
       <div id="contrato" class="contrato-content">${contrato}</div>
     `;
-  }
-
+  },
 };
 
 const Paginador = {
   inserirTimbre(pagina, imagemUrl) {
-      const fundo = document.createElement("div");
-      fundo.classList.add("timbre-background");
-      fundo.style.backgroundImage = `url('${imagemUrl}')`;
-      pagina.appendChild(fundo);
+    const fundo = document.createElement("div");
+    fundo.classList.add("timbre-background");
+    fundo.style.backgroundImage = `url('${imagemUrl}')`;
+    pagina.appendChild(fundo);
   },
 
   adicionarConteudoPaginado(
-    blocos,               
-    gerarCabecalho,      
-    gerarFooter,        
-    dados = {},        
-    config = {}       
+    blocos,
+    gerarCabecalho,
+    gerarFooter,
+    dados = {},
+    config = {}
   ) {
-
-    return new Promise(resolve => {
-      const LIMITE_PAGINA = config.imprimirLogoEmTodas === true ? 765 : 780; 
+    return new Promise((resolve) => {
+      const LIMITE_PAGINA = config.imprimirLogoEmTodas === true ? 765 : 780;
       let totalPaginas = 1;
-      
+
       let paginaAtual = this.criarNovaPagina(
         gerarCabecalho(totalPaginas),
         gerarFooter(totalPaginas, "?"),
-        dados.imagemTimbre,    
+        dados.imagemTimbre
       );
       let contentDiv = paginaAtual.querySelector(".content");
       document.body.appendChild(paginaAtual);
 
-      const paginas  = [paginaAtual];     
-      const promessas = [];               
+      const paginas = [paginaAtual];
+      const promessas = [];
 
-      blocos.filter(Boolean).forEach(bloco => {
+      blocos.filter(Boolean).forEach((bloco) => {
         promessas.push(
-          new Promise(done => {
+          new Promise((done) => {
             const medidor = bloco.cloneNode(true);
             medidor.style.visibility = "hidden";
-            medidor.style.position   = "absolute";
-            medidor.style.left       = "-9999px";
+            medidor.style.position = "absolute";
+            medidor.style.left = "-9999px";
             document.body.appendChild(medidor);
 
             requestAnimationFrame(() => {
-            
-              const alturaBloco  = medidor.offsetHeight;
-              const alturaAtual  = contentDiv.scrollHeight;
+              const alturaBloco = medidor.offsetHeight;
+              const alturaAtual = contentDiv.scrollHeight;
               const evitarQuebra = bloco.classList.contains("avoid-break");
-            
-              document.body.removeChild(medidor); 
+
+              document.body.removeChild(medidor);
 
               const ultrapassa = alturaAtual + alturaBloco > LIMITE_PAGINA;
 
-              if (ultrapassa && (!evitarQuebra || alturaBloco > LIMITE_PAGINA)) {
+              if (
+                ultrapassa &&
+                (!evitarQuebra || alturaBloco > LIMITE_PAGINA)
+              ) {
                 totalPaginas++;
                 paginaAtual = this.criarNovaPagina(
                   gerarCabecalho(totalPaginas),
                   gerarFooter(totalPaginas, "?"),
-                  dados.imagemTimbre, 
+                  dados.imagemTimbre
                 );
                 contentDiv = paginaAtual.querySelector(".content");
                 document.body.appendChild(paginaAtual);
@@ -552,7 +638,7 @@ const Paginador = {
           }
         });
 
-        resolve();  
+        resolve();
       });
     });
   },
@@ -576,10 +662,7 @@ const Paginador = {
 
     return pagina;
   },
-
-
 };
-
 
 // =====================
 // APLICAÇÃO PRINCIPAL
@@ -588,24 +671,24 @@ const PropostaApp = {
   dados: {},
 
   async init() {
-    const {dadosCarregados, config} = await this.carregarDados();
+    const { dadosCarregados, config } = await this.carregarDados();
 
     if (!dadosCarregados) {
       console.error("Erro ao carregar dados da proposta.");
       return;
     }
 
-    this.dados  = dadosCarregados ?? {};
+    this.dados = dadosCarregados ?? {};
     this.dados.cores = this.dados.cores ?? {};
 
     const coresPadrao = { corPrimaria: "#004080", corSecundaria: "#bb961e" };
-    this.dados.cores  = { ...coresPadrao, ...this.dados.cores };
+    this.dados.cores = { ...coresPadrao, ...this.dados.cores };
 
     this.cores = this.dados.cores;
 
     this.config = config ?? {};
 
-    console.log(this.config)
+    console.log(this.config);
 
     this.preencherCapa();
     this.preencherRodape();
@@ -614,7 +697,13 @@ const PropostaApp = {
       criarBloco(Geradores.gerarDadosCliente(this.dados)),
       ...(this.dados.projetos ?? []).flatMap((projeto) => {
         const blocos = [
-          criarBloco(Geradores.gerarProjeto(projeto, this.config, !projeto.variaveis?.length > 0))
+          criarBloco(
+            Geradores.gerarProjeto(
+              projeto,
+              this.config,
+              !projeto.variaveis?.length > 0
+            )
+          ),
         ];
 
         if (projeto.variaveis?.length > 0 && this.config.imprimirVariaveis) {
@@ -625,15 +714,25 @@ const PropostaApp = {
 
         return blocos;
       }),
-      (this.config.imprimirVendaItens ? criarBloco(Geradores.gerarVendaMateriais(this.dados.vendaItens, this.config)) : null),
-      (this.config.imprimirParcelas ? criarBloco(Geradores.gerarParcelas(this.dados.parcelas))  : null),
-      (this.config.imprimirValorTotal ? criarBloco(Geradores.gerarTotais(this.dados, this.config)) : null),
-      criarBloco(Geradores.gerarCondicoesPagamento(this.dados.condicoesPagamento)),
+      this.config.imprimirVendaItens
+        ? criarBloco(
+            Geradores.gerarVendaMateriais(this.dados.vendaItens, this.config)
+          )
+        : null,
+      this.config.imprimirParcelas
+        ? criarBloco(Geradores.gerarParcelas(this.dados.parcelas))
+        : null,
+      this.config.imprimirValorTotal
+        ? criarBloco(Geradores.gerarTotais(this.dados, this.config))
+        : null,
+      criarBloco(
+        Geradores.gerarCondicoesPagamento(this.dados.condicoesPagamento)
+      ),
       criarBloco(Geradores.gerarAssinatura()),
       ...Utils.dividirEmBlocosQuebraveis(this.dados.observacoes, {
         paragrafosPorBloco: 3,
         className: "allow-break",
-        titulo: "Observações:"
+        titulo: "Observações:",
       }),
     ].filter(Boolean);
 
@@ -649,7 +748,7 @@ const PropostaApp = {
 
       const fragmentos = [];
 
-      tempDiv.childNodes.forEach(node => {
+      tempDiv.childNodes.forEach((node) => {
         if (
           node.nodeType === Node.ELEMENT_NODE ||
           (node.nodeType === Node.TEXT_NODE && node.textContent.trim())
@@ -670,10 +769,9 @@ const PropostaApp = {
       return fragmentos;
     }
 
-
     await Paginador.adicionarConteudoPaginado(
       blocosHTML,
-      pag => Geradores.gerarCabecalho(this.dados, this.config, pag),
+      (pag) => Geradores.gerarCabecalho(this.dados, this.config, pag),
       (pag, tot) => Geradores.gerarFooter(this.dados.licenca, pag, tot),
       this.dados,
       this.config
@@ -683,7 +781,7 @@ const PropostaApp = {
       const Pagina = document.createElement("div");
       Pagina.classList.add("contrato-page");
 
-      Pagina.innerHTML = Geradores.gerarPromissoria(this.dados)
+      Pagina.innerHTML = Geradores.gerarPromissoria(this.dados);
       document.body.appendChild(Pagina);
     }
 
@@ -691,17 +789,19 @@ const PropostaApp = {
       const contratoPagina = document.createElement("div");
       contratoPagina.classList.add("contrato-page");
 
-      contratoPagina.innerHTML = Geradores.gerarContrato(this.dados.contratoHtml);
+      contratoPagina.innerHTML = Geradores.gerarContrato(
+        this.dados.contratoHtml
+      );
       document.body.appendChild(contratoPagina);
     }
 
     this.aplicarCores(this.cores);
     window.readyForPDF = true;
-    console.log("Relatório renderizado com sucesso.");  
+    console.log("Relatório renderizado com sucesso.");
   },
 
   async carregarDados() {
-     const { licencaId, orcamentoId, config } = this.getQueryParams();
+    const { licencaId, orcamentoId, config } = this.getQueryParams();
 
     if (!config || !licencaId || !orcamentoId) {
       console.error("Parâmetros inválidos ou ausentes.");
@@ -709,42 +809,43 @@ const PropostaApp = {
     }
 
     try {
-      const response = await fetch("https://dev.wvetro.com.br/geovaneconcept/app.wvetro.arelorcamentoconcepthtml", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          licencaId,
-          orcamentoId,
-          config
-        })
-      });
+      const response = await fetch(
+        "https://dev.wvetro.com.br/geovaneconcept/app.wvetro.arelorcamentoconcepthtml",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            licencaId,
+            orcamentoId,
+            config,
+          }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Erro ao buscar os dados do relatório.");
       }
 
       const dadosRelatorio = await response.json();
-      return {dadosCarregados: dadosRelatorio, config};
+      return { dadosCarregados: dadosRelatorio, config };
     } catch (e) {
       console.error("Erro no fetch:", e);
-       return null;
+      return null;
     }
   },
 
   getQueryParams() {
     const params = new URLSearchParams(window.location.search);
     return {
-      licencaId: params.get('licencaId'),
-      orcamentoId: params.get('orcamentoId'),
-      config: JSON.parse(decodeURIComponent(params.get('config')))
+      licencaId: params.get("licencaId"),
+      orcamentoId: params.get("orcamentoId"),
+      config: JSON.parse(decodeURIComponent(params.get("config"))),
     };
   },
 
-
   aplicarCores(config) {
-
     document.querySelectorAll(".cor-primaria").forEach((el) => {
       el.style.backgroundColor = config.corPrimaria;
     });
@@ -766,18 +867,36 @@ const PropostaApp = {
       el.style.backgroundColor = config.corSecundaria;
     });
     document.querySelectorAll('[data-cor="primaria"]').forEach((el) => {
-      if (el.hasAttribute("fill") || el.tagName.toLowerCase() === 'path' || el.tagName.toLowerCase() === 'rect') {
+      if (
+        el.hasAttribute("fill") ||
+        el.tagName.toLowerCase() === "path" ||
+        el.tagName.toLowerCase() === "rect"
+      ) {
         el.setAttribute("fill", config.corPrimaria);
       }
-      if (el.hasAttribute("stroke") || el.tagName.toLowerCase() === 'line' || el.tagName.toLowerCase() === 'polyline' || el.tagName.toLowerCase() === 'path') {
+      if (
+        el.hasAttribute("stroke") ||
+        el.tagName.toLowerCase() === "line" ||
+        el.tagName.toLowerCase() === "polyline" ||
+        el.tagName.toLowerCase() === "path"
+      ) {
         el.setAttribute("stroke", config.corPrimaria);
       }
     });
     document.querySelectorAll('[data-cor="secundaria"]').forEach((el) => {
-      if (el.hasAttribute("fill") || el.tagName.toLowerCase() === 'path' || el.tagName.toLowerCase() === 'rect') {
+      if (
+        el.hasAttribute("fill") ||
+        el.tagName.toLowerCase() === "path" ||
+        el.tagName.toLowerCase() === "rect"
+      ) {
         el.setAttribute("fill", config.corSecundaria);
       }
-      if (el.hasAttribute("stroke") || el.tagName.toLowerCase() === 'line' || el.tagName.toLowerCase() === 'polyline' || el.tagName.toLowerCase() === 'path') {
+      if (
+        el.hasAttribute("stroke") ||
+        el.tagName.toLowerCase() === "line" ||
+        el.tagName.toLowerCase() === "polyline" ||
+        el.tagName.toLowerCase() === "path"
+      ) {
         el.setAttribute("stroke", config.corSecundaria);
       }
     });
@@ -788,20 +907,23 @@ const PropostaApp = {
   },
 
   preencherCapa() {
-
     this.preencherCards();
 
     Utils.setText("title", this.dados.titulo);
     Utils.setText("subtitle", this.dados.subtitulo);
-    Utils.setText("orcamento-nro", this.dados.id)
+    Utils.setText("orcamento-nro", this.dados.id);
 
     Utils.setHTML(
       "licenca-whatsapp",
-      `<i class="icon-capa color-primaria fab fa-whatsapp"></i> ${Utils.formatarTelefone(this.dados.licenca.whatsapp)}`
+      `<i class="icon-capa color-primaria fab fa-whatsapp"></i> ${Utils.formatarTelefone(
+        this.dados.licenca.whatsapp
+      )}`
     );
     Utils.setHTML(
       "licenca-fone",
-      `<i class="icon-capa color-primaria fas fa-phone-alt"></i> ${Utils.formatarTelefone(this.dados.licenca.fone)}`
+      `<i class="icon-capa color-primaria fas fa-phone-alt"></i> ${Utils.formatarTelefone(
+        this.dados.licenca.fone
+      )}`
     );
     Utils.setHTML(
       "licenca-email",
@@ -829,14 +951,15 @@ const PropostaApp = {
     );
   },
 
-
   preencherCards() {
     const cards = document.querySelectorAll(
       ".card-left, .card-middle, .card-right"
     );
     cards.forEach((card) => {
       card.style.backgroundImage = `url('${
-        !this.dados.imagemCapa?.trim() ? './assets/images/building.png' : this.dados.imagemCapa
+        !this.dados.imagemCapa?.trim()
+          ? "./assets/images/building.png"
+          : this.dados.imagemCapa
       }')`;
       card.style.backgroundRepeat = "no-repeat";
       card.style.backgroundSize = "794px auto";
@@ -849,7 +972,10 @@ const PropostaApp = {
   },
 
   preencherRodape() {
-    Utils.setText("rodape-telefone", Utils.formatarTelefone(this.dados.licenca.telefone));
+    Utils.setText(
+      "rodape-telefone",
+      Utils.formatarTelefone(this.dados.licenca.telefone)
+    );
     Utils.setText("rodape-email", this.dados.licenca.email);
     Utils.setText("rodape-site", this.dados.licenca.site);
     Utils.setText("rodape-endereco", this.dados.licenca.endereco);
