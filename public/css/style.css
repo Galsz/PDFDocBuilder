@@ -704,21 +704,25 @@ header {
 
 .col-tipo {
   min-width: 50px;
+  max-width: 50px;
   text-align: left;
 }
 
 .col-qtd {
   min-width: 50px;
+  max-width: 50px;
 }
 
 .col-l,
 .col-h {
   min-width: 60px;
+  max-width: 60px;
 }
 
 .col-vlr-unt,
 .col-vlr-total {
   min-width: 90px;
+  max-width: 90px;
   text-align: right;
 }
 

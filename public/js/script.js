@@ -1,7 +1,254 @@
 // =====================
+// SISTEMA DE INTERNACIONALIZAÇÃO (i18n)
+// =====================
+const I18N = {
+  // Mapeia código de país para idioma
+  countryToLang: {
+    1058: "pt", // Brasil
+    6076: "pt", // Portugal
+    2496: "en", // Estados Unidos
+    230: "en",  // Alemanha (usando inglês como fallback)
+    2453: "es", // Espanha
+    4936: "es", // México
+    639: "es",  // Argentina
+    5860: "es", // Paraguai
+  },
+
+  // Dicionário de traduções
+  dict: {
+    pt: {
+      // Dados do cliente
+      client: "Cliente",
+      vendor: "Vendedor",
+      phone: "Telefone",
+      email: "Email",
+      city: "Cidade",
+      address: "Endereço",
+      workAddress: "Endereço Obra",
+      contact: "Contato",
+      proposal: "Proposta",
+      project: "Projeto",
+      
+      // Detalhes do projeto
+      profile: "Perfil",
+      accessories: "Acessórios",
+      glass: "Vidro",
+      location: "Localização",
+      type: "Tipo",
+      qty: "Qtd",
+      width: "L",
+      height: "H",
+      unitValue: "Vlr Unt",
+      totalValue: "Vlr Total",
+      
+      // Venda de materiais
+      materialSale: "Venda de materiais",
+      product: "Produto",
+      unit: "Un.",
+      color: "Cor",
+      description: "Descrição",
+      observations: "Observações",
+      
+      // Parcelas
+      installment: "Parcela",
+      dueDate: "Vencimento",
+      value: "Valor",
+      paymentMethod: "Forma de Pagamento",
+      status: "Status",
+      
+      // Totais
+      subtotal: "Subtotal",
+      discount: "Desconto",
+      discountValue: "Valor Desconto",
+      finalValue: "Valor Final",
+      paymentConditions: "Condições de pagamento",
+      
+      // Outros
+      page: "Página",
+      of: "de",
+      signature: "Assinatura",
+      date: "Data",
+      communicationChannels: "Canais de comunicação"
+    },
+    en: {
+      // Client data
+      client: "Client",
+      vendor: "Vendor", 
+      phone: "Phone",
+      email: "Email",
+      city: "City",
+      address: "Address",
+      workAddress: "Work Address",
+      contact: "Contact",
+      proposal: "Proposal",
+      project: "Project",
+      
+      // Project details
+      profile: "Section",
+      accessories: "Accessories",
+      glass: "Glass",
+      location: "Location",
+      type: "Type",
+      qty: "Qty",
+      width: "W",
+      height: "H",
+      unitValue: "Unit Value",
+      totalValue: "Total Value",
+      
+      // Material sales
+      materialSale: "Material Sales",
+      product: "Product",
+      unit: "Un.",
+      color: "Color",
+      description: "Description",
+      observations: "Observations",
+      
+      // Installments
+      installment: "Installment",
+      dueDate: "Due Date",
+      value: "Value",
+      paymentMethod: "Payment Method",
+      status: "Status",
+      
+      // Totals
+      subtotal: "Subtotal",
+      discount: "Discount",
+      discountValue: "Discount Value",
+      finalValue: "Final Value",
+      paymentConditions: "Payment Conditions",
+      
+      // Others
+      page: "Page",
+      of: "of",
+      signature: "Signature",
+      date: "Date",
+      communicationChannels: "Communication Channels"
+    },
+    es: {
+      // Datos del cliente
+      client: "Cliente",
+      vendor: "Vendedor",
+      phone: "Teléfono",
+      email: "Email",
+      city: "Ciudad",
+      address: "Dirección",
+      workAddress: "Dirección de Obra",
+      contact: "Contacto",
+      proposal: "Propuesta",
+      project: "Proyecto",
+      
+      // Detalles del proyecto
+      profile: "Sección",
+      accessories: "Accesorios",
+      glass: "Vidrio",
+      location: "Ubicación",
+      type: "Tipo",
+      qty: "Cant",
+      width: "A",
+      height: "H",
+      unitValue: "Valor Unit",
+      totalValue: "Valor Total",
+      
+      // Venta de materiales
+      materialSale: "Venta de materiales",
+      product: "Producto",
+      unit: "Un.",
+      color: "Color",
+      description: "Descripción",
+      observations: "Observaciones",
+      
+      // Cuotas
+      installment: "Cuota",
+      dueDate: "Vencimiento",
+      value: "Valor",
+      paymentMethod: "Forma de Pago",
+      status: "Estado",
+      
+      // Totales
+      subtotal: "Subtotal",
+      discount: "Descuento",
+      discountValue: "Valor Descuento",
+      finalValue: "Valor Final",
+      paymentConditions: "Condiciones de pago",
+      
+      // Otros
+      page: "Página",
+      of: "de",
+      signature: "Firma",
+      date: "Fecha",
+      communicationChannels: "Canales de comunicación"
+    }
+  },
+
+  // Função para obter idioma baseado no código do país
+  getLang(codigoPais) {
+    return this.countryToLang[codigoPais] || "pt";
+  },
+
+  // Função para traduzir uma chave
+  t(codigoPais, key, fallback = null) {
+    const lang = this.getLang(codigoPais);
+    const translation = this.dict[lang]?.[key];
+    return translation || fallback || key;
+  }
+};
+
+// =====================
 // FUNÇÕES UTILITÁRIAS
 // =====================
 const Utils = {
+  // Mapeamento de códigos de países para configurações de moeda e idioma
+  paisesConfig: {
+    1058: { // Brasil
+      currency: "BRL",
+      locale: "pt-BR",
+      symbol: "R$",
+      language: "pt"
+    },
+    5860: { // Paraguai
+      currency: "PYG",
+      locale: "es-PY",
+      symbol: "₲",
+      language: "es"
+    },
+    2453: { // Espanha
+      currency: "EUR",
+      locale: "es-ES",
+      symbol: "€",
+      language: "es"
+    },
+    230: { // Alemanha
+      currency: "EUR",
+      locale: "de-DE",
+      symbol: "€",
+      language: "en" // Usando inglês como fallback
+    },
+    2496: { // Estados Unidos
+      currency: "USD",
+      locale: "en-US",
+      symbol: "$",
+      language: "en"
+    },
+    6076: { // Portugal
+      currency: "EUR",
+      locale: "pt-PT",
+      symbol: "€",
+      language: "pt"
+    },
+    4936: { // México
+      currency: "MXN",
+      locale: "es-MX",
+      symbol: "MX$",
+      language: "es"
+    },
+    639: { // Argentina
+      currency: "ARS",
+      locale: "es-AR",
+      symbol: "AR$",
+      language: "es"
+    },
+  },
+
   setText(id, texto) {
     const el = document.getElementById(id);
     if (el) el.textContent = texto;
@@ -32,17 +279,32 @@ const Utils = {
       return telefone;
     }
   },
-  formatarValor(valor, comSimbolo = true) {
-    if (!valor) return comSimbolo ? "R$ 0,00" : "0,00";
-    if (typeof valor === "string") valor = parseFloat(valor.replace(",", "."));
+  formatarValor(valor, comSimbolo = true, codigoPais = null) {
+    // Configuração padrão (Brasil)
+    let config = this.paisesConfig[1058];
+    
+    // Se foi fornecido um código de país, usa a configuração correspondente
+    if (codigoPais && this.paisesConfig[codigoPais]) {
+      config = this.paisesConfig[codigoPais];
+    }
 
-    return valor.toLocaleString("pt-BR", {
-      style: comSimbolo ? "currency" : "decimal",
-      currency: "BRL",
+    if (!valor) {
+      return comSimbolo ? `${config.symbol} 0,00` : "0,00";
+    }
+    
+    if (typeof valor === "string") {
+      valor = parseFloat(valor.replace(",", "."));
+    }
+
+    const valorFormatado = valor.toLocaleString(config.locale, {
+      style: "decimal",
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     });
+
+    return comSimbolo ? `${config.symbol} ${valorFormatado}` : valorFormatado;
   },
+
   dividirEmBlocosQuebraveis(
     texto,
     { paragrafosPorBloco = 5, className = "allow-break", titulo = null } = {}
@@ -99,7 +361,7 @@ const Geradores = {
           mostrarLogo
             ? `<div style="display: flex; justify-content: space-between;">
                 <div style="padding-top: 54px; padding-left: 50px; font-size: 14px;">
-                  ${mostrarTitulo ? `<h2>Proposta ${dados.id}</h2>` : ""}
+                  ${mostrarTitulo ? `<h2>${I18N.t(dados.licenca?.pais, 'proposal')} ${dados.id}</h2>` : ""}
                 </div>
                 <div style="padding-top: 34px; padding-right: 50px;">
                   <img src="${dados.licenca.logoUrl}" style="height: 100px;" />
@@ -111,7 +373,7 @@ const Geradores = {
     `;
   },
 
-  gerarFooter(licenca, pagina = 1, totalPaginas = 1) {
+  gerarFooter(licenca, pagina = 1, totalPaginas = 1, codigoPais = null) {
     return `
       <footer class="footer">
         <div class="footer-image">
@@ -133,7 +395,7 @@ const Geradores = {
       </svg>
         </div>
         <div class="footer-page-number" >
-          <span>${pagina} / ${totalPaginas}</span>
+          <span>${I18N.t(codigoPais, 'page')} ${pagina} ${I18N.t(codigoPais, 'of')} ${totalPaginas}</span>
         </div>
         <div class="footer-info">
           <div class="footer-info-left">
@@ -152,49 +414,49 @@ const Geradores = {
     `;
   },
 
-  gerarDadosCliente(dados) {
+  gerarDadosCliente(dados, codigoPais = null) {
     return `
 
       <div class="cliente-info">
           <span>
-            <strong>Cliente:</strong> ${dados.cliente.contato}<br />
+            <strong>${I18N.t(codigoPais, 'client')}:</strong> ${dados.cliente.contato}<br />
           </span>
           <div style="display: flex; gap: 5px;">
-          <span><strong>Endereço:</strong> ${dados.cliente.endereco}</span>
-            <span><strong>Cidade:</strong> ${dados.cliente.cidade}</span>
+          <span><strong>${I18N.t(codigoPais, 'address')}:</strong> ${dados.cliente.endereco}</span>
+            <span><strong>${I18N.t(codigoPais, 'city')}:</strong> ${dados.cliente.cidade}</span>
           </div>
         <div style="display: flex">
-          <span style="min-width: 145px;"><strong>Telefone:</strong> ${
+          <span style="min-width: 145px;"><strong>${I18N.t(codigoPais, 'phone')}:</strong> ${
             dados.cliente.telefone
           }</span>
-          <span><strong>Email:</strong> ${dados.cliente.email}</span>
+          <span><strong>${I18N.t(codigoPais, 'email')}:</strong> ${dados.cliente.email}</span>
         </div>
       </div>
 
       <div class="dados-cliente">
         <div class="linha1">
           <span><strong>Obra:</strong> ${dados.cliente.obra.nome}</span>
-          <span><strong>Dt.Proposta:</strong> ${dados.data}</span>
+          <span><strong>Dt.${I18N.t(codigoPais, 'proposal')}:</strong> ${dados.data}</span>
         </div>
         <div class="linha2">
-          <span><strong>Contato:</strong> ${dados.cliente.obra.responsavel}</span>
-          <span style="min-width: 165px;"><strong>Telefone:</strong> ${Utils.formatarTelefone(
+          <span><strong>${I18N.t(codigoPais, 'contact')}:</strong> ${dados.cliente.obra.responsavel}</span>
+          <span style="min-width: 165px;"><strong>${I18N.t(codigoPais, 'phone')}:</strong> ${Utils.formatarTelefone(
             dados.cliente.obra.responsavelFone
           )}</span>
         </div>
         <div class="linha3">
-          <span><strong>Endereço Obra:</strong> ${
+          <span><strong>${I18N.t(codigoPais, 'workAddress')}:</strong> ${
             dados.cliente.obra.endereco
           }</span>
-          <span style="min-width: 165px;"><strong>Cidade:</strong> ${
+          <span style="min-width: 165px;"><strong>${I18N.t(codigoPais, 'city')}:</strong> ${
             dados.cliente.obra.cidade
           }</span>
         </div>
         <div class="linha4 destaque" style="background-color: ${
           dados.cores.corPrimaria
         };">
-          <span><strong>Vendedor:</strong> ${dados.vendedor.nome}</span>
-          <span><strong>Telefone:</strong> ${Utils.formatarTelefone(
+          <span><strong>${I18N.t(codigoPais, 'vendor')}:</strong> ${dados.vendedor.nome}</span>
+          <span><strong>${I18N.t(codigoPais, 'phone')}:</strong> ${Utils.formatarTelefone(
             dados.vendedor.telefone
           )}</span>
         </div>
@@ -202,7 +464,7 @@ const Geradores = {
     `;
   },
 
-  gerarProjeto(p, config) {
+  gerarProjeto(p, config, codigoPais = null) {
     return `
         <div class="projeto-item avoid-break">
           <div class="item-topo">
@@ -214,31 +476,31 @@ const Geradores = {
             <div class="item-info">
               <div class="item-info-header">
                 <h4>${p.nome}</h4>
-                <p><strong>Perfil:</strong> ${p.perfil}</p>
-                <p><strong>Acessórios:</strong> ${p.acessorios}</p>
-                <p><strong>Vidro:</strong> ${p.vidro}</p>
-                <p><strong>Localização:</strong> ${p.localizacao}</p>
+                <p><strong>${I18N.t(codigoPais, 'profile')}:</strong> ${p.perfil}</p>
+                <p><strong>${I18N.t(codigoPais, 'accessories')}:</strong> ${p.acessorios}</p>
+                <p><strong>${I18N.t(codigoPais, 'glass')}:</strong> ${p.vidro}</p>
+                <p><strong>${I18N.t(codigoPais, 'location')}:</strong> ${p.localizacao}</p>
               </div>
               <div class="item-tabela allow-break">
                 <div class="tabela-item-linha">
                   <div class="tabela-item-numero">${p.ordem}</div>
                   <div class="tabela-item-valores">
                     <div class="tabela-item-header">
-                      <span class="col-tipo"><strong>Tipo:</strong></span>
-                      <span class="col-qtd"><strong>Qtd:</strong></span>
+                      <span class="col-tipo"><strong>${I18N.t(codigoPais, 'type')}:</strong></span>
+                      <span class="col-qtd"><strong>${I18N.t(codigoPais, 'qty')}:</strong></span>
                       ${
                         config.imprimirMedidas
                           ? `
                         <span class="col-qtd"><strong>M2:</strong></span>
-                        <span class="col-l"><strong>L:</strong></span>
-                        <span class="col-h"><strong>H:</strong></span>`
+                        <span class="col-l"><strong>${I18N.t(codigoPais, 'width')}:</strong></span>
+                        <span class="col-h"><strong>${I18N.t(codigoPais, 'height')}:</strong></span>`
                           : ""
                       }
                       ${
                         config.imprimirValorUnitario
                           ? `
-                        <span class="col-vlr-unt"><strong>Vlr Unt:</strong></span>
-                        <span class="col-vlr-total"><strong>Vlr Total:</strong></span>`
+                        <span class="col-vlr-unt"><strong>${I18N.t(codigoPais, 'unitValue')}:</strong></span>
+                        <span class="col-vlr-total"><strong>${I18N.t(codigoPais, 'totalValue')}:</strong></span>`
                           : ""
                       }
                     </div>
@@ -258,11 +520,13 @@ const Geradores = {
                           ? `
                         <span class="col-vlr-unt">${Utils.formatarValor(
                           p.valorUnt,
-                          false
+                          false,
+                          codigoPais
                         )}</span>
                         <span class="col-vlr-total">${Utils.formatarValor(
                           p.valorTotal,
-                          false
+                          false,
+                          codigoPais
                         )}</span>`
                           : ""
                       }
@@ -309,23 +573,23 @@ const Geradores = {
     `;
   },
 
-  gerarVendaMateriais(vendas) {
+  gerarVendaMateriais(vendas, codigoPais = null) {
     if (!vendas.itens) return "";
 
     return `
       <div id="venda-itens" class="venda-itens">
         <div class="item-venda avoid-break">
-          <span class="item-venda-titulo">Venda de materiais</span>
+          <span class="item-venda-titulo">${I18N.t(codigoPais, 'materialSale')}</span>
           <table class="item-venda-lista">
             <thead>
               <tr class="item-venda-cabecalho">
-                <th class="produto">Produto</th>
-                <th>Un.</th>
+                <th class="produto">${I18N.t(codigoPais, 'product')}</th>
+                <th>${I18N.t(codigoPais, 'unit')}</th>
                 <th>Larg.</th>
                 <th>Alt.</th>
-                <th>Qtde.</th>
-                <th>Vlr unt.</th>
-                <th class="valor-total">Vlr. Total</th>
+                <th>${I18N.t(codigoPais, 'qty')}.</th>
+                <th>${I18N.t(codigoPais, 'unitValue')}.</th>
+                <th class="valor-total">${I18N.t(codigoPais, 'totalValue')}</th>
               </tr>
             </thead>
             ${vendas.itens
@@ -350,11 +614,13 @@ const Geradores = {
                     <td class="center">${item.qtd}</td>
                     <td class="right">${Utils.formatarValor(
                       item.valorUnitario,
-                      false
+                      false,
+                      codigoPais
                     )}</td>
                     <td class="right">${Utils.formatarValor(
                       item.valorTotal,
-                      false
+                      false,
+                      codigoPais
                     )}</td>
                   </tr>
                   ${
@@ -362,7 +628,7 @@ const Geradores = {
                       ? `
                     <tr>
                       <td class="item-obs" colspan="7">
-                        <p><strong>Observações:</strong> ${item.observacoes}</p>
+                        <p><strong>${I18N.t(codigoPais, 'observations')}:</strong> ${item.observacoes}</p>
                       </td>
                     </tr>
                   `
@@ -381,7 +647,7 @@ const Geradores = {
     `;
   },
 
-  gerarParcelas(parcelas) {
+  gerarParcelas(parcelas, codigoPais = null) {
     if (!parcelas) return "";
 
     return `
@@ -389,11 +655,11 @@ const Geradores = {
         <table id="parcela-lista" class="parcela-tabela">
           <thead>
             <tr class="parcela-cabecalho">
-              <th class="al-left pd">Parcela</th>
-              <th class="al-left pd">Vencimento</th>
-              <th class="al-right pd">Valor</th>
-              <th class="al-left pd">Forma de Pagamento</th>
-              <th class="al-left pd">Status</th>
+              <th class="al-left pd">${I18N.t(codigoPais, 'installment')}</th>
+              <th class="al-left pd">${I18N.t(codigoPais, 'dueDate')}</th>
+              <th class="al-right pd">${I18N.t(codigoPais, 'value')}</th>
+              <th class="al-left pd">${I18N.t(codigoPais, 'paymentMethod')}</th>
+              <th class="al-left pd">${I18N.t(codigoPais, 'status')}</th>
             </tr>
           </thead>
           <tbody>
@@ -405,7 +671,8 @@ const Geradores = {
                 <td class="pd">${p.vencimento}</td>
                 <td class="al-right pd">${Utils.formatarValor(
                   p.valor,
-                  false
+                  false,
+                  codigoPais
                 )}</td>
                 <td class="pd">${p.formaPagamento}</td>
                 <td class="pd">${p.status}</td>
@@ -418,8 +685,7 @@ const Geradores = {
       </div>
     `;
   },
-  gerarTotais(dados, config = {}) {
-    console.log(dados.logoTempera);
+  gerarTotais(dados, config = {}, codigoPais = null) {
     return `
         <div id="totais" class="totais-container">
           <div class="logo-tempera">
@@ -434,26 +700,27 @@ const Geradores = {
               ${
                 config.imprimirDesconto
                   ? `
-              <p><strong>Valor Total:</strong> ${Utils.formatarValor(
-                dados.valorTotal
+              <p><strong>${I18N.t(codigoPais, 'totalValue')}:</strong> ${Utils.formatarValor(
+                dados.valorTotal, true, codigoPais
               )}</p>
-              <p><strong>Valor Desconto:</strong> ${Utils.formatarValor(
-                dados.desconto
+              <p><strong>${I18N.t(codigoPais, 'discountValue')}:</strong> ${Utils.formatarValor(
+                dados.desconto, true, codigoPais
               )}</p>`
                   : ""
               } 
               <div class="valor-final-destaque">
-                  Valor Final: ${Utils.formatarValor(dados.valorFinal)}
+                  ${I18N.t(codigoPais, 'finalValue')}: ${Utils.formatarValor(dados.valorFinal, true, codigoPais)}
               </div>
           </div>
       </div>
     `;
   },
 
-  gerarCondicoesPagamento(condicoes) {
+  gerarCondicoesPagamento(condicoes, codigoPais = null) {
+    if (!condicoes || condicoes.trim() === "") return "";
     return `
       <div id="condicoes" class="condicoes-pagamento">
-          <p><h3>Condições de pagamento: </h3>${condicoes}</p>
+          <p><h3>${I18N.t(codigoPais, 'paymentConditions')}: </h3>${condicoes}</p>
       </div>
     `;
   },
@@ -504,9 +771,9 @@ const Geradores = {
             <div><strong>Nº:</strong> <span style="border: 1px solid black;border-radius: 8px;padding: 5px 18px;">${
               dados.promissoria.documento
             }</span></div>
-            <div><strong>Vencimento,</strong> 10/05/2025</div>
+            <div>${dados.promissoria.vencimento}</div>
             <div><strong>R$</strong> <span style="border: 1px solid black;border-radius: 8px;padding: 5px 18px;">${Utils.formatarValor(
-              dados.promissoria.valor
+              dados.promissoria.valor, false, dados.licenca.pais
             )}</span></div>
           </div>
 
@@ -534,14 +801,14 @@ const Geradores = {
           </div>
          
 
-          <p>Pagável em Sorocaba</p>
+          <p>Pagável em ${dados.cliente.cidade}</p>
           <div style="margin-top: 20px">
             <p>EMITENTE: ${dados.cliente.contato}</p>
             <p>CPF/CNPJ: ${dados.cliente.cpfcnpj}</p>
             <p>Endereço: ${dados.cliente.endereco}</p>
           </div>
           <div style="display: flex; justify-content: space-between; margin-top: 20px;">
-            <div>Sorocaba, 10/05/205</div>
+            <div>${dados.cliente.cidade}, ${new Date().toLocaleDateString()}</div>
             <div style="text-align: center;">
               _______________________________________________________<br/>
               Assinatura
@@ -688,20 +955,18 @@ const PropostaApp = {
 
     this.config = config ?? {};
 
-    console.log(this.config);
-
     this.preencherCapa();
     this.preencherRodape();
 
     const blocosHTML = [
-      criarBloco(Geradores.gerarDadosCliente(this.dados)),
+      criarBloco(Geradores.gerarDadosCliente(this.dados, this.dados.licenca?.pais)),
       ...(this.dados.projetos ?? []).flatMap((projeto) => {
         const blocos = [
           criarBloco(
             Geradores.gerarProjeto(
               projeto,
               this.config,
-              !projeto.variaveis?.length > 0
+              this.dados.licenca?.pais
             )
           ),
         ];
@@ -716,17 +981,17 @@ const PropostaApp = {
       }),
       this.config.imprimirVendaItens
         ? criarBloco(
-            Geradores.gerarVendaMateriais(this.dados.vendaItens, this.config)
+            Geradores.gerarVendaMateriais(this.dados.vendaItens, this.dados.licenca?.pais)
           )
         : null,
       this.config.imprimirParcelas
-        ? criarBloco(Geradores.gerarParcelas(this.dados.parcelas))
+        ? criarBloco(Geradores.gerarParcelas(this.dados.parcelas, this.dados.licenca?.pais))
         : null,
       this.config.imprimirValorTotal
-        ? criarBloco(Geradores.gerarTotais(this.dados, this.config))
+        ? criarBloco(Geradores.gerarTotais(this.dados, this.config, this.dados.licenca?.pais))
         : null,
       criarBloco(
-        Geradores.gerarCondicoesPagamento(this.dados.condicoesPagamento)
+        Geradores.gerarCondicoesPagamento(this.dados.condicoesPagamento, this.dados.licenca?.pais)
       ),
       criarBloco(Geradores.gerarAssinatura()),
       ...Utils.dividirEmBlocosQuebraveis(this.dados.observacoes, {
@@ -772,7 +1037,7 @@ const PropostaApp = {
     await Paginador.adicionarConteudoPaginado(
       blocosHTML,
       (pag) => Geradores.gerarCabecalho(this.dados, this.config, pag),
-      (pag, tot) => Geradores.gerarFooter(this.dados.licenca, pag, tot),
+      (pag, tot) => Geradores.gerarFooter(this.dados.licenca, pag, tot, this.dados.licenca?.pais),
       this.dados,
       this.config
     );
@@ -913,6 +1178,9 @@ const PropostaApp = {
     Utils.setText("subtitle", this.dados.subtitulo);
     Utils.setText("orcamento-nro", this.dados.id);
 
+    // Traduz o rótulo "Canais de comunicação"
+    Utils.setText("canais-comunicacao-label", I18N.t(this.dados.licenca?.pais, 'communicationChannels'));
+
     Utils.setHTML(
       "licenca-whatsapp",
       `<i class="icon-capa color-primaria fab fa-whatsapp"></i> ${Utils.formatarTelefone(
@@ -988,3 +1256,48 @@ const PropostaApp = {
 document.addEventListener("DOMContentLoaded", () => {
   PropostaApp.init();
 });
+
+// =====================
+// UTILITÁRIOS DE TESTE/DEBUG i18n
+// =====================
+window.I18N_Debug = {
+  // Testa todas as traduções disponíveis
+  testAllTranslations() {
+    const paises = [1058, 2496, 2453]; // Brasil, EUA, Espanha
+    const chaves = ['client', 'vendor', 'phone', 'email', 'totalValue', 'finalValue'];
+    
+    console.log('=== TESTE DE TRADUÇÕES ===');
+    paises.forEach(pais => {
+      const lang = I18N.getLang(pais);
+      console.log(`\n📍 País: ${pais} | Idioma: ${lang}`);
+      chaves.forEach(chave => {
+        console.log(`  ${chave}: "${I18N.t(pais, chave)}"`);
+      });
+    });
+  },
+  
+  // Mostra configuração de país
+  showCountryConfig(codigoPais) {
+    const config = Utils.paisesConfig[codigoPais];
+    const lang = I18N.getLang(codigoPais);
+    console.log(`País ${codigoPais}:`, {
+      currency: config?.currency,
+      locale: config?.locale,
+      symbol: config?.symbol,
+      language: lang
+    });
+  },
+  
+  // Simula formatação de valor para diferentes países
+  testCurrencyFormat(valor = 1234.56) {
+    const paises = [1058, 2496, 2453, 4936];
+    console.log(`\n=== FORMATAÇÃO DE VALOR: ${valor} ===`);
+    paises.forEach(pais => {
+      const formatted = Utils.formatarValor(valor, true, pais);
+      console.log(`País ${pais}: ${formatted}`);
+    });
+  }
+};
+
+// Para teste rápido, descomente a linha abaixo:
+// window.I18N_Debug.testAllTranslations();
