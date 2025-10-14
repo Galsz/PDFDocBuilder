@@ -981,11 +981,7 @@ const PropostaApp = {
           );
         }
 
-        // Observações do projeto: quebrar em blocos respeitando tamanho de página
         if (projeto.observacoes && typeof projeto.observacoes === 'string') {
-
-          console.log("Processando observações do projeto:", projeto.nome);
-          console.log("Conteúdo das observações:", projeto.observacoes);
           const obsBlocos = Utils.dividirEmBlocosQuebraveis(projeto.observacoes, {
             paragrafosPorBloco: 5,
             className: 'allow-break',
