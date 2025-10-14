@@ -280,10 +280,8 @@ const Utils = {
     }
   },
   formatarValor(valor, comSimbolo = true, codigoPais = null) {
-    // Configuração padrão (Brasil)
     let config = this.paisesConfig[1058];
-    
-    // Se foi fornecido um código de país, usa a configuração correspondente
+
     if (codigoPais && this.paisesConfig[codigoPais]) {
       config = this.paisesConfig[codigoPais];
     }
@@ -311,25 +309,48 @@ const Utils = {
   ) {
     if (!texto || typeof texto !== "string") return [];
 
-    // Divide por linhas
-    const linhas = texto
-      .split(/\r?\n/)
-      .map((l) => l.trim())
-      .filter((l) => l.length > 0);
+    const linhasOriginais = texto.split(/\r?\n/);
+
+    const paragrafos = [];
+    linhasOriginais.forEach((ln) => {
+      if (ln.trim().length > 0) {
+        paragrafos.push(ln.trim());
+      } else {
+        paragrafos.push("__SPACE__"); 
+      }
+    });
 
     const blocos = [];
+    let grupo = [];
+    let countParagrafos = 0;
 
-    for (let i = 0; i < linhas.length; i += paragrafosPorBloco) {
-      const grupo = linhas.slice(i, i + paragrafosPorBloco);
-      const wrapper = document.createElement("div");
-      wrapper.className = className;
+    const pushGrupo = (isFirst) => {
+      if (grupo.length === 0) return;
+      const wrapper = document.createElement('div');
+      const conteudoHTML = grupo.map((item) => {
+        if (item === '__SPACE__') {
+          return '<p style="height:8px"></p>';
+        }
+        return `<p>${item}</p>`;
+      }).join('');
       wrapper.innerHTML = `
-        ${titulo && i === 0 ? `<h3 class="observacoes">${titulo}</h3>` : ""}
-        <div class="observacoes-conteudo">
-          ${grupo.map((linha) => `<p>${linha}</p>`).join("")}
-        </div>
+        ${titulo && isFirst ? `<h3 class="observacoes">${titulo}</h3>` : ''}
+        <div class="observacoes-conteudo">${conteudoHTML}</div>
       `;
       blocos.push(wrapper);
+    };
+
+    for (let i = 0; i < paragrafos.length; i++) {
+      const item = paragrafos[i];
+      const isSpace = item === '__SPACE__';
+      grupo.push(item);
+      if (!isSpace) countParagrafos++;
+      const isLast = i === paragrafos.length - 1;
+      if (countParagrafos === paragrafosPorBloco || isLast) {
+        pushGrupo(blocos.length === 0);
+        grupo = [];
+        countParagrafos = 0;
+      }
     }
 
     return blocos;
@@ -538,12 +559,7 @@ const Geradores = {
           </div>
 
           ${
-            p.observacoes
-              ? `
-            <div class="item-obs allow-break">
-              <p><strong>Observações:</strong> ${p.observacoes}</p>
-            </div>`
-              : ""
+            '' /* Observações do projeto são agora divididas em blocos fora deste container para permitir quebra de página. */
           }
         </div>
     `;
@@ -738,18 +754,6 @@ const Geradores = {
             <strong>CONTRATADO</strong>
           </div>
         </div>
-      </div>
-    `;
-  },
-
-  gerarObservacoes(observacoes) {
-    if (!observacoes || observacoes.trim() === "") return "";
-    return `
-      <div id="observacoes" class="observacoes allow-break">
-          <h3>Observações: </h3>
-          <div class="observacoes-conteudo">
-            ${observacoes}
-          </div>
       </div>
     `;
   },
@@ -977,6 +981,19 @@ const PropostaApp = {
           );
         }
 
+        // Observações do projeto: quebrar em blocos respeitando tamanho de página
+        if (projeto.observacoes && typeof projeto.observacoes === 'string') {
+
+          console.log("Processando observações do projeto:", projeto.nome);
+          console.log("Conteúdo das observações:", projeto.observacoes);
+          const obsBlocos = Utils.dividirEmBlocosQuebraveis(projeto.observacoes, {
+            paragrafosPorBloco: 5,
+            className: 'allow-break',
+            titulo: 'Observações:'
+          });
+          blocos.push(...obsBlocos);
+        }
+
         return blocos;
       }),
       this.config.imprimirVendaItens
@@ -1019,7 +1036,7 @@ const PropostaApp = {
           (node.nodeType === Node.TEXT_NODE && node.textContent.trim())
         ) {
           const wrapper = document.createElement("div");
-          wrapper.classList.add("observacoes", "allow-break");
+          wrapper.classList.add("allow-break");
           wrapper.innerHTML = `
             <h3>Observações:</h3>
             <div class="observacoes-conteudo">
@@ -1256,48 +1273,3 @@ const PropostaApp = {
 document.addEventListener("DOMContentLoaded", () => {
   PropostaApp.init();
 });
-
-// =====================
-// UTILITÁRIOS DE TESTE/DEBUG i18n
-// =====================
-window.I18N_Debug = {
-  // Testa todas as traduções disponíveis
-  testAllTranslations() {
-    const paises = [1058, 2496, 2453]; // Brasil, EUA, Espanha
-    const chaves = ['client', 'vendor', 'phone', 'email', 'totalValue', 'finalValue'];
-    
-    console.log('=== TESTE DE TRADUÇÕES ===');
-    paises.forEach(pais => {
-      const lang = I18N.getLang(pais);
-      console.log(`\n📍 País: ${pais} | Idioma: ${lang}`);
-      chaves.forEach(chave => {
-        console.log(`  ${chave}: "${I18N.t(pais, chave)}"`);
-      });
-    });
-  },
-  
-  // Mostra configuração de país
-  showCountryConfig(codigoPais) {
-    const config = Utils.paisesConfig[codigoPais];
-    const lang = I18N.getLang(codigoPais);
-    console.log(`País ${codigoPais}:`, {
-      currency: config?.currency,
-      locale: config?.locale,
-      symbol: config?.symbol,
-      language: lang
-    });
-  },
-  
-  // Simula formatação de valor para diferentes países
-  testCurrencyFormat(valor = 1234.56) {
-    const paises = [1058, 2496, 2453, 4936];
-    console.log(`\n=== FORMATAÇÃO DE VALOR: ${valor} ===`);
-    paises.forEach(pais => {
-      const formatted = Utils.formatarValor(valor, true, pais);
-      console.log(`País ${pais}: ${formatted}`);
-    });
-  }
-};
-
-// Para teste rápido, descomente a linha abaixo:
-// window.I18N_Debug.testAllTranslations();
