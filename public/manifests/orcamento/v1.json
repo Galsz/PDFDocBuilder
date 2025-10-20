@@ -1,0 +1,173 @@
+{
+  "id": "orcamento",
+  "version": "v1",
+  "pages": [
+    {
+      "id": "body",
+      "role": "content",
+      "sections": [
+        {
+          "type": "component",
+          "component": "cliente.info",
+          "props": {
+            "dados": "@dados",
+            "codigoPais": "@context.codigoPais"
+          }
+        },
+        {
+          "type": "collection",
+          "items": "@dados.projetos",
+          "itemAs": "projeto",
+          "sections": [
+            {
+              "type": "component",
+              "component": "projeto.item",
+              "props": {
+                "projeto": "@item",
+                "config": "@config",
+                "codigoPais": "@context.codigoPais"
+              }
+            },
+            {
+              "type": "component",
+              "component": "projeto.variaveis",
+              "when": {
+                "allOf": [
+                  "@config.imprimirVariaveis",
+                  "@item.variaveis.length"
+                ]
+              },
+              "props": {
+                "variaveis": "@item.variaveis",
+                "config": "@config"
+              }
+            },
+            {
+              "type": "richText",
+              "when": "@item.observacoes",
+              "value": "@item.observacoes",
+              "options": {
+                "paragrafosPorBloco": 5,
+                "className": "allow-break",
+                "titulo": "Observações:"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "when": {
+            "allOf": [
+              "@config.imprimirVendaItens",
+              "@dados.vendaItens.itens.length"
+            ]
+          },
+          "sections": [
+            {
+              "type": "component",
+              "component": "venda.cabecalho"
+            },
+            {
+              "type": "collection",
+              "items": "@dados.vendaItens.itens",
+              "itemAs": "item",
+              "sections": [
+                {
+                  "type": "component",
+                  "component": "venda.item",
+                  "props": {
+                    "item": "@item"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "component",
+              "component": "venda.total",
+              "props": {
+                "vendas": "@dados.vendaItens"
+              }
+            }
+          ]
+        },
+        {
+          "type": "component",
+          "component": "financeiro.parcelas",
+          "when": {
+            "allOf": [
+              "@config.imprimirParcelas",
+              "@dados.parcelas.length"
+            ]
+          },
+          "props": {
+            "parcelas": "@dados.parcelas",
+            "codigoPais": "@context.codigoPais"
+          }
+        },
+        {
+          "type": "component",
+          "component": "financeiro.totais",
+          "when": "@config.imprimirValorTotal",
+          "props": {
+            "dados": "@dados",
+            "config": "@config",
+            "codigoPais": "@context.codigoPais"
+          }
+        },
+        {
+          "type": "component",
+          "component": "financeiro.condicoes",
+          "when": "@dados.condicoesPagamento",
+          "props": {
+            "condicoes": "@dados.condicoesPagamento",
+            "codigoPais": "@context.codigoPais"
+          }
+        },
+        {
+          "type": "component",
+          "component": "assinar.bloco"
+        },
+        {
+          "type": "richText",
+          "when": "@dados.observacoes",
+          "value": "@dados.observacoes",
+          "options": {
+            "paragrafosPorBloco": 3,
+            "className": "allow-break",
+            "titulo": "Observações:"
+          }
+        }
+      ]
+    }
+  ],
+  "attachments": [
+    {
+      "type": "component",
+      "component": "financeiro.promissoria",
+      "when": {
+        "allOf": [
+          "@config.imprimirPromissorias",
+          "@dados.promissoria"
+        ]
+      },
+      "container": "contrato-page",
+      "props": {
+        "dados": "@dados"
+      }
+    },
+    {
+      "type": "component",
+      "component": "financeiro.contrato",
+      "when": {
+        "allOf": [
+          "@config.imprimirContrato",
+          "@dados.contratoHtml"
+        ]
+      },
+      "container": "contrato-page",
+      "props": {
+        "contratoHtml": "@dados.contratoHtml"
+      }
+    }
+  ]
+}

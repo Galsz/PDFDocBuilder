@@ -116,8 +116,12 @@ class PagePool {
         }
       });
 
-      // Reset de viewport se necessário
-      await page.setViewport({ width: 1200, height: 800 });
+      // Reset de viewport se necessário (API moderna usa setViewportSize)
+      if (typeof page.setViewportSize === "function") {
+        await page.setViewportSize({ width: 1200, height: 800 });
+      } else if (typeof page.setViewport === "function") {
+        await page.setViewport({ width: 1200, height: 800 });
+      }
       
     } catch (error) {
       Logger.debug('Erro ao resetar página, será descartada:', error.message);

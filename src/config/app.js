@@ -10,6 +10,14 @@ module.exports = {
     environment: process.env.NODE_ENV || "development"
   },
 
+  templates: {
+    defaultTemplateId: process.env.DEFAULT_TEMPLATE_ID || "default"
+  },
+
+  reports: {
+    defaultReportType: process.env.DEFAULT_REPORT_TYPE || "orcamento"
+  },
+
   // Configurações do Playwright - OTIMIZADO PARA ALTA DEMANDA
   browser: {
     maxConcurrentBrowsers: parseInt(process.env.MAX_CONCURRENT_BROWSERS) || 4,
@@ -81,7 +89,7 @@ module.exports = {
     maxSize: parseInt(process.env.CACHE_MAX_SIZE) || 100, // 100 PDFs em memória
     // Chave baseada em licencaId, orcamentoId e hash estável de config
     // Inclua um campo "dataVersion" dentro de config para refletir mudanças de dados
-    hashFields: (process.env.CACHE_HASH_FIELDS || 'licencaId,orcamentoId,configData').split(',')
+    hashFields: (process.env.CACHE_HASH_FIELDS || 'licencaId,orcamentoId,templateId,reportType,configData').split(',')
   },
 
   // Configurações de PDF

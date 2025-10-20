@@ -1,0 +1,356 @@
+body[data-theme="modern"] {
+  font-family: "Inter", "Segoe UI", Arial, sans-serif;
+  background-color: #f4f6fb;
+  color: #0f172a;
+}
+
+body[data-theme="modern"] .page-relatorio {
+  background: #ffffff;
+  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.12);
+  border-radius: 20px;
+}
+
+body[data-theme="modern"] .content {
+  padding: 2.5rem 2.75rem;
+}
+
+body[data-theme="modern"] header,
+body[data-theme="modern"] .footer {
+  border-radius: 20px;
+}
+
+body[data-theme="modern"] .cor-primaria {
+  background: linear-gradient(135deg, #3730a3 0%, #6366f1 70%, #818cf8 100%);
+}
+
+body[data-theme="modern"] .cor-secundaria {
+  background: linear-gradient(135deg, #0ea5e9 0%, #22d3ee 50%, #14b8a6 100%);
+}
+
+body[data-theme="modern"] .color-primaria {
+  color: #3730a3;
+}
+
+body[data-theme="modern"] .color-secundaria {
+  color: #0ea5e9;
+}
+
+body[data-theme="modern"] .borda-cor-primaria {
+  border-color: #3730a3;
+}
+
+body[data-theme="modern"] .borda-cor-secundaria {
+  border-color: #0ea5e9;
+}
+
+body[data-theme="modern"] [data-cor="primaria"] {
+  fill: #3730a3;
+}
+
+body[data-theme="modern"] [data-cor="secundaria"] {
+  fill: #0ea5e9;
+}
+
+body[data-theme="modern"] #capa .topo-logo {
+  position: relative;
+  overflow: hidden;
+}
+
+body[data-theme="modern"] #capa .topo-logo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.28), transparent 55%),
+    radial-gradient(circle at bottom right, rgba(15, 118, 110, 0.22), transparent 60%);
+  mix-blend-mode: screen;
+}
+
+body[data-theme="modern"] #capa .card-left,
+body[data-theme="modern"] #capa .card-middle,
+body[data-theme="modern"] #capa .card-right {
+  filter: saturate(120%) contrast(110%);
+  border-radius: 18px;
+  opacity: 0.85;
+}
+
+body[data-theme="modern"] #capa .detail1,
+body[data-theme="modern"] #capa .detail2,
+body[data-theme="modern"] #capa .detail3,
+body[data-theme="modern"] #capa .detail4 {
+  opacity: 0.9;
+  border-radius: 18px;
+}
+
+body[data-theme="modern"] #capa .title-text {
+  font-size: 22pt;
+  letter-spacing: 1px;
+}
+
+body[data-theme="modern"] #capa .orcamento-nro {
+  color: #1f2937;
+  font-weight: 600;
+}
+
+body[data-theme="modern"] .dados-cliente .linha4.destaque {
+  background: linear-gradient(135deg, rgba(55, 48, 163, 0.95), rgba(14, 165, 233, 0.95));
+}
+
+body[data-theme="modern"] .projeto-item {
+  border: 1px solid rgba(55, 48, 163, 0.08);
+  border-radius: 16px;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.06), rgba(14, 165, 233, 0.08));
+  box-shadow: 0 14px 35px rgba(15, 23, 42, 0.08);
+}
+
+body[data-theme="modern"] .item-venda-lista {
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(15, 118, 110, 0.1);
+}
+
+body[data-theme="modern"] .item-venda-cabecalho {
+  background: linear-gradient(135deg, rgba(55, 48, 163, 0.2), rgba(14, 165, 233, 0.25));
+  color: #0f172a;
+}
+
+body[data-theme="modern"] .valor-final-destaque {
+  background: linear-gradient(135deg, #3730a3, #6366f1);
+  box-shadow: 0 14px 35px rgba(99, 102, 241, 0.45);
+  border-radius: 999px;
+  padding-inline: 2.25rem;
+}
+
+body[data-theme="modern"] .assinatura-container {
+  border-top: 1px solid rgba(99, 102, 241, 0.2);
+  padding-top: 3rem;
+}
+
+body[data-theme="modern"] .assinatura-bloco .linha-assinatura {
+  border-top: 2px dashed rgba(15, 118, 110, 0.6);
+}
+
+body[data-theme="modern"] .condicoes-pagamento,
+body[data-theme="modern"] .observacoes {
+  border-radius: 14px;
+  background: rgba(14, 165, 233, 0.08);
+  padding: 1.75rem;
+  border: 1px solid rgba(14, 165, 233, 0.18);
+}
+
+body[data-theme="modern"] .promissoria-container {
+  border-radius: 18px;
+  border: 1px solid rgba(15, 118, 110, 0.2);
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.08), rgba(14, 165, 233, 0));
+}
+
+body[data-theme="modern"] .promissoria-left {
+  background: linear-gradient(135deg, rgba(55, 48, 163, 0.15), rgba(14, 165, 233, 0.15));
+}
+
+body[data-theme="modern"] .footer-info-right {
+  color: #fff;
+}
+
+body[data-theme="modern"] .projeto-item--modern {
+  display: grid;
+  gap: 1.5rem;
+}
+
+body[data-theme="modern"] .projeto-item__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+body[data-theme="modern"] .projeto-item__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+body[data-theme="modern"] .projeto-item__meta h3 {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+body[data-theme="modern"] .projeto-item__meta p {
+  margin: 0;
+  color: #475569;
+  font-size: 0.95rem;
+}
+
+body[data-theme="modern"] .projeto-item__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(55, 48, 163, 0.16), rgba(14, 165, 233, 0.16));
+  color: #312e81;
+  font-weight: 600;
+}
+
+body[data-theme="modern"] .projeto-item__image {
+  width: 180px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 18px;
+  box-shadow: 0 18px 32px rgba(15, 23, 42, 0.15);
+}
+
+body[data-theme="modern"] .projeto-item__details dl {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+  margin: 0;
+}
+
+body[data-theme="modern"] .projeto-item__details dt {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: #475569;
+  letter-spacing: 0.08em;
+}
+
+body[data-theme="modern"] .projeto-item__details dd {
+  margin: 0.2rem 0 0;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+body[data-theme="modern"] .projeto-item__metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem;
+}
+
+body[data-theme="modern"] .projeto-item__metric {
+  border-radius: 16px;
+  padding: 1rem 1.25rem;
+  background: rgba(99, 102, 241, 0.12);
+  color: #312e81;
+}
+
+body[data-theme="modern"] .projeto-item__metric span {
+  display: block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.75;
+}
+
+body[data-theme="modern"] .projeto-item__metric strong {
+  display: block;
+  margin-top: 0.45rem;
+  font-size: 1.1rem;
+  color: #0f172a;
+}
+
+body[data-theme="modern"] .projeto-item__metric--highlight {
+  background: linear-gradient(135deg, rgba(55, 48, 163, 0.85), rgba(14, 165, 233, 0.85));
+  color: #fff;
+}
+
+body[data-theme="modern"] .projeto-item__metric--highlight strong {
+  color: #fff;
+}
+
+body[data-theme="modern"] .projeto-item__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+body[data-theme="modern"] .projeto-item__chip {
+  padding: 0.45rem 0.85rem;
+  border-radius: 14px;
+  background: rgba(15, 118, 110, 0.12);
+  color: #0f766e;
+  font-size: 0.85rem;
+}
+
+body[data-theme="modern"] .projeto-item__footer {
+  border-top: 1px solid rgba(148, 163, 184, 0.35);
+  padding-top: 1rem;
+}
+
+body[data-theme="modern"] .projeto-item__footer h4 {
+  margin: 0 0 0.5rem;
+  font-size: 0.95rem;
+  color: #334155;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+body[data-theme="modern"] .projeto-item__footer p {
+  margin: 0;
+  color: #475569;
+  line-height: 1.5;
+}
+
+body[data-theme="modern"] .totais-modern {
+  margin-top: 3rem;
+  padding: 2rem;
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(55, 48, 163, 0.08), rgba(14, 165, 233, 0.12));
+  border: 1px solid rgba(55, 48, 163, 0.12);
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+body[data-theme="modern"] .totais-modern__logo img {
+  height: 140px;
+  object-fit: contain;
+  background: #fff;
+  border-radius: 16px;
+  padding: 1rem 1.5rem;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.15);
+}
+
+body[data-theme="modern"] .totais-modern__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+  width: 100%;
+}
+
+body[data-theme="modern"] .totais-modern__card {
+  border-radius: 18px;
+  padding: 1.25rem 1.5rem;
+  background: #fff;
+  border: 1px solid rgba(15, 118, 110, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  color: #0f172a;
+  box-shadow: 0 16px 32px rgba(15, 23, 42, 0.08);
+}
+
+body[data-theme="modern"] .totais-modern__card span {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #475569;
+}
+
+body[data-theme="modern"] .totais-modern__card strong {
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+body[data-theme="modern"] .totais-modern__card--highlight {
+  background: linear-gradient(135deg, rgba(55, 48, 163, 0.88), rgba(14, 165, 233, 0.88));
+  color: #fff;
+  border-color: transparent;
+}
+
+body[data-theme="modern"] .totais-modern__card--highlight span,
+body[data-theme="modern"] .totais-modern__card--highlight strong {
+  color: #fff;
+}

@@ -40,9 +40,9 @@ COPY package*.json ./
 RUN npm ci --only=production && npm cache clean --force
 
 # Instala somente o Chromium do Playwright e suas deps de SO
-# (USANDO a versão do Playwright do seu package.json)
-RUN npx playwright install chromium && \
-    npx playwright install-deps chromium
+# (força uso da versão instalada em node_modules)
+RUN node ./node_modules/playwright/cli.js install chromium && \
+    node ./node_modules/playwright/cli.js install-deps chromium
 
 # Copia o código da aplicação
 COPY . .

@@ -43,6 +43,8 @@ Content-Type: application/json
 {
   "licencaId": "string (required)",
   "orcamentoId": "string (required)", 
+  "templateId": "string (optional, default: \"default\")",
+  "reportType": "string (optional, default: \"orcamento\")",
   "config": {
     "imprimirLogoEmTodas": boolean,
     "imprimirParcelas": boolean,
@@ -66,6 +68,10 @@ Content-Disposition: attachment; filename="ORCAMENTO-{orcamentoId}.pdf"
 X-PDF-Engine: playwright-chromium
 X-Generation-Time: {duration}ms
 X-Browser-Pool: {poolStats}
+X-Config-Hash: {configHash}
+X-Cache-Key: {cacheKey}
+X-Template-Id: {templateId}
+X-Report-Type: {reportType}
 ```
 
 **Success Response (200):**
@@ -98,11 +104,30 @@ Binary PDF data
 }
 ```
 
+### **POST /relatorios/orcamento**
+Endpoint ilustrativo que fixa `reportType="orcamento"` e utiliza os mesmos parâmetros de `/gerar-pdf`. Ideal para consumidores que ainda não distinguem relatórios por tipo.
+
+**Body mínimo:**
+```json
+{
+  "licencaId": "string",
+  "orcamentoId": "string",
+  "config": { "imprimirLogoEmTodas": true }
+}
+```
+
+**Comportamento:**
+- `reportType` forçado para `orcamento` (ignora valores enviados pelo cliente).
+- `templateId` assume `default` quando não informado.
+- Retorna os mesmos headers e payload do endpoint principal.
+
 ## 🧠 Cache
 
 Para evitar gerar o mesmo PDF repetidas vezes, o serviço mantém um cache em memória por um período (TTL). A chave do cache é composta por:
 - `licencaId`
 - `orcamentoId`
+- `templateId`
+- `reportType`
 - um hash estável do objeto `config`
 
 Recomendação: inclua `dataVersion` dentro de `config` (ex.: ISO-8601 ou versão numérica). Quando `dataVersion` mudar, o hash de `config` muda e o cache é invalidado automaticamente.
@@ -126,6 +151,14 @@ Recomendação: inclua `dataVersion` dentro de `config` (ex.: ISO-8601 ou versã
 | `LOG_LEVEL` | info | Nível de log |
 | `MEMORY_LOG_INTERVAL` | 30000 | Intervalo de log de memória (ms) |
 | `CLEANUP_INTERVAL` | 300000 | Intervalo de limpeza (ms) |
+
+## 🛠️ **Guidelines para Novos Endpoints**
+
+- Sempre defina `reportType` explícito no handler e documente o comportamento (mesmo que seja igual ao default).
+- Permita `templateId` customizado, mas mantenha fallback em `config.templates.defaultTemplateId` para compatibilidade.
+- Reutilize o controller principal (`PDFController.generatePDF`) com overrides para manter validações comuns.
+- Propague `templateId` e `reportType` para headers e cache (garante observabilidade e isolamento dos PDFs gerados).
+- Atualize testes automatizados adicionando um cenário smoke por endpoint criado.
 
 ## 📊 **Monitoring**
 

@@ -10,6 +10,7 @@ class RateLimiter {
     this.requestCounts = new Map();
     this.windowMs = config.rateLimit.windowMs;
     this.maxRequests = config.rateLimit.maxRequestsPerMinute;
+    this.cleanupInterval = null;
   }
 
   middleware() {
@@ -48,7 +49,11 @@ class RateLimiter {
 
   // Limpeza periódica dos contadores
   startCleanup() {
-    setInterval(() => {
+    if (this.cleanupInterval) {
+      return;
+    }
+
+    this.cleanupInterval = setInterval(() => {
       const now = Date.now();
       for (const [clientId, data] of this.requestCounts.entries()) {
         if (now - data.timestamp > this.windowMs * 2) {
@@ -56,6 +61,13 @@ class RateLimiter {
         }
       }
     }, this.windowMs);
+  }
+
+  stopCleanup() {
+    if (this.cleanupInterval) {
+      clearInterval(this.cleanupInterval);
+      this.cleanupInterval = null;
+    }
   }
 }
 

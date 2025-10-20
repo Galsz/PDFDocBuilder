@@ -334,7 +334,7 @@ header {
 .card-left,
 .card-middle,
 .card-right {
-  background-image: url("../assets/images/building.png");
+  background-image: url("../../assets/images/building.png");
   background-repeat: no-repeat;
   background-size: 794px auto;
   background-position-y: center;
@@ -790,21 +790,53 @@ header {
   padding: 6px;
 }
 
-.item-venda-cabecalho .produto {
+.item-venda-cabecalho .col-produto {
   text-align: left;
   padding: 10px;
+  width: 60%;
   border-radius: 8px 0 0 8px;
 }
 
-.item-venda-cabecalho .valor-total {
+.item-venda-cabecalho .col-total {
   border-radius: 0 8px 8px 0;
 }
 
 .item-venda-produto {
   display: flex;
   align-items: center;
+  width: 62%;
   gap: 10px;
   padding: 6px;
+}
+
+.venda-item-linha .col-total {
+  text-align: right;
+}
+
+.venda-item-linha .col-un {
+  min-width: 25px;
+}
+
+.venda-item-linha .col-alt {
+  min-width: 50px;
+}
+.venda-item-linha .col-larg {
+  min-width: 50px;
+}
+
+.venda-item-linha .col-qtde {
+  min-width: 40px;
+  text-align: center;
+}
+
+.venda-item-linha .col-unt {
+  min-width: 60px;
+  text-align: right;
+}
+
+.venda-item-linha .col-total {
+  min-width: 60px;
+  text-align: right;
 }
 
 .produto-imagem {

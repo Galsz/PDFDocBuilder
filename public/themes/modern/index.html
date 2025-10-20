@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="../default/css/style.css" />
+  <link rel="stylesheet" href="./css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="../default/js/shared.js" defer></script>
+  <script src="../default/js/components/registry.js" defer></script>
+  <script src="../../components/common/index.js" defer></script>
+  <script src="../default/js/components/layout.js" defer></script>
+  <script src="../default/js/components/cliente.js" defer></script>
+  <script src="../default/js/components/projeto.js" defer></script>
+  <script src="../default/js/components/vendas.js" defer></script>
+  <script src="../default/js/components/financeiro.js" defer></script>
+  <script src="./js/components/overrides.js" defer></script>
+  <script src="../default/js/script.js" defer></script>
+  <title>Relatório Moderno</title>
+</head>
+
+<body data-theme="modern">
+  <div id="capa" class="page-relatorio">
+    <div class="topo">
+      <div class="topo-logo cor-primaria">
+        <div class="wvicon">
+          <img src="../../assets/images/logowhite_evo.svg" alt="wv icon" />
+        </div>
+        <div id="logo-capa" class="logo-container"></div>
+      </div>
+      <div class="title-container">
+        <svg xmlns="http://www.w3.org/2000/svg" width="331" height="62" viewBox="0 0 849 159" fill="none">
+          <path d="M0 0H849L753.398 149.762C749.724 155.517 743.367 159 736.54 159H0V0Z" data-cor="primaria" />
+        </svg>
+        <div class="title-text">
+          <span id="title"></span>
+          <span id="subtitle"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="middle">
+      <div class="orcamento-nro">
+        <span id="orcamento-nro"></span>
+      </div>
+      <div id="line-middle">
+        <div class="middle-line1 borda-cor-secundaria"></div>
+        <div class="middle-line2 borda-cor-secundaria"></div>
+      </div>
+      <div class="cards-container">
+        <div class="card-left"></div>
+        <div class="card-middle"></div>
+        <div class="card-right"></div>
+      </div>
+      <div id="detalhes">
+        <div class="detail1 cor-secundaria"></div>
+        <div class="detail2 cor-secundaria"></div>
+        <div class="detail3 cor-secundaria"></div>
+        <div class="detail4 cor-secundaria"></div>
+      </div>
+    </div>
+
+    <div id="bottom">
+      <div id="line">
+        <div class="bottom-line1 borda-cor-secundaria"></div>
+        <div class="bottom-line2 borda-cor-secundaria"></div>
+        <div class="bottom-line3 borda-cor-secundaria"></div>
+        <div class="bottom-line4 borda-cor-secundaria"></div>
+        <div class="bottom-line5 borda-cor-secundaria"></div>
+      </div>
+      <div class="card-canais">
+        <svg xmlns="http://www.w3.org/2000/svg" width="1164" height="131" viewBox="0 0 1164 131" fill="none">
+          <path
+            d="M64.0658 8.93536C67.7722 3.35444 74.0268 0 80.7264 0H1164V131H20.2912C4.33329 131 -5.19772 113.229 3.63071 99.9354L64.0658 8.93536Z"
+            data-cor="primaria" />
+        </svg>
+        <span id="canais-comunicacao-label">Canais de comunicação</span>
+      </div>
+      <div id="dados-cliente">
+        <div class="dados-left">
+          <p class="dados-item">
+            <span id="licenca-whatsapp"></span>
+            <span id="licenca-fone"></span>
+          </p>
+          <p id="licenca-email"></p>
+          <p id="licenca-site"></p>
+          <p id="licenca-instagram"></p>
+        </div>
+        <div class="dados-right">
+          <p id="licenca-cnpj"></p>
+          <p id="licenca-endereco"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

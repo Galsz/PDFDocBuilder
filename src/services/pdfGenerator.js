@@ -18,11 +18,18 @@ class PDFGeneratorService {
       totalTime: 0,
       avgTime: 0,
     };
+    this.reportStats = {};
   }
 
   async generatePDF(licencaId, orcamentoId, configData, options = {}) {
     const startTime = Date.now();
-    const { forceRefresh = false } = options || {};
+    const { forceRefresh = false, templateId, reportType } = options || {};
+    const resolvedTemplateId =
+      templateId || config.templates.defaultTemplateId;
+    const resolvedReportType =
+      reportType || config.reports.defaultReportType;
+    const templateSegment = encodeURIComponent(resolvedTemplateId);
+    const reportQueryParam = encodeURIComponent(resolvedReportType);
     // Hash estável do config para compor a chave do cache
     const sortKeys = (o) => {
       if (Array.isArray(o)) return o.map(sortKeys);
@@ -44,7 +51,13 @@ class PDFGeneratorService {
       .substring(0, 16);
 
     // Para compatibilidade com CACHE_HASH_FIELDS padrão ('configData') usamos a string do hash
-    const requestData = { licencaId, orcamentoId, configData: configHash };
+    const requestData = {
+      licencaId,
+      orcamentoId,
+      templateId: resolvedTemplateId,
+      reportType: resolvedReportType,
+      configData: configHash,
+    };
 
     try {
       // Verifica cache primeiro
@@ -55,8 +68,16 @@ class PDFGeneratorService {
         this.stats.cached++;
         const duration = Date.now() - startTime;
         Logger.info(
-          `PDF retornado do cache em ${duration}ms - Licença: ${licencaId}, Orçamento: ${orcamentoId}`
+          `PDF retornado do cache em ${duration}ms - Licença: ${licencaId}, Orçamento: ${orcamentoId}`,
+          {
+            templateId: resolvedTemplateId,
+            reportType: resolvedReportType,
+          }
         );
+        this.trackReportEvent(resolvedReportType, {
+          type: "cached",
+          duration,
+        });
 
         return {
           buffer: cachedPDF,
@@ -67,12 +88,18 @@ class PDFGeneratorService {
             browserPool: this.browserPool.getStats(),
             cacheKey,
             configHash,
+            templateId: resolvedTemplateId,
+            reportType: resolvedReportType,
           },
         };
       }
 
       Logger.info(
-        `Gerando PDF - Licença: ${licencaId}, Orçamento: ${orcamentoId}`
+        `Gerando PDF - Licença: ${licencaId}, Orçamento: ${orcamentoId}`,
+        {
+          templateId: resolvedTemplateId,
+          reportType: resolvedReportType,
+        }
       );
 
       // Obtém browser do pool
@@ -97,9 +124,7 @@ class PDFGeneratorService {
 
         // URL otimizada
         const cfg = encodeURIComponent(JSON.stringify(configData));
-        const url = `http://127.0.0.1:${
-          config.server.port
-        }/relatorio/index.html?licencaId=${licencaId}&orcamentoId=${orcamentoId}&config=${cfg}&_t=${Date.now()}`;
+        const url = `http://127.0.0.1:${config.server.port}/relatorio/themes/${templateSegment}/index.html?licencaId=${licencaId}&orcamentoId=${orcamentoId}&reportType=${reportQueryParam}&templateId=${templateSegment}&config=${cfg}&_t=${Date.now()}`;
 
         Logger.debug(`Navegando para: ${url}`);
 
@@ -165,11 +190,17 @@ class PDFGeneratorService {
           configHash,
           size: pdfBuffer.length,
           generated: new Date().toISOString(),
+          templateId: resolvedTemplateId,
+          reportType: resolvedReportType,
         });
 
         // Atualiza estatísticas
         const duration = Date.now() - startTime;
         this.updateStats(duration);
+        this.trackReportEvent(resolvedReportType, {
+          type: "generated",
+          duration,
+        });
 
         const stats = this.browserPool.getStats();
         Logger.info(
@@ -179,6 +210,8 @@ class PDFGeneratorService {
           {
             browserPool: stats,
             cache: MemoryCache.getStats(),
+            templateId: resolvedTemplateId,
+            reportType: resolvedReportType,
           }
         );
 
@@ -192,6 +225,8 @@ class PDFGeneratorService {
             cache: MemoryCache.getStats(),
             cacheKey,
             configHash,
+            templateId: resolvedTemplateId,
+            reportType: resolvedReportType,
           },
         };
       } finally {
@@ -203,11 +238,14 @@ class PDFGeneratorService {
       }
     } catch (err) {
       this.stats.errors++;
+      this.trackReportEvent(resolvedReportType, { type: "error" });
       const duration = Date.now() - startTime;
       Logger.error(`Erro ao gerar PDF após ${duration}ms:`, {
         error: err.message,
         licencaId,
         orcamentoId,
+        templateId: resolvedTemplateId,
+        reportType: resolvedReportType,
         stack: err.stack.split("\n").slice(0, 3).join("\n"),
       });
 
@@ -226,6 +264,22 @@ class PDFGeneratorService {
   getStats() {
     const cacheStats = MemoryCache.getStats();
     const browserStats = this.browserPool.getStats();
+
+    const reports = Object.keys(this.reportStats).reduce((acc, key) => {
+      const data = this.reportStats[key];
+      acc[key] = {
+        generated: data.generated,
+        cached: data.cached,
+        errors: data.errors,
+        totalDuration: data.totalDuration,
+        avgDuration: data.avgDuration,
+        lastDuration: data.lastDuration,
+        lastGeneratedAt: data.lastGeneratedAt,
+        lastCacheHitAt: data.lastCacheHitAt,
+        lastErrorAt: data.lastErrorAt,
+      };
+      return acc;
+    }, {});
 
     return {
       requests: {
@@ -248,7 +302,52 @@ class PDFGeneratorService {
       },
       cache: cacheStats,
       browserPool: browserStats,
+      reports,
     };
+  }
+
+  trackReportEvent(reportType, event = {}) {
+    if (!reportType) return;
+
+    if (!this.reportStats[reportType]) {
+      this.reportStats[reportType] = {
+        generated: 0,
+        cached: 0,
+        errors: 0,
+        totalDuration: 0,
+        avgDuration: 0,
+        lastDuration: null,
+        lastGeneratedAt: null,
+        lastCacheHitAt: null,
+        lastErrorAt: null,
+      };
+    }
+
+    const record = this.reportStats[reportType];
+    const nowIso = new Date().toISOString();
+
+    if (event.type === "generated") {
+      record.generated += 1;
+      if (typeof event.duration === "number") {
+        record.totalDuration += event.duration;
+        record.lastDuration = event.duration;
+        record.avgDuration = Math.round(record.totalDuration / record.generated);
+      }
+      record.lastGeneratedAt = nowIso;
+    }
+
+    if (event.type === "cached") {
+      record.cached += 1;
+      record.lastCacheHitAt = nowIso;
+      if (typeof event.duration === "number") {
+        record.lastDuration = event.duration;
+      }
+    }
+
+    if (event.type === "error") {
+      record.errors += 1;
+      record.lastErrorAt = nowIso;
+    }
   }
 }
 

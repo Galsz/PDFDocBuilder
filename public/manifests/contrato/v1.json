@@ -1,0 +1,34 @@
+{
+  "id": "contrato",
+  "version": "v1",
+  "pages": [
+    {
+      "id": "body",
+      "role": "content",
+      "sections": [
+        {
+          "type": "component",
+          "component": "cliente.info",
+          "when": "@dados.cliente",
+          "props": {
+            "dados": "@dados",
+            "codigoPais": "@context.codigoPais"
+          }
+        },
+        {
+          "type": "component",
+          "component": "financeiro.contrato",
+          "when": "@dados.contratoHtml",
+          "props": {
+            "contratoHtml": "@dados.contratoHtml"
+          }
+        },
+        {
+          "type": "component",
+          "component": "assinar.bloco"
+        }
+      ]
+    }
+  ],
+  "attachments": []
+}

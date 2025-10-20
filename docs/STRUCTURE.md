@@ -116,3 +116,28 @@ PDFDocBuilder/
 6. **Criar docker-compose para desenvolvimento**
 
 Esta estrutura segue as **melhores práticas** de desenvolvimento Node.js e está pronta para crescer com seu projeto! 🎉
+
+## 🧩 Componentes Compartilhados
+
+- `public/components/common/` hospeda blocos neutros reutilizáveis por qualquer tema ou relatório.
+- Cada componente registrado via `ComponentRegistry.registerCommon` informa um contrato leve (`definition.contract`) descrevendo props esperados.
+- Resolução de componentes considera a seguinte ordem de precedência:
+	1. overrides específicos de relatório (`ComponentRegistry.registerReport` / `setReportOverrides`)
+	2. overrides do tema (`ComponentRegistry.register` | `registerTheme`)
+	3. fallback dos componentes comuns
+- Componentes disponíveis atualmente:
+	- `layout.header`: cabeçalho padrão com logo/licença
+	- `layout.footer`: rodapé com paginação e dados da licença
+	- `assinar.bloco`: bloco de assinaturas padrão
+- Guidelines de composição:
+	- **Nomenclatura**: use o padrão `dominio.subdominio` (ex.: `layout.header`).
+	- **Coesão**: cada componente deve encapsular apenas um bloco visual e receber dados via props.
+	- **Testabilidade**: mantenha `render` puro, sem efeitos colaterais, facilitando snapshot/render tests.
+
+## 📋 Manifests de Relatórios
+
+- Cada relatório possui um manifesto JSON versionado em `public/manifests/<reportType>/<version>.json`.
+- O manifesto descreve a ordem dos blocos (`component`, `collection`, `richText`) e regras condicionais (`when`, `allOf`, `anyOf`).
+- `ManifestRuntime` carrega o manifesto adequado (_fallback_ para `orcamento@v1`) e instancia componentes via `ComponentRegistry`.
+- Anexos (ex.: promissória, contrato) são modelados no campo `attachments` para gerar páginas adicionais após a paginação principal.
+- Para novas versões, incremente o diretório (`v2`, `v3`) mantendo compatibilidade retroativa através de `config.manifestVersion`.

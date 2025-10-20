@@ -1,0 +1,121 @@
+{
+  "reportType": "orcamento",
+  "templateId": "modern",
+  "config": {
+    "manifestVersion": "v1",
+    "imprimirParcelas": true,
+    "imprimirPromissorias": false,
+    "cover": {
+      "variant": "imageCenter",
+      "background": {
+        "size": "cover",
+        "position": "center",
+        "color": "rgba(55,48,163,0.35)"
+      },
+      "tokens": {
+        "titulo": "Proposta Técnica",
+        "subtitulo": "Soluções em vidro inteligente",
+        "imagemCapa": "https://images.unsplash.com/photo-1529429617124-aee19168f7f1?auto=format&fit=crop&w=1200&q=80"
+      }
+    }
+  },
+  "dados": {
+    "id": "ORC-9821",
+    "data": "2025-03-14",
+    "cores": {
+      "corPrimaria": "#3730a3",
+      "corSecundaria": "#0ea5e9"
+    },
+    "licenca": {
+      "nome": "Studio Vetro",
+      "cnpj": "12.345.678/0001-22",
+      "email": "contato@studiovetro.com",
+      "fone": "11955558888",
+      "site": "https://studiovetro.com",
+      "instagram": "studiovetro",
+      "endereco": "Av. Paulista, 2500",
+      "cidade": "São Paulo",
+      "pais": 1058,
+      "logoUrl": "https://dummyimage.com/220x120/312e81/ffffff&text=Studio+Vetro"
+    },
+    "cliente": {
+      "contato": "Condomínio Horizon",
+      "telefone": "1122334455",
+      "email": "administracao@horizon.com",
+      "endereco": "Rua das Artes, 180",
+      "cidade": "São Paulo",
+      "obra": {
+        "nome": "Cobertura social",
+        "responsavel": "Eng. Laura Dias",
+        "responsavelFone": "11988887777",
+        "endereco": "Rua das Artes, 180",
+        "cidade": "São Paulo"
+      }
+    },
+    "vendedor": {
+      "nome": "Marcos Vieira",
+      "telefone": "11966667777",
+      "email": "marcos@studiovetro.com"
+    },
+    "projetos": [
+      {
+        "ordem": "A1",
+        "nome": "Painel panorâmico",
+        "localizacao": "Lounge principal",
+        "perfil": "Estrutural em alumínio anodizado",
+        "acessorios": "Fechos ocultos, sensor de presença",
+        "vidro": "Vidro inteligente 10mm",
+        "qtd": 4,
+        "m2": 18.5,
+        "largura": "3.70m",
+        "altura": "2.50m",
+        "valorUnt": 3550,
+        "valorTotal": 14200,
+        "imagem": "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=400&q=80",
+        "variaveis": [
+          { "nome": "Acionamento", "valor": "Automação integrada" },
+          { "nome": "Garantia", "valor": "36 meses" }
+        ],
+        "observacoes": "Estrutura preparada para integração com sistema de áudio e iluminação cênica."
+      },
+      {
+        "ordem": "B4",
+        "nome": "Guarda-corpo flutuante",
+        "localizacao": "Ático",
+        "perfil": "Perfil minimalista inox escovado",
+        "acessorios": "Parafusos ocultos, LEDs embutidos",
+        "vidro": "Vidro laminado 12mm",
+        "qtd": 12,
+        "m2": 25.1,
+        "largura": "1.20m",
+        "altura": "1.10m",
+        "valorUnt": 980,
+        "valorTotal": 11760,
+        "variaveis": [
+          { "nome": "Norma", "valor": "NBR 7199" }
+        ]
+      }
+    ],
+    "parcelas": [
+      {
+        "numero": "1",
+        "vencimento": "2025-04-01",
+        "valor": 12000,
+        "formaPagamento": "PIX",
+        "status": "Aberta"
+      },
+      {
+        "numero": "2",
+        "vencimento": "2025-05-01",
+        "valor": 13960,
+        "formaPagamento": "PIX",
+        "status": "Planejada"
+      }
+    ],
+    "valorTotal": 29000,
+    "desconto": 1960,
+    "valorFinal": 27040,
+    "condicoesPagamento": "Antecipação de 40% na assinatura e duas parcelas proporcionais.",
+    "observacoes": "Valores válidos por 15 dias. Inclui suporte técnico e treinamento da equipe do condomínio."
+  }
+}
