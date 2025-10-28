@@ -231,25 +231,33 @@
       return telefone;
     },
     formatarValor(valor, comSimbolo = true, codigoPais = null) {
+      // Seleciona configuração do país
       let config = this.paisesConfig[1058];
-
       if (codigoPais && this.paisesConfig[codigoPais]) {
         config = this.paisesConfig[codigoPais];
       }
 
-      if (!valor) {
-        return comSimbolo ? `${config.symbol} 0,00` : "0,00";
-      }
+      // Moedas sem casas decimais (PYG: Guarani, JPY: Iene, KRW: Won, etc.)
+      const zeroDecimalCurrencies = new Set(["PYG", "JPY", "KRW"]);
+      const minFrac = zeroDecimalCurrencies.has(config.currency) ? 0 : 2;
+      const maxFrac = minFrac;
 
+      // Normaliza valor
       let parsed = valor;
       if (typeof parsed === "string") {
-        parsed = parseFloat(parsed.replace(",", "."));
+        // Converte vírgula decimal para ponto e remove separadores de milhar simples
+        const norm = parsed.replace(/\./g, "").replace(",", ".");
+        parsed = Number(norm);
+      }
+      if (parsed === null || parsed === undefined || Number.isNaN(Number(parsed))) {
+        parsed = 0;
       }
 
-      const valorFormatado = parsed.toLocaleString(config.locale, {
+      const numero = Number(parsed);
+      const valorFormatado = numero.toLocaleString(config.locale, {
         style: "decimal",
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
+        minimumFractionDigits: minFrac,
+        maximumFractionDigits: maxFrac,
       });
 
       return comSimbolo ? `${config.symbol} ${valorFormatado}` : valorFormatado;
