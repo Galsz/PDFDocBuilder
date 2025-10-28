@@ -334,7 +334,7 @@ header {
 .card-left,
 .card-middle,
 .card-right {
-  background-image: url("../../assets/images/building.png");
+  background-image: url("./../assets/images/building.png");
   background-repeat: no-repeat;
   background-size: 794px auto;
   background-position-y: center;

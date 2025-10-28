@@ -59,8 +59,8 @@ const normalizeProjetos = (raw) =>
       valorUnt: ensureNumber(projeto.valorUnt || projeto.valorUnitario, 0),
       valorTotal: ensureNumber(projeto.valorTotal || projeto.total || projeto.valor, 0),
       imagem: ensureString(projeto.imagem || projeto.imagemUrl || projeto.image || ""),
-      variaveis: normalizeProjetoVariaveis(projeto.variaveis || projeto.variables),
       observacoes: ensureString(projeto.observacoes || projeto.obs || ""),
+      variaveis: normalizeProjetoVariaveis(projeto.variaveis || projeto.variables),
     };
   });
 

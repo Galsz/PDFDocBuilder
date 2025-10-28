@@ -102,18 +102,19 @@
             ${total}
           </div>
 
-          ${variaveis}
-
           ${
-            projeto.observacoes
-              ? `
-                <footer class="projeto-item__footer">
-                  <h4>${I18N.t(codigoPais, "observations")}</h4>
-                  <p>${projeto.observacoes}</p>
-                </footer>
-              `
-              : ""
+          projeto.observacoes
+            ? `
+              <footer class="projeto-item__footer">
+                <h4>${I18N.t(codigoPais, "observations")}</h4>
+                <p>${projeto.observacoes}</p>
+              </footer>
+            `
+            : ""
           }
+
+          ${variaveis}
+        
         </section>
       `;
     },

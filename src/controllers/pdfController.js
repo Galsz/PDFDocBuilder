@@ -98,7 +98,7 @@ class PDFController {
 
       res.set({
         "Content-Type": "application/pdf",
-  "Content-Disposition": `attachment; filename="ORCAMENTO-${normalizedOrcamentoId}.pdf"`,
+        "Content-Disposition": `attachment; filename="ORCAMENTO-${normalizedOrcamentoId}.pdf"`,
         "X-PDF-Engine": "playwright-chromium",
         "X-Generation-Time": `${result.stats.duration}ms`,
         "X-Browser-Pool": JSON.stringify(result.stats.browserPool),

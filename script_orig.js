@@ -2,8 +2,8 @@
 (function propostaModule(global) {
   const { ComponentRegistry, Utils, I18N } = global;
 
-  const DEFAULT_COVER_IMAGE = "./../../assets/images/building.png";
-  const MANIFEST_BASE_PATH = "./../../manifests";
+  const DEFAULT_COVER_IMAGE = "../../assets/images/building.png";
+  const MANIFEST_BASE_PATH = "../../manifests";
   const DEFAULT_REPORT_TYPE = "orcamento";
   const DEFAULT_MANIFEST_VERSION = "v1";
 
@@ -45,491 +45,6 @@
   }
 
   const COVER_CARD_SELECTORS = [".card-left", ".card-middle", ".card-right"];
-
-  function toCssMm(value) {
-    const numeric = Number(value);
-    if (Number.isFinite(numeric)) {
-      return `${numeric}mm`;
-    }
-    return null;
-  }
-
-  function isLikelyImageSrc(value) {
-    if (typeof value !== "string") return false;
-    const v = value.trim();
-    if (!v) return false;
-    return (
-      v.startsWith("data:image/") ||
-      v.startsWith("http://") ||
-      v.startsWith("https://") ||
-      v.startsWith("blob:")
-    );
-  }
-
-  const DYNAMIC_ANCHOR_TRANSFORMS = {
-    "top-left": [0, 0],
-    "left-top": [0, 0],
-    "top-center": [-50, 0],
-    "center-top": [-50, 0],
-    "top-right": [-100, 0],
-    "right-top": [-100, 0],
-    "center-left": [0, -50],
-    "left-center": [0, -50],
-    center: [-50, -50],
-    middle: [-50, -50],
-    "center-center": [-50, -50],
-    "middle-center": [-50, -50],
-    "center-right": [-100, -50],
-    "right-center": [-100, -50],
-    "bottom-left": [0, -100],
-    "left-bottom": [0, -100],
-    "bottom-center": [-50, -100],
-    "center-bottom": [-50, -100],
-    "bottom-right": [-100, -100],
-    "right-bottom": [-100, -100],
-  };
-
-  function resolveAnchorTransform(anchor) {
-    if (!anchor) {
-      return { x: 0, y: 0 };
-    }
-    const normalized = String(anchor).trim().toLowerCase();
-    if (DYNAMIC_ANCHOR_TRANSFORMS[normalized]) {
-      const [x, y] = DYNAMIC_ANCHOR_TRANSFORMS[normalized];
-      return { x, y };
-    }
-    return { x: 0, y: 0 };
-  }
-
-  const DynamicCover = {
-    render(blueprint, runtimeContext = {}) {
-      if (!isPlainObject(blueprint)) {
-        console.warn("DynamicCover.render recebeu blueprint inválido", blueprint);
-        return false;
-      }
-      const container = document.getElementById("capa");
-      if (!container) {
-        console.warn("DynamicCover.render não encontrou container #capa");
-        return false;
-      }
-
-      this.prepareContainer(container, blueprint);
-
-      const tokensRoot = this.createTokensRoot(container, blueprint);
-      const lookup = this.buildLookup(runtimeContext);
-      const tokens = Array.isArray(blueprint.tokens) ? blueprint.tokens : [];
-
-      tokens.forEach((token) => {
-        const element = this.createTokenElement(token, lookup);
-        if (element) {
-          tokensRoot.appendChild(element);
-        }
-      });
-
-      return true;
-    },
-
-    prepareContainer(container, blueprint) {
-      container.classList.add("dynamic-cover");
-      container.setAttribute("data-dynamic-cover", "true");
-      container.innerHTML = "";
-      container.style.position = "relative";
-      container.style.display = "block";
-      container.style.padding = "0";
-      container.style.margin = "0 auto";
-      container.style.overflow = "hidden";
-      container.style.boxSizing = "border-box";
-      container.style.backgroundColor =
-        blueprint.background?.color || "transparent";
-
-      if (blueprint.background?.src) {
-        container.style.backgroundImage = `url('${blueprint.background.src}')`;
-      } else {
-        container.style.backgroundImage = "none";
-      }
-
-      const fit = String(blueprint.background?.fit || "cover").toLowerCase();
-      let backgroundSize = "cover";
-      let backgroundRepeat = "no-repeat";
-
-      if (fit === "contain") {
-        backgroundSize = "contain";
-      } else if (fit === "stretch" || fit === "fill") {
-        backgroundSize = "100% 100%";
-      } else if (fit === "repeat" || fit === "tile") {
-        backgroundSize = "auto";
-        backgroundRepeat = "repeat";
-      } else if (fit === "none") {
-        backgroundSize = "auto";
-      }
-
-      container.style.backgroundRepeat = backgroundRepeat;
-      container.style.backgroundSize = backgroundSize;
-      container.style.backgroundPosition = "center";
-
-      const widthCss = toCssMm(blueprint.page?.widthMm);
-      const heightCss = toCssMm(blueprint.page?.heightMm);
-
-      if (widthCss) {
-        container.style.width = widthCss;
-      } else {
-        container.style.removeProperty("width");
-      }
-
-      if (heightCss) {
-        container.style.height = heightCss;
-      } else {
-        container.style.removeProperty("height");
-      }
-    },
-
-    createTokensRoot(container, blueprint) {
-      const tokensRoot = document.createElement("div");
-      tokensRoot.classList.add("dynamic-cover__tokens");
-      tokensRoot.style.position = "relative";
-      tokensRoot.style.width = "100%";
-      tokensRoot.style.height = "100%";
-      tokensRoot.style.boxSizing = "border-box";
-
-      const safe = isPlainObject(blueprint.page?.safe)
-        ? blueprint.page.safe
-        : {};
-
-      const paddingTop = toCssMm(safe.top) || "0";
-      const paddingRight = toCssMm(safe.right) || "0";
-      const paddingBottom = toCssMm(safe.bottom) || "0";
-      const paddingLeft = toCssMm(safe.left) || "0";
-
-      tokensRoot.style.padding = `${paddingTop} ${paddingRight} ${paddingBottom} ${paddingLeft}`;
-
-      container.appendChild(tokensRoot);
-      return tokensRoot;
-    },
-
-    buildLookup(runtimeContext = {}) {
-      const aggregate = {
-        dados: runtimeContext.dados || {},
-        config: runtimeContext.config || {},
-        query: runtimeContext.query || {},
-        tokens: runtimeContext.tokens || {},
-      };
-
-  const map = new Map();
-      const visited = new WeakSet();
-
-      const register = (key, value) => {
-        if (value === undefined || value === null) return;
-        if (!key) return;
-        const normalized = String(key).trim().toLowerCase();
-        if (!normalized) return;
-        if (!map.has(normalized)) {
-          map.set(normalized, value);
-        }
-      };
-
-      const sanitize = (key) => String(key).trim().toLowerCase().replace(/[^a-z0-9]/g, "");
-
-      const traverse = (prefix, value) => {
-        if (value === undefined || value === null) {
-          return;
-        }
-
-        if (typeof value === "object") {
-          if (visited.has(value)) {
-            return;
-          }
-          visited.add(value);
-        }
-
-        if (
-          typeof value !== "object" ||
-          value instanceof Date ||
-          value instanceof RegExp
-        ) {
-          if (prefix) {
-            // registro do caminho completo
-            register(prefix, value);
-
-            // aliases baseados nos segmentos
-            const segments = prefix.split(".").filter(Boolean);
-            const last = segments[segments.length - 1];
-            if (last) {
-              register(last, value);
-              register(sanitize(last), value);
-            }
-
-            const roots = new Set(["dados", "tokens", "config", "query"]);
-            const withoutRoots = segments.filter((s) => !roots.has(s));
-            if (withoutRoots.length) {
-              const flattened = sanitize(withoutRoots.join(""));
-              if (flattened) register(flattened, value);
-            }
-
-            if (sanitize(last) === "id") {
-              register("orcamentoid", value);
-            }
-          }
-          return;
-        }
-
-        if (Array.isArray(value)) {
-          value.forEach((item, index) => {
-            const nextPrefix = prefix ? `${prefix}[${index}]` : `[${index}]`;
-            traverse(nextPrefix, item);
-          });
-          return;
-        }
-
-        Object.keys(value).forEach((key) => {
-          const nextPrefix = prefix ? `${prefix}.${key}` : key;
-          traverse(nextPrefix, value[key]);
-        });
-      };
-
-      traverse("dados", aggregate.dados);
-      traverse("config", aggregate.config);
-      traverse("query", aggregate.query);
-      traverse("tokens", aggregate.tokens);
-
-      return (rawExpression) => {
-        if (rawExpression === undefined || rawExpression === null) {
-          return undefined;
-        }
-
-        const expression = String(rawExpression)
-          .replace(/^\s*\{\{/, "")
-          .replace(/\}\}\s*$/, "")
-          .trim();
-
-        if (!expression) return undefined;
-
-        const normalized = expression.toLowerCase();
-        if (map.has(normalized)) {
-          return map.get(normalized);
-        }
-
-        const fromPath = Utils.getValueByPath(aggregate, expression);
-        if (!Utils.isNil(fromPath)) {
-          return fromPath;
-        }
-
-        const fromLowerPath = Utils.getValueByPath(
-          aggregate,
-          expression.toLowerCase()
-        );
-        if (!Utils.isNil(fromLowerPath)) {
-          return fromLowerPath;
-        }
-
-        return undefined;
-      };
-    },
-
-    createTokenElement(token, lookup) {
-      if (!token || typeof token !== "object") {
-        return null;
-      }
-
-      const type = String(token.type || "text").toLowerCase();
-      const wrapper = document.createElement("div");
-      wrapper.classList.add("dynamic-cover__token", `dynamic-cover__token--${type}`);
-      if (token.id) {
-        wrapper.dataset.tokenId = token.id;
-      }
-      wrapper.style.position = "absolute";
-      wrapper.style.pointerEvents = "none";
-      wrapper.style.display = "inline-block";
-      wrapper.style.whiteSpace = "pre-wrap";
-      wrapper.style.wordBreak = "break-word";
-
-      const left = toCssMm(token.xMm ?? token.leftMm ?? token.x);
-      const top = toCssMm(token.yMm ?? token.topMm ?? token.y);
-
-      if (left) {
-        wrapper.style.left = left;
-      }
-      if (top) {
-        wrapper.style.top = top;
-      }
-
-      if (token.zIndex !== undefined) {
-        wrapper.style.zIndex = String(token.zIndex);
-      }
-
-      const { x, y } = resolveAnchorTransform(token.anchor);
-      if (x !== 0 || y !== 0) {
-        wrapper.style.transform = `translate(${x}%, ${y}%)`;
-      }
-
-      const styleConfig = isPlainObject(token.style) ? token.style : {};
-
-      // Resolver conteúdo antes para detectar imagem implicitamente
-      const previewContent = this.resolveTokenContent(token, lookup);
-      const renderAsImage =
-        type === "image" ||
-        token.render === "image" ||
-        token.format === "image" ||
-        token.asImage === true ||
-        isLikelyImageSrc(previewContent);
-
-      if (renderAsImage) {
-        const src = previewContent;
-        if (!src) {
-          return null;
-        }
-
-        const img = document.createElement("img");
-        img.src = src;
-        img.alt = token.binding?.label || token.binding?.key || token.id || "";
-        img.style.display = "block";
-        img.style.width = "100%";
-        img.style.height = "100%";
-
-        if (styleConfig.objectFit) {
-          img.style.objectFit = styleConfig.objectFit;
-        }
-        if (styleConfig.objectPosition) {
-          img.style.objectPosition = styleConfig.objectPosition;
-        }
-        if (styleConfig.borderRadius) {
-          img.style.borderRadius = styleConfig.borderRadius;
-        }
-
-        wrapper.appendChild(img);
-        this.applyTokenStyles(wrapper, styleConfig, type);
-        return wrapper;
-      }
-
-      const content = previewContent;
-      if (content === null || content === undefined) {
-        if (token.hideIfEmpty) {
-          return null;
-        }
-        wrapper.textContent = "";
-      } else {
-        wrapper.textContent = String(content);
-      }
-
-      this.applyTokenStyles(wrapper, styleConfig, type);
-      return wrapper;
-    },
-
-    resolveTokenContent(token, lookup) {
-      const candidates = [
-        token.value,
-        token.binding?.value,
-        token.binding?.key,
-        token.binding?.label,
-      ];
-
-      for (let index = 0; index < candidates.length; index += 1) {
-        const candidate = candidates[index];
-        if (candidate === undefined || candidate === null) continue;
-        const resolved = this.interpolate(candidate, lookup);
-        if (resolved !== undefined && resolved !== null && resolved !== "") {
-          return resolved;
-        }
-      }
-
-      return null;
-    },
-
-    interpolate(template, lookup) {
-      if (template === undefined || template === null) {
-        return template;
-      }
-
-      if (typeof template !== "string") {
-        return template;
-      }
-
-      if (!template.includes("{{")) {
-        return template;
-      }
-
-      let hadReplacement = false;
-      const result = template.replace(/\{\{\s*([^}]+)\s*\}\}/g, (match, expression) => {
-        const value = lookup(expression);
-        hadReplacement = true;
-        if (value === undefined || value === null) {
-          return "";
-        }
-        return String(value);
-      });
-
-      if (!hadReplacement) {
-        return template;
-      }
-
-      return result;
-    },
-
-    applyTokenStyles(target, styleConfig, type) {
-      if (!isPlainObject(styleConfig) || !target) {
-        return;
-      }
-
-      const mmMap = {
-        fontSizeMm: "fontSize",
-        lineHeightMm: "lineHeight",
-        maxWidthMm: "maxWidth",
-        maxHeightMm: "maxHeight",
-        widthMm: "width",
-        heightMm: "height",
-        letterSpacingMm: "letterSpacing",
-        paddingMm: "padding",
-        marginMm: "margin",
-      };
-
-      Object.keys(styleConfig).forEach((key) => {
-        const value = styleConfig[key];
-        if (value === undefined || value === null) {
-          return;
-        }
-        
-        if (mmMap[key]) {
-          const cssValue = toCssMm(value);
-          if (cssValue) {
-            target.style[mmMap[key]] = cssValue;
-          }
-          return;
-        }
-
-        if (key.endsWith("Mm")) {
-          const cssKey = key.slice(0, -2);
-          const cssValue = toCssMm(value);
-          if (cssValue) {
-            target.style[cssKey] = cssValue;
-          }
-          return;
-        }
-
-        if (key === "opacity") {
-          target.style.opacity = String(value);
-          return;
-        }
-
-        if (key === "color") {
-            target.style.color = value;
-            return;
-        } 
-
-        if (typeof value === "number" && key !== "fontWeight") {
-          target.style[key] = `${value}`;
-          return;
-        }
-
-        if (typeof value === "string" || key === "fontWeight") {
-          target.style[key] = String(value);
-        }
-      });
-
-      if (type === "text" && !styleConfig.textAlign) {
-        target.style.textAlign = "left";
-      }
-      
-    },
-  };
 
   function interpolateTemplate(template, context) {
     if (typeof template !== "string") return template;
@@ -866,11 +381,11 @@
         entry.layout,
         entry.settings,
         entry.config,
+        entry.blueprint,
         entry,
       ];
 
       const result = {};
-      const blueprintValue = entry.blueprint;
 
       sources.forEach((source) => {
         if (!isPlainObject(source)) return;
@@ -882,10 +397,6 @@
           result[key] = cloneDeep(value);
         });
       });
-
-      if (blueprintValue !== undefined) {
-        result.blueprint = cloneDeep(blueprintValue);
-      }
 
       return result;
     },
@@ -961,7 +472,6 @@
         elements: [],
         regions: isPlainObject(source.regions) ? cloneDeep(source.regions) : {},
         meta: isPlainObject(source.meta) ? cloneDeep(source.meta) : {},
-        blueprint: null,
       };
 
       const tokensInput =
@@ -984,21 +494,6 @@
 
       if (Array.isArray(source.overlays)) {
         cover.elements = cover.elements.concat(cloneDeep(source.overlays));
-      }
-
-      if (source.blueprint) {
-        if (typeof source.blueprint === "string") {
-          try {
-            cover.blueprint = JSON.parse(source.blueprint);
-          } catch (error) {
-            console.warn("Falha ao analisar cover.blueprint string:", error);
-          }
-        } else if (
-          isPlainObject(source.blueprint) ||
-          Array.isArray(source.blueprint)
-        ) {
-          cover.blueprint = cloneDeep(source.blueprint);
-        }
       }
 
       if (isPlainObject(source.placeholders)) {
@@ -1037,11 +532,11 @@
         rawCover.layout,
         rawCover.settings,
         rawCover.config,
+        rawCover.blueprint,
         rawCover,
       ];
 
       const definition = {};
-      let blueprintValue = rawCover.blueprint;
 
       sources.forEach((source) => {
         if (!isPlainObject(source)) return;
@@ -1050,19 +545,9 @@
           if (source === rawCover && ["definition", "layout", "settings", "config", "blueprint"].includes(key)) {
             return;
           }
-          if (key === "blueprint") {
-            if (blueprintValue === undefined) {
-              blueprintValue = value;
-            }
-            return;
-          }
           definition[key] = cloneDeep(value);
         });
       });
-
-      if (blueprintValue !== undefined) {
-        definition.blueprint = cloneDeep(blueprintValue);
-      }
 
       return definition;
     },
@@ -1101,9 +586,6 @@
       );
 
       const tokens = this.prepareTokens(normalized.tokens, context);
-      const blueprint = normalized.blueprint
-        ? cloneDeep(normalized.blueprint)
-        : null;
 
       const meta = {
         ...(basePreset.meta || {}),
@@ -1120,10 +602,6 @@
         meta.regions = cloneDeep(normalized.regions);
       }
 
-      if (blueprint) {
-        meta.blueprint = blueprint;
-      }
-
       const page = {
         id: "cover",
         meta,
@@ -1135,7 +613,6 @@
         tokens,
         variant: variantKey,
         meta,
-        blueprint,
       };
     },
 
@@ -1988,13 +1465,6 @@
           });
           blocos.push(...blocosObservacoes);
         }
-
-        if (projeto.variaveis?.length && this.config.imprimirVariaveis) {
-          pushBlock("projeto.variaveis", {
-            variaveis: projeto.variaveis,
-            config: this.config,
-          });
-        }
       });
 
       if (this.config.imprimirVendaItens && this.dados.vendaItens?.itens?.length) {
@@ -2126,57 +1596,32 @@
     aplicarCoverConfigurada() {
       const coverDefinition = LayoutConfig.getPage(this.config, "cover") || this.config?.cover;
       const layout = CoverLayout.build(coverDefinition, { dados: this.dados, config: this.config });
-
-      if (!layout?.blueprint?.page) {
+      if (!layout) {
         document.body.removeAttribute("data-cover-variant");
         return false;
       }
 
-      const blueprint = layout.blueprint || layout.meta?.blueprint;
-      const runtimeContext = {
-        dados: this.dados,
-        config: this.config,
-        codigoPais: this.dados.licenca?.pais,
-        document,
-        tokens: layout.tokens,
-        query: this.queryParams,
-        layoutMeta: layout.meta,
-        cover: layout,
-      };
-
-      runtimeContext.resolvePath = (path) => this.resolverCoverPath(path, layout.tokens);
-
-      const possuiBlueprint = Boolean(blueprint);
-      let aplicadoPreset = false;
-
-      if (!possuiBlueprint) {
-        aplicadoPreset = LayoutEngine.applyPage(
-          { pages: [layout.page] },
-          "cover",
-          runtimeContext
-        );
-      }
-
-      let aplicadoDinamico = false;
-      if (possuiBlueprint) {
-
-        aplicadoDinamico = DynamicCover.render(blueprint, runtimeContext);
-  
-        if (!aplicadoDinamico) {
-          aplicadoPreset = LayoutEngine.applyPage(
-            { pages: [layout.page] },
-            "cover",
-            runtimeContext
-          );
+      const aplicado = LayoutEngine.applyPage(
+        { pages: [layout.page] },
+        "cover",
+        {
+          dados: this.dados,
+          config: this.config,
+          codigoPais: this.dados.licenca?.pais,
+          document,
+          tokens: layout.tokens,
+          query: this.queryParams,
+          layoutMeta: layout.meta,
+          resolvePath: (path) => this.resolverCoverPath(path, layout.tokens),
         }
-      }
+      );
 
-      if (!aplicadoDinamico && !aplicadoPreset) {
+      if (!aplicado) {
         document.body.removeAttribute("data-cover-variant");
         return false;
       }
 
-      if (layout.variant && !possuiBlueprint) {
+      if (layout.variant) {
         document.body.setAttribute("data-cover-variant", layout.variant);
       } else {
         document.body.removeAttribute("data-cover-variant");

@@ -29,6 +29,16 @@
               }
             },
             {
+              "type": "richText",
+              "when": "@item.observacoes",
+              "value": "@item.observacoes",
+              "options": {
+                "paragrafosPorBloco": 5,
+                "className": "allow-break",
+                "titulo": "Observações:"
+              }
+            },
+            {
               "type": "component",
               "component": "projeto.variaveis",
               "when": {
@@ -41,17 +51,7 @@
                 "variaveis": "@item.variaveis",
                 "config": "@config"
               }
-            },
-            {
-              "type": "richText",
-              "when": "@item.observacoes",
-              "value": "@item.observacoes",
-              "options": {
-                "paragrafosPorBloco": 5,
-                "className": "allow-break",
-                "titulo": "Observações:"
-              }
-            }
+            }  
           ]
         },
         {

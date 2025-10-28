@@ -52,9 +52,9 @@ class MemoryCache {
 
     // Verifica se não expirou
     if (Date.now() > cached.expires) {
-  this.cache.delete(key);
-  // Remove do índice primário se apontar para esta chave
-  this.removeFromPrimaryIndex(cached.metadata, key);
+      this.cache.delete(key);
+      // Remove do índice primário se apontar para esta chave
+      this.removeFromPrimaryIndex(cached.metadata, key);
       this.stats.evictions++;
       return null;
     }

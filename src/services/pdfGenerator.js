@@ -60,7 +60,6 @@ class PDFGeneratorService {
     };
 
     try {
-      // Verifica cache primeiro
       const cacheKey = MemoryCache.generateKey(requestData);
       const cachedPDF = forceRefresh ? null : MemoryCache.get(cacheKey);
 
