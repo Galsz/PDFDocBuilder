@@ -12,6 +12,7 @@
           "when": "@dados.cliente",
           "props": {
             "dados": "@dados",
+            "config": "@config",
             "codigoPais": "@context.codigoPais"
           }
         },

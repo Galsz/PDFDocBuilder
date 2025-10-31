@@ -1,0 +1,13 @@
+{
+  "page": { "widthMm": 210, "heightMm": 45 },
+  "tokens": [
+    { "id": "cliente", "type": "text", "xMm": 0, "yMm": 2.5, "style": { "fontWeight": 700 }, "value": "Cliente: {{CLIENTE.CONTATO}}" },
+    { "id": "email", "type": "text", "xMm": 0, "yMm": 10, "value": "Email: {{CLIENTE.EMAIL}}" },
+    { "id": "fone", "type": "text", "xMm": 80, "yMm": 10, "value": "Telefone: {{CLIENTE.TELEFONE}}" },
+    { "id": "obra", "type": "text", "xMm": 0, "yMm": 17.5, "value": "Obra: {{CLIENTE.OBRA.NOME}}" },
+    { "id": "obra-end", "type": "text", "xMm": 0, "yMm": 24.5, "value": "Endereço Obra: {{CLIENTE.OBRA.ENDERECO}}" },
+    { "id": "obra-cidade", "type": "text", "xMm": 140, "yMm": 24.5, "value": "Cidade: {{CLIENTE.OBRA.CIDADE}}" },
+    { "id": "vendedor", "type": "text", "xMm": 0, "yMm": 33, "style": { "fontWeight": 700, "color": "{{CORES.CORPRIMARIA}}" }, "value": "Vendedor: {{VENDEDOR.NOME}}" },
+    { "id": "vendedor-fone", "type": "text", "xMm": 120, "yMm": 33, "style": { "fontWeight": 700, "color": "{{CORES.CORPRIMARIA}}" }, "value": "Telefone: {{VENDEDOR.TELEFONE}}" }
+  ]
+}

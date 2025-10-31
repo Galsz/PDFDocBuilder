@@ -11,6 +11,7 @@
           "component": "cliente.info",
           "props": {
             "dados": "@dados",
+            "config": "@config",
             "codigoPais": "@context.codigoPais"
           }
         },

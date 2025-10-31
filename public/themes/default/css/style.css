@@ -187,6 +187,11 @@ header {
   z-index: 1;
 }
 
+.page-relatorio header {
+  position: relative;
+  z-index: 2;
+}
+
 .avoid-break {
   page-break-inside: avoid;
   break-inside: avoid;
@@ -227,6 +232,26 @@ header {
   margin: 0;
   padding: 2rem 3rem;
   box-sizing: border-box;
+  --content-padding-x: 3rem;
+  --content-padding-y: 2rem;
+}
+
+.dynamic-blueprint-block {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.dynamic-blueprint-block > .dynamic-container {
+  max-width: 100%;
+}
+
+.dynamic-blueprint-block--flush {
+  margin-left: calc(-1 * var(--content-padding-x, 3rem));
+  margin-right: calc(-1 * var(--content-padding-x, 3rem));
+  width: calc(100% + (var(--content-padding-x, 3rem) * 2));
 }
 
 .topo {

@@ -1,0 +1,9 @@
+{
+  "page": { "widthMm": 210, "heightMm": 40, "safe": { "top": 0, "right": 10, "bottom": 0, "left": 10 } },
+  "background": { "color": "transparent" },
+  "tokens": [
+    { "id": "logo", "type": "image", "xMm": 0, "yMm": 5, "style": { "widthMm": 40, "heightMm": 30, "objectFit": "contain" }, "binding": { "key": "{{LICENCA.LOGOURL}}" } },
+    { "id": "titulo", "type": "text", "xMm": 60, "yMm": 12, "style": { "fontSizeMm": 4.5, "fontWeight": 700, "color": "{{CORES.CORPRIMARIA}}" }, "value": "Proposta {{ID}}" },
+    { "id": "subtitulo", "type": "text", "xMm": 60, "yMm": 22, "style": { "fontSizeMm": 3.2, "color": "#333" }, "value": "{{TITULO}}" }
+  ]
+}

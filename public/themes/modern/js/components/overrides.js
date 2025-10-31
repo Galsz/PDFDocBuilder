@@ -1,5 +1,5 @@
 (function modernThemeOverrides(global) {
-  const { ComponentRegistry: registry, Utils, I18N } = global;
+  const { ComponentRegistry: registry, Utils, I18N, DynamicRenderer } = global;
 
   if (!registry || !Utils || !I18N) {
     return;
@@ -9,8 +9,22 @@
     Utils.formatarValor(valor, comSimbolo, codigoPais);
 
   registry.register("projeto.item", {
-    render({ projeto, config = {}, codigoPais = null } = {}) {
+    render({ projeto, config = {}, codigoPais = null, dados } = {}) {
       if (!projeto) return "";
+
+      // Permitir blueprint para o item de projeto
+      const itemConf = config?.components?.projetoItem;
+      const usarBlueprint = itemConf?.type === "blueprint" && itemConf?.blueprint && DynamicRenderer?.renderToString;
+      if (usarBlueprint) {
+        const runtime = {
+          dados: dados || {},
+          config,
+          tokens: { item: projeto, projeto },
+          query: config.query || {},
+        };
+        const html = DynamicRenderer.renderToString(itemConf.blueprint, runtime);
+        if (html && html.length) return html;
+      }
 
       const mostrarMedidas = config.imprimirMedidas !== false;
       const mostrarValorUnitario = config.imprimirValorUnitario !== false;

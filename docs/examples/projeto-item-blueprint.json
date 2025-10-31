@@ -1,0 +1,26 @@
+{
+  "page": { "widthMm": 210, "heightMm": 75, "safe": { "top": 3, "right": 10, "bottom": 3, "left": 10 } },
+  "background": { "color": "#fff" },
+  "tokens": [
+    { "id": "ordem", "type": "text", "xMm": 0, "yMm": 3, "style": { "fontSizeMm": 3.2, "fontWeight": 700, "color": "#999" }, "value": "#{{ITEM.ORDEM}}" },
+    { "id": "nome", "type": "text", "xMm": 10, "yMm": 3, "style": { "fontSizeMm": 4.5, "fontWeight": 700, "color": "#111" }, "value": "{{ITEM.NOME}}" },
+    { "id": "localizacao", "type": "text", "xMm": 10, "yMm": 10, "style": { "fontSizeMm": 3.2, "color": "#444" }, "value": "{{ITEM.LOCALIZACAO}}" },
+
+    { "id": "qtd-label", "type": "text", "xMm": 10, "yMm": 20, "style": { "fontSizeMm": 2.6, "color": "#666" }, "value": "Qtd" },
+    { "id": "qtd", "type": "text", "xMm": 10, "yMm": 25, "style": { "fontSizeMm": 3.6, "fontWeight": 700 }, "value": "{{ITEM.QTD}}" },
+
+    { "id": "dim-label", "type": "text", "xMm": 40, "yMm": 20, "style": { "fontSizeMm": 2.6, "color": "#666" }, "value": "L × H" },
+    { "id": "dim", "type": "text", "xMm": 40, "yMm": 25, "style": { "fontSizeMm": 3.6, "fontWeight": 700 }, "value": "{{ITEM.LARGURA}} × {{ITEM.ALTURA}}" },
+
+    { "id": "m2-label", "type": "text", "xMm": 80, "yMm": 20, "style": { "fontSizeMm": 2.6, "color": "#666" }, "value": "M²" },
+    { "id": "m2", "type": "text", "xMm": 80, "yMm": 25, "style": { "fontSizeMm": 3.6, "fontWeight": 700 }, "value": "{{ITEM.M2}}" },
+
+    { "id": "unit-label", "type": "text", "xMm": 120, "yMm": 20, "style": { "fontSizeMm": 2.6, "color": "#666" }, "value": "Vlr Unt" },
+    { "id": "unit", "type": "text", "xMm": 120, "yMm": 25, "style": { "fontSizeMm": 3.6, "fontWeight": 700, "color": "{{CORES.CORPRIMARIA}}" }, "value": "{{ITEM.VALORUNT}}" },
+
+    { "id": "total-label", "type": "text", "xMm": 160, "yMm": 20, "style": { "fontSizeMm": 2.6, "color": "#666" }, "value": "Vlr Total" },
+    { "id": "total", "type": "text", "xMm": 160, "yMm": 25, "style": { "fontSizeMm": 3.6, "fontWeight": 700, "color": "{{CORES.CORPRIMARIA}}" }, "value": "{{ITEM.VALORTOTAL}}" },
+
+    { "id": "imagem", "type": "image", "xMm": 150, "yMm": 5, "style": { "widthMm": 50, "heightMm": 40, "objectFit": "cover", "borderRadius": "2mm" }, "binding": { "key": "{{ITEM.IMAGEM}}" } }
+  ]
+}

@@ -262,6 +262,50 @@
 
       return comSimbolo ? `${config.symbol} ${valorFormatado}` : valorFormatado;
     },
+    _localeFromPais(codigoPais) {
+      let cfg = this.paisesConfig[1058];
+      if (codigoPais && this.paisesConfig[codigoPais]) cfg = this.paisesConfig[codigoPais];
+      return cfg.locale || "pt-BR";
+    },
+    _coerceDate(value) {
+      if (value instanceof Date) return value;
+      if (typeof value === "number") return new Date(value);
+      if (typeof value === "string") {
+        const d = new Date(value);
+        if (!Number.isNaN(d.getTime())) return d;
+      }
+      return new Date();
+    },
+    formatarData(value = new Date(), codigoPais = null, options = undefined) {
+      const locale = this._localeFromPais(codigoPais);
+      const d = this._coerceDate(value);
+      const fmt = options ?? { dateStyle: "short" };
+      try {
+        return new Intl.DateTimeFormat(locale, fmt).format(d);
+      } catch (e) {
+        return d.toLocaleDateString(locale);
+      }
+    },
+    formatarHora(value = new Date(), codigoPais = null, options = undefined) {
+      const locale = this._localeFromPais(codigoPais);
+      const d = this._coerceDate(value);
+      const fmt = options ?? { timeStyle: "short" };
+      try {
+        return new Intl.DateTimeFormat(locale, fmt).format(d);
+      } catch (e) {
+        return d.toLocaleTimeString(locale);
+      }
+    },
+    formatarDataHora(value = new Date(), codigoPais = null, options = undefined) {
+      const locale = this._localeFromPais(codigoPais);
+      const d = this._coerceDate(value);
+      const fmt = options ?? { dateStyle: "short", timeStyle: "short" };
+      try {
+        return new Intl.DateTimeFormat(locale, fmt).format(d);
+      } catch (e) {
+        return `${d.toLocaleDateString(locale)} ${d.toLocaleTimeString(locale)}`;
+      }
+    },
     dividirEmBlocosQuebraveis(
       texto,
       { paragrafosPorBloco = 5, className = "allow-break", titulo = null } = {}
@@ -350,6 +394,12 @@
           return this.formatarTelefone(value);
         case "currency":
           return this.formatarValor(value, comSimbolo, codigoPais);
+        case "date":
+          return this.formatarData(value, codigoPais);
+        case "time":
+          return this.formatarHora(value, codigoPais);
+        case "datetime":
+          return this.formatarDataHora(value, codigoPais);
         case "numero":
         case "number":
           return Number(value);

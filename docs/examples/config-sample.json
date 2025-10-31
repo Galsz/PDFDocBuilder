@@ -1,0 +1,7 @@
+{
+  "components": {
+    "header": { "type": "blueprint", "blueprint": { "$ref": "./header-blueprint.json" } },
+    "clienteInfo": { "type": "blueprint", "blueprint": { "$ref": "./cliente-info-blueprint.json" } },
+    "projetoItem": { "type": "blueprint", "blueprint": { "$ref": "./projeto-item-blueprint.json" } }
+  }
+}

@@ -291,6 +291,31 @@
       traverse("query", aggregate.query);
       traverse("tokens", aggregate.tokens);
 
+      // Special tokens for cover blueprints
+      try {
+        const codigoPais = aggregate?.dados?.licenca?.pais ?? aggregate?.config?.codigoPais ?? null;
+        const now = new Date();
+        const locale = Utils?.paisesConfig?.[codigoPais]?.locale || Utils?.paisesConfig?.[1058]?.locale || "pt-BR";
+        const dateStr = new Intl.DateTimeFormat(locale, { dateStyle: "short" }).format(now);
+        const timeStr = new Intl.DateTimeFormat(locale, { timeStyle: "short" }).format(now);
+        const dateTimeStr = new Intl.DateTimeFormat(locale, { dateStyle: "short", timeStyle: "short" }).format(now);
+        const currencySymbol = (Utils?.paisesConfig?.[codigoPais]?.symbol) || (Utils?.paisesConfig?.[1058]?.symbol) || "R$";
+
+        const registerSpecial = (k, v) => {
+          const n = String(k).trim().toLowerCase();
+          if (n) map.set(n, v);
+        };
+        registerSpecial("now", dateTimeStr);
+        registerSpecial("datetime", dateTimeStr);
+        registerSpecial("date", dateStr);
+        registerSpecial("today", dateStr);
+        registerSpecial("time", timeStr);
+        registerSpecial("currencysymbol", currencySymbol);
+        registerSpecial("currency", currencySymbol);
+      } catch (e) {
+        // ignore
+      }
+
       return (rawExpression) => {
         if (rawExpression === undefined || rawExpression === null) {
           return undefined;
@@ -1672,6 +1697,23 @@
           ? Utils.formatValue(translation, rawFormat, { codigoPais: context.codigoPais }) ?? ""
           : translation;
       }
+      // Built-in dynamic placeholders
+      const lower = rawPath.toLowerCase();
+      if (lower === "now" || lower === "datetime") {
+        const now = new Date();
+        if (rawFormat) return Utils.formatValue(now, rawFormat, { codigoPais: context.codigoPais }) ?? "";
+        return Utils.formatarDataHora(now, context.codigoPais);
+      }
+      if (lower === "today" || lower === "date") {
+        const now = new Date();
+        if (rawFormat) return Utils.formatValue(now, rawFormat, { codigoPais: context.codigoPais }) ?? "";
+        return Utils.formatarData(now, context.codigoPais);
+      }
+      if (lower === "time") {
+        const now = new Date();
+        if (rawFormat) return Utils.formatValue(now, rawFormat, { codigoPais: context.codigoPais }) ?? "";
+        return Utils.formatarHora(now, context.codigoPais);
+      }
       if (rawPath === "value") {
         return context.value ?? "";
       }
@@ -1770,8 +1812,8 @@
           dados.imagemTimbre
         );
 
-        let contentDiv = paginaAtual.querySelector(".content");
-        document.body.appendChild(paginaAtual);
+    let contentDiv = paginaAtual.querySelector(".content");
+    document.body.appendChild(paginaAtual);
 
         const paginas = [paginaAtual];
         const tarefasMedicao = [];
@@ -1818,7 +1860,6 @@
         });
 
         Promise.all(tarefasMedicao).then(() => {
-
           paginas.forEach((pagina, index) => {
             const footerNumber = pagina.querySelector(".footer-page-number span");
             if (footerNumber) {
@@ -1964,7 +2005,8 @@
         if (bloco) blocos.push(bloco);
       };
 
-      pushBlock("cliente.info", { dados: this.dados, codigoPais });
+  // Passar config para cliente.info para habilitar blueprints por componente
+  pushBlock("cliente.info", { dados: this.dados, config: this.config, codigoPais });
 
       (this.dados.projetos ?? []).forEach((projeto) => {
         pushBlock("projeto.item", {
