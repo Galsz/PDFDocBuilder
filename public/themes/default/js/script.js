@@ -809,112 +809,7 @@
     return cloneDeep(rawTokens);
   }
 
-  const LayoutConfig = {
-    extract(config) {
-      if (!config || typeof config !== "object") return null;
-      const layout = config.layout || config.layouts || config.layoutDefinitions;
-      if (layout && isPlainObject(layout)) {
-        return layout;
-      }
-      return null;
-    },
-
-    getPage(config, pageId) {
-      if (!pageId) return null;
-      const layout = this.extract(config);
-      if (!layout) return null;
-      const containers = [layout.pages, layout.pageLayouts, layout.sections, layout.views, layout];
-      for (let index = 0; index < containers.length; index += 1) {
-        const entry = this.resolveContainer(containers[index], pageId);
-        if (entry) {
-          return this.unwrap(entry);
-        }
-      }
-      return null;
-    },
-
-    resolveContainer(container, pageId) {
-      if (!container || !pageId) return null;
-      const normalizedId = this.normalizeId(pageId);
-      if (!normalizedId) return null;
-
-      if (Array.isArray(container)) {
-        return container.find((entry) => this.matches(entry, normalizedId)) || null;
-      }
-
-      if (isPlainObject(container)) {
-        if (Object.prototype.hasOwnProperty.call(container, pageId)) {
-          return container[pageId];
-        }
-        const keys = Object.keys(container);
-        for (let index = 0; index < keys.length; index += 1) {
-          const key = keys[index];
-          const entry = container[key];
-          if (typeof key === "string" && this.normalizeId(key) === normalizedId) {
-            return entry;
-          }
-          if (this.matches(entry, normalizedId)) {
-            return entry;
-          }
-        }
-      }
-
-      return null;
-    },
-
-    normalizeId(value) {
-      if (value === undefined || value === null) return null;
-      return String(value).trim().toLowerCase();
-    },
-
-    matches(entry, normalizedId) {
-      if (!entry || typeof entry !== "object" || !normalizedId) return false;
-      const candidates = [
-        entry.id,
-        entry.pageId,
-        entry.key,
-        entry.slot,
-        entry.name,
-        entry.type,
-        entry.variant,
-      ];
-      return candidates.some((candidate) => typeof candidate === "string" && this.normalizeId(candidate) === normalizedId);
-    },
-
-    unwrap(entry) {
-      if (!entry || typeof entry !== "object") {
-        return entry;
-      }
-
-      const sources = [
-        entry.definition,
-        entry.layout,
-        entry.settings,
-        entry.config,
-        entry,
-      ];
-
-      const result = {};
-      const blueprintValue = entry.blueprint;
-
-      sources.forEach((source) => {
-        if (!isPlainObject(source)) return;
-        Object.entries(source).forEach(([key, value]) => {
-          if (value === undefined) return;
-          if (source === entry && ["definition", "layout", "settings", "config", "blueprint"].includes(key)) {
-            return;
-          }
-          result[key] = cloneDeep(value);
-        });
-      });
-
-      if (blueprintValue !== undefined) {
-        result.blueprint = cloneDeep(blueprintValue);
-      }
-
-      return result;
-    },
-  };
+  
 
   const CoverLayout = {
     validate(coverConfig) {
@@ -1801,14 +1696,55 @@
         const limitePagina = config.imprimirLogoEmTodas === true ? 765 : 780;
         let totalPaginas = 1;
 
+        // Define um renderizador de footer com suporte a config.components.footer
+        const footerConf = config?.components?.footer || null;
+        const footerEnabled = footerConf?.enabled !== false && footerConf?.type !== "none";
+
+        const renderFooter = (paginaAtual, totalAtual) => {
+          if (!footerEnabled) return "";
+
+          // Se houver blueprint customizado, usamos o DynamicRenderer (quando disponível)
+          const blueprint = footerConf?.blueprint;
+          const tokens = footerConf?.tokens || {};
+
+          if (blueprint && global.DynamicRenderer?.renderToString) {
+            try {
+              const runtimeContext = {
+                dados,
+                config,
+                tokens,
+                codigoPais: dados.licenca?.pais,
+                pagina: paginaAtual,
+                totalPaginas: totalAtual,
+              };
+              let html = global.DynamicRenderer.renderToString(blueprint, runtimeContext) || "";
+              // Se o blueprint não fornecer um elemento <footer class="footer">,
+              // encapsulamos para garantir posicionamento absoluto no rodapé.
+              if (typeof html === "string") {
+                const hasFooterTag = /<footer\b/i.test(html);
+                const hasFooterClass = /class=["'][^"']*\bfooter\b[^"']*["']/i.test(html);
+                if (!hasFooterTag && !hasFooterClass) {
+                  html = `<footer class="footer">${html}</footer>`;
+                }
+              }
+              return html;
+            } catch (e) {
+              console.warn("Falha ao renderizar footer blueprint; usando padrão.", e);
+            }
+          }
+
+          // Fallback: componente padrão
+          return footerComponent.render({
+            licenca: dados.licenca || {},
+            pagina: paginaAtual,
+            totalPaginas: totalAtual,
+            codigoPais: dados.licenca?.pais,
+          });
+        };
+
         let paginaAtual = this.criarNovaPagina(
           headerComponent.render({ dados, config, pagina: totalPaginas }),
-          footerComponent.render({
-            licenca: dados.licenca || {},
-            pagina: totalPaginas,
-            totalPaginas: "?",
-            codigoPais: dados.licenca?.pais,
-          }),
+          renderFooter(totalPaginas, "?"),
           dados.imagemTimbre
         );
 
@@ -1839,12 +1775,7 @@
                   totalPaginas += 1;
                   paginaAtual = this.criarNovaPagina(
                     headerComponent.render({ dados, config, pagina: totalPaginas }),
-                    footerComponent.render({
-                      licenca: dados.licenca || {},
-                      pagina: totalPaginas,
-                      totalPaginas: "?",
-                      codigoPais: dados.licenca?.pais,
-                    }),
+                    renderFooter(totalPaginas, "?"),
                     dados.imagemTimbre
                   );
                   contentDiv = paginaAtual.querySelector(".content");
@@ -1898,8 +1829,13 @@
       this.config = config ?? {};
       this.queryParams = queryParams || {};
 
-      this.preencherCapa();
-      this.preencherRodape();
+  // Normaliza array de componentes (quando fornecido) para os pontos esperados pela engine
+  this.normalizarComponentesDaConfig();
+
+  this.preencherCapa();
+  // Folha de rosto (contra-capa) deve vir imediatamente após a capa
+  this.aplicarContraCapaConfigurada();
+  this.preencherRodape();
 
       const codigoPais = this.dados.licenca?.pais;
       const reportType = this.config.reportType || DEFAULT_REPORT_TYPE;
@@ -1946,6 +1882,89 @@
       this.aplicarCores(this.cores);
       global.readyForPDF = true;
       console.log("Relatório renderizado com sucesso.");
+    },
+
+    // Converte um array declarativo de componentes em chaves de config já suportadas (cover, backCover, components.header, etc.)
+    normalizarComponentesDaConfig() {
+      // Apenas o array this.config.components é suportado
+      const list = Array.isArray(this.config?.components) ? this.config.components : null;
+      if (!list || !list.length) return;
+
+      const normId = (v) => String(v || "").trim().toLowerCase();
+      const ensureObj = (v) => (v && typeof v === "object" ? v : {});
+
+      list.forEach((entryRaw) => {
+        const entry = ensureObj(entryRaw);
+        const id = normId(entry.id || entry.key || entry.name || entry.type);
+        if (!id) return;
+
+        // Sinônimos
+        const isCover = ["capa", "cover"].includes(id);
+  const isBackCover = ["contracapa", "contra-capa", "backcover", "back-cover"].includes(id);
+        const isHeader = id === "header" || id === "cabecalho";
+        const isFooter = id === "footer" || id === "rodape";
+        const isClientInfo = ["cliente.info", "clienteinfo", "cliente_info", "clientinfo"].includes(id);
+
+        if (isCover) {
+          // A capa aceita o mesmo schema do CoverLayout (blueprint, tokens, background, actions...)
+          this.config.cover = { ...ensureObj(this.config.cover), ...entry };
+          return;
+        }
+
+        if (isBackCover) {
+          // A contracapa só é renderizada quando há blueprint; armazenamos em backCover
+          this.config.backCover = { ...ensureObj(this.config.backCover), ...entry };
+          return;
+        }
+
+        if (isHeader) {
+          // O header do layout comum lê de config.components.header
+          const headerConf = {
+            type: entry.type || (entry.blueprint ? "blueprint" : undefined) || "blueprint",
+            blueprint: entry.blueprint,
+            tokens: entry.tokens || entry.bindings || entry.data || entry.values || {},
+            mode: entry.mode || "replace",
+          };
+          this.config.components = this.config.components || {};
+          this.config.components.header = headerConf;
+          return;
+        }
+
+        if (isFooter) {
+          // Ainda não há footer blueprint integrado ao paginator; deixamos salvo para uso futuro
+          const footerConf = {
+            type: entry.type || (entry.blueprint ? "blueprint" : undefined) || "blueprint",
+            blueprint: entry.blueprint,
+            tokens: entry.tokens || entry.bindings || entry.data || entry.values || {},
+            mode: entry.mode || "replace",
+          };
+          this.config.components = this.config.components || {};
+          this.config.components.footer = footerConf;
+          return;
+        }
+
+        if (isClientInfo) {
+          const comp = {
+            type: entry.type || (entry.blueprint ? "blueprint" : undefined) || "blueprint",
+            blueprint: entry.blueprint,
+            tokens: entry.tokens || entry.bindings || entry.data || entry.values || {},
+            mode: entry.mode || "replace",
+          };
+          this.config.components = this.config.components || {};
+          this.config.components.clienteInfo = comp;
+          return;
+        }
+
+        // Para outros ids, armazenamos em config.components[id] seguindo o mesmo padrão
+        const generic = {
+          type: entry.type || (entry.blueprint ? "blueprint" : undefined) || "blueprint",
+          blueprint: entry.blueprint,
+          tokens: entry.tokens || entry.bindings || entry.data || entry.values || {},
+          mode: entry.mode || "replace",
+        };
+        this.config.components = this.config.components || {};
+        this.config.components[id] = generic;
+      });
     },
 
     async carregarDados() {
@@ -2166,7 +2185,8 @@
     },
 
     aplicarCoverConfigurada() {
-      const coverDefinition = LayoutConfig.getPage(this.config, "cover") || this.config?.cover;
+      // Usa somente o que vier do array components (normalizado em this.config.cover)
+      const coverDefinition = this.config?.cover;
       const layout = CoverLayout.build(coverDefinition, { dados: this.dados, config: this.config });
 
       if (!layout?.blueprint?.page) {
@@ -2316,6 +2336,84 @@
         "logo-capa",
         licenca.logoUrl ? `<img src="${licenca.logoUrl}" alt="Logo" class="logo-capa">` : ""
       );
+    },
+
+    // Renderiza uma contra-capa somente quando houver blueprint JSON configurado.
+    // Usa exclusivamente o que foi normalizado a partir do array components em this.config.backCover.
+    aplicarContraCapaConfigurada() {
+      // Usa somente this.config.backCover
+      const def = this.config?.backCover;
+      if (!def) return false;
+
+      // Aceita blueprint direto (def como blueprint) ou em def.blueprint
+      let blueprint = null;
+      const looksLikeBlueprint = (obj) => obj && typeof obj === "object" && (
+        Object.prototype.hasOwnProperty.call(obj, "page") ||
+        Object.prototype.hasOwnProperty.call(obj, "background") ||
+        Object.prototype.hasOwnProperty.call(obj, "tokens")
+      );
+
+      if (typeof def?.blueprint === "string") {
+        try {
+          blueprint = JSON.parse(def.blueprint);
+        } catch (e) {
+          console.warn("contra-capa blueprint inválido (string):", e);
+          blueprint = null;
+        }
+      } else if (def?.blueprint && (typeof def.blueprint === "object")) {
+        blueprint = cloneDeep(def.blueprint);
+      } else if (looksLikeBlueprint(def)) {
+        blueprint = cloneDeep(def);
+      }
+
+      if (!blueprint || typeof blueprint !== "object") {
+        // Sem blueprint válido, não renderiza contra-capa
+        return false;
+      }
+
+      // Tokens opcionais para interpolação de blueprint
+      let tokens = {};
+      const tokensInput = def.tokens ?? def.bindings ?? def.data ?? def.values ?? null;
+      if (Array.isArray(tokensInput)) {
+        tokens = CoverLayout.tokensFromArray(tokensInput);
+      } else if (isPlainObject(tokensInput)) {
+        tokens = normalizeTokens(tokensInput);
+      }
+      if (isPlainObject(def.placeholders)) {
+        Object.entries(def.placeholders).forEach(([path, value]) => {
+          setValueByPath(tokens, path, value);
+        });
+      }
+
+      const runtimeContext = {
+        dados: this.dados,
+        config: this.config,
+        codigoPais: this.dados.licenca?.pais,
+        tokens,
+        query: this.queryParams,
+        document,
+        layoutMeta: { role: "back-cover" },
+      };
+
+      // Renderiza o blueprint em HTML (string)
+      const html = (global.DynamicRenderer && global.DynamicRenderer.renderToString)
+        ? global.DynamicRenderer.renderToString(blueprint, runtimeContext)
+        : "";
+
+      if (!html || html.length === 0) return false;
+
+      // Cria uma página isolada sem header/footer e insere APÓS a capa
+      const pagina = document.createElement("div");
+      pagina.classList.add("page-relatorio");
+      pagina.setAttribute("data-role", "back-cover");
+      pagina.innerHTML = html;
+      const capa = document.getElementById("capa");
+      if (capa && capa.parentNode) {
+        capa.insertAdjacentElement("afterend", pagina);
+      } else {
+        document.body.appendChild(pagina);
+      }
+      return true;
     },
 
     preencherRodape() {

@@ -270,7 +270,7 @@ header {
 .wvicon {
   display: flex;
   height: 20px;
-  margin: 1.3rem 1.3rem 0;
+  padding: 1.3rem 1.3rem 0;
   z-index: 10;
 }
 
@@ -570,7 +570,7 @@ header {
   top: 0;
   align-items: center;
   width: 25px;
-  height: 10%;
+  height: 112px;
   transform: skewX(-20deg);
   border-radius: 10px;
   z-index: 1;
@@ -583,7 +583,7 @@ header {
   top: 0;
   align-items: center;
   width: 75px;
-  height: 18%;
+  height: 205px;
   transform: skewX(-20deg);
   border-radius: 10px;
   z-index: 2;

@@ -9,11 +9,92 @@
     render({ dados, config = {}, codigoPais = null } = {}) {
       if (!dados) return "";
 
-      
-      // Rota de blueprint dinâmica se configurada
+      // Tokens flexíveis (similar à capa):
+      // - Suporta {{CLIENTENOME}}, {{CLIENTEEMAIL}}, etc. (CAIXA ALTA)
+      // - Suporta caminhos como {{dados.cliente.email}}
+      // - Cria aliases sanitizados em minúsculas e maiúsculas
+      const buildSmartTokens = (src = {}, cfg = {}, qry = {}, extra = {}) => {
+        const tokens = {};
+
+        const setKey = (key, value) => {
+          if (value === undefined || value === null) return;
+          const raw = String(key).trim();
+          if (!raw) return;
+          if (!(raw in tokens)) tokens[raw] = value;
+          const upper = raw.toUpperCase();
+          const lower = raw.toLowerCase();
+          if (!(upper in tokens)) tokens[upper] = value;
+          if (!(lower in tokens)) tokens[lower] = value;
+          const sanitized = raw.replace(/[^a-zA-Z0-9]/g, "");
+          if (sanitized) {
+            const sLower = sanitized.toLowerCase();
+            const sUpper = sanitized.toUpperCase();
+            if (!(sLower in tokens)) tokens[sLower] = value;
+            if (!(sUpper in tokens)) tokens[sUpper] = value;
+          }
+        };
+
+        const flatten = (obj, prefix = "") => {
+          if (!obj || typeof obj !== "object") return;
+          Object.keys(obj).forEach((k) => {
+            const v = obj[k];
+            const path = prefix ? `${prefix}.${k}` : k;
+            if (v && typeof v === "object" && !(v instanceof Date)) {
+              flatten(v, path);
+            } else {
+              setKey(path, v);
+              const last = String(k).trim();
+              if (last) setKey(last, v);
+            }
+          });
+        };
+
+        // Flatten das fontes
+        flatten({ dados: src });
+        flatten({ config: cfg });
+        flatten({ query: qry });
+        flatten({ tokens: extra });
+
+        // Aliases úteis em CAIXA ALTA
+        const cliente = src.cliente || {};
+        const obra = (src.cliente && src.cliente.obra) || src.obra || {};
+        const vendedor = src.vendedor || {};
+        const aliases = {
+          CLIENTENOME: cliente.contato || cliente.nome || "",
+          CLIENTECONTATO: cliente.contato || "",
+          CLIENTEEMAIL: cliente.email || "",
+          CLIENTETELEFONE: cliente.telefone || cliente.fone || "",
+          CLIENTEENDERECO: cliente.endereco || "",
+          CLIENTECIDADE: cliente.cidade || "",
+          OBRANOME: obra.nome || "",
+          OBRARESPONSAVEL: obra.responsavel || "",
+          OBRARESPONSAVELFONE: obra.responsavelFone || obra.fone || "",
+          OBRAENDERECO: obra.endereco || "",
+          OBRACIDADE: obra.cidade || "",
+          VENDEDORNOME: vendedor.nome || "",
+          VENDEDORTELEFONE: vendedor.telefone || vendedor.fone || "",
+          ORCAMENTOID: src.id || "",
+          DATA: src.data || "",
+        };
+        Object.keys(aliases).forEach((k) => setKey(k, aliases[k]));
+
+        // Especiais simples
+        try {
+          const now = new Date();
+          setKey("NOW", now);
+          setKey("DATE", now);
+          setKey("TIME", now);
+        } catch (_) {
+          // ignore
+        }
+
+        return tokens;
+      };
+
       const compConf = config?.components?.clienteInfo;
       const usarBlueprint = compConf?.type === "blueprint" && compConf?.blueprint;
-      const runtime = { dados, config, tokens: compConf?.tokens || {}, query: config.query || {} };
+      const runtimeTokens = buildSmartTokens(dados, config, config.query || {}, compConf?.tokens || {});
+      const runtime = { dados, config, tokens: runtimeTokens, query: config.query || {} };
       const modo = compConf?.mode || "replace"; // replace | prepend | append
       let htmlDinamico = "";
 
