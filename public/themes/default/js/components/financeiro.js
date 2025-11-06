@@ -110,7 +110,7 @@
                 dados.promissoria.documento
               }</span></div>
               <div>${dados.promissoria.vencimento}</div>
-              <div><strong>R$</strong> <span style="border: 1px solid black;border-radius: 8px;padding: 5px 18px;">${Utils.formatarValor(
+              <div><span style="border: 1px solid black;border-radius: 8px;padding: 5px 18px;">${Utils.formatarValor(
                 dados.promissoria.valor, false, dados.licenca.pais
               )}</span></div>
             </div>
