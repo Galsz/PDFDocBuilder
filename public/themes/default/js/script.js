@@ -2033,14 +2033,7 @@
           config: this.config,
           codigoPais,
         });
-
-        if (projeto.variaveis?.length && this.config.imprimirVariaveis) {
-          pushBlock("projeto.variaveis", {
-            variaveis: projeto.variaveis,
-            config: this.config,
-          });
-        }
-
+        
         if (projeto.observacoes) {
           const blocosObservacoes = Utils.dividirEmBlocosQuebraveis(projeto.observacoes, {
             paragrafosPorBloco: 5,
@@ -2056,6 +2049,9 @@
             config: this.config,
           });
         }
+
+
+        pushBlock("projeto.divisor");
       });
 
       if (this.config.imprimirVendaItens && this.dados.vendaItens?.itens?.length) {

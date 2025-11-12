@@ -89,6 +89,12 @@
     },
   });
 
+  registry.register("projeto.divisor", {
+    render() {
+      return `<div class="linha-separadora"></div>`;
+    },
+  });
+
   registry.register("projeto.variaveis", {
     render({ variaveis, config = {} } = {}) {
       if (!variaveis || !variaveis.length || !config.imprimirVariaveis) return "";

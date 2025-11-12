@@ -666,7 +666,6 @@ header {
   font-size: 10pt;
   color: #000;
   margin: 15px 0;
-  border-bottom: 2px solid #ccc;
 }
 
 .item-topo {
@@ -766,6 +765,7 @@ header {
   width: 100%;
   height: 2px;
   background: #ccc;
+  margin: 0.5rem 0;
 }
 
 .item-variaveis {
