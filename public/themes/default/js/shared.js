@@ -108,7 +108,7 @@
         contact: "Contacto",
         proposal: "Propuesta",
         project: "Proyecto",
-        profile: "Sección",
+        profile: "Color Perfil",
         accessories: "Accesorios",
         glass: "Vidrio",
         location: "Ubicación",

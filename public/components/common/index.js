@@ -116,6 +116,18 @@
       traverse("query", aggregate.query);
       traverse("tokens", aggregate.tokens);
 
+      // Page-aware special tokens (current/total page), available for any blueprint
+      if (typeof runtime.pagina === "number") {
+        register("pagina", runtime.pagina);
+        register("page", runtime.pagina);
+      }
+      if (typeof runtime.totalPaginas === "number") {
+        register("totalpaginas", runtime.totalPaginas);
+        register("totalpages", runtime.totalPaginas);
+        register("total_paginas", runtime.totalPaginas);
+        register("total paginas", runtime.totalPaginas);
+      }
+
       // Special tokens (date/time/currency symbol)
       try {
         const codigoPais = aggregate?.dados?.licenca?.pais ?? aggregate?.config?.codigoPais ?? null;

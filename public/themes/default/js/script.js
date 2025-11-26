@@ -1694,7 +1694,6 @@
         }
 
         const limitePagina = config.imprimirLogoEmTodas === true ? 765 : 780;
-        let totalPaginas = 1;
 
         // Define um renderizador de footer com suporte a config.components.footer
         const footerConf = config?.components?.footer || null;
@@ -1703,7 +1702,6 @@
         const renderFooter = (paginaAtual, totalAtual) => {
           if (!footerEnabled) return "";
 
-          // Se houver blueprint customizado, usamos o DynamicRenderer (quando disponível)
           const blueprint = footerConf?.blueprint;
           const tokens = footerConf?.tokens || {};
 
@@ -1718,8 +1716,6 @@
                 totalPaginas: totalAtual,
               };
               let html = global.DynamicRenderer.renderToString(blueprint, runtimeContext) || "";
-              // Se o blueprint não fornecer um elemento <footer class="footer">,
-              // encapsulamos para garantir posicionamento absoluto no rodapé.
               if (typeof html === "string") {
                 const hasFooterTag = /<footer\b/i.test(html);
                 const hasFooterClass = /class=["'][^"']*\bfooter\b[^"']*["']/i.test(html);
@@ -1742,16 +1738,18 @@
           });
         };
 
+        // 1ª fase: criar páginas e descobrir o total, usando footer temporário
+        const paginas = [];
         let paginaAtual = this.criarNovaPagina(
-          headerComponent.render({ dados, config, pagina: totalPaginas }),
-          renderFooter(totalPaginas, "?"),
+          headerComponent.render({ dados, config, pagina: 1 }),
+          "", // footer vazio por enquanto
           dados.imagemTimbre
         );
 
-    let contentDiv = paginaAtual.querySelector(".content");
-    document.body.appendChild(paginaAtual);
+        let contentDiv = paginaAtual.querySelector(".content");
+        document.body.appendChild(paginaAtual);
+        paginas.push(paginaAtual);
 
-        const paginas = [paginaAtual];
         const tarefasMedicao = [];
 
         blocos.filter(Boolean).forEach((bloco) => {
@@ -1772,10 +1770,9 @@
 
                 const ultrapassa = alturaAtual + alturaBloco > limitePagina;
                 if (ultrapassa && (!evitarQuebra || alturaBloco > limitePagina)) {
-                  totalPaginas += 1;
                   paginaAtual = this.criarNovaPagina(
-                    headerComponent.render({ dados, config, pagina: totalPaginas }),
-                    renderFooter(totalPaginas, "?"),
+                    headerComponent.render({ dados, config, pagina: paginas.length + 1 }),
+                    "", // footer ainda vazio
                     dados.imagemTimbre
                   );
                   contentDiv = paginaAtual.querySelector(".content");
@@ -1790,11 +1787,28 @@
           );
         });
 
+        // 2ª fase: com o total conhecido, renderizar footers definitivos (incluindo blueprint)
         Promise.all(tarefasMedicao).then(() => {
+          const totalPaginas = paginas.length;
+
           paginas.forEach((pagina, index) => {
+            const paginaNumero = index + 1;
+
+            // Remove footer anterior (se houver) para re-inserir com total correto
+            const footerAntigo = pagina.querySelector("footer.footer");
+            if (footerAntigo && footerAntigo.parentNode === pagina) {
+              pagina.removeChild(footerAntigo);
+            }
+
+            const footerMarkup = renderFooter(paginaNumero, totalPaginas) || "";
+            if (footerMarkup) {
+              appendMarkup(pagina, footerMarkup);
+            }
+
+            // Atualiza o texto padrão caso o footer seja o componente padrão
             const footerNumber = pagina.querySelector(".footer-page-number span");
             if (footerNumber) {
-              footerNumber.textContent = `${index + 1} / ${paginas.length}`;
+              footerNumber.textContent = `${paginaNumero} / ${totalPaginas}`;
             }
           });
 
@@ -1829,13 +1843,30 @@
       this.config = config ?? {};
       this.queryParams = queryParams || {};
 
-  // Normaliza array de componentes (quando fornecido) para os pontos esperados pela engine
-  this.normalizarComponentesDaConfig();
+      // Normaliza array de componentes (quando fornecido) para os pontos esperados pela engine
+      this.normalizarComponentesDaConfig();
 
-  this.preencherCapa();
-  // Folha de rosto (contra-capa) deve vir imediatamente após a capa
-  this.aplicarContraCapaConfigurada();
-  this.preencherRodape();
+      // Flag de capa aceita tanto ImprimirCapa quanto imprimirCapa (case-insensitive por convenção)
+      const flagCapa =
+        this.config.ImprimirCapa ??
+        this.config.imprimirCapa ??
+        this.config.imprimircapa ??
+        null;
+
+      // Renderiza capa/contracapa apenas quando não for explicitamente desabilitada (flag === false)
+      if (flagCapa !== false) {
+        this.preencherCapa();
+        // Folha de rosto (contra-capa) deve vir imediatamente após a capa
+        this.aplicarContraCapaConfigurada();
+      } else {
+        // Se a capa estiver desabilitada, remove o HTML estático da capa para que nada apareça
+        const capaEl = document.getElementById("capa");
+        if (capaEl && capaEl.parentNode) {
+          capaEl.parentNode.removeChild(capaEl);
+        }
+      }
+
+      this.preencherRodape();
 
       const codigoPais = this.dados.licenca?.pais;
       const reportType = this.config.reportType || DEFAULT_REPORT_TYPE;
@@ -1878,6 +1909,9 @@
       if (attachmentsToApply && attachmentsToApply.length) {
         ManifestRuntime.applyAttachments(attachmentsToApply);
       }
+
+      this.paginarContratoConteudo();
+      this.reaplicarLayoutEGerarPaginacao();
 
       this.aplicarCores(this.cores);
       global.readyForPDF = true;
@@ -2104,7 +2138,7 @@
           dados: this.dados,
         });
         if (promissoriaBlock) {
-          attachments.push({ node: promissoriaBlock, container: "contrato-page" });
+          attachments.push({ node: promissoriaBlock, container: "page-relatorio contrato-page" });
         }
       }
 
@@ -2113,7 +2147,10 @@
           contratoHtml: this.dados.contratoHtml,
         });
         if (contratoBlock) {
-          attachments.push({ node: contratoBlock, container: "contrato-page" });
+          attachments.push({
+            node: contratoBlock,
+            container: "page-relatorio contrato-page",
+          });
         }
       }
 
@@ -2418,6 +2455,243 @@
       Utils.setText("rodape-email", licenca.email || "");
       Utils.setText("rodape-site", licenca.site || "");
       Utils.setText("rodape-endereco", licenca.endereco || "");
+    },
+
+    obterLimiteConteudo() {
+      return this.config.imprimirLogoEmTodas === true ? 765 : 780;
+    },
+
+    copiarAtributosElemento(origem, destino, { ignorar = [] } = {}) {
+      if (!origem || !destino) return;
+      const ignorados = new Set(ignorar);
+      Array.from(origem.attributes || []).forEach((attr) => {
+        if (ignorados.has(attr.name)) return;
+        destino.setAttribute(attr.name, attr.value);
+      });
+    },
+
+    paginarContratoConteudo() {
+      const contratoPaginas = Array.from(document.querySelectorAll(".contrato-page"))
+        .filter((pagina) => pagina && pagina.dataset.contratoPaginado !== "true");
+
+      if (!contratoPaginas.length) {
+        return;
+      }
+
+      const limite = this.obterLimiteConteudo();
+      const NodeCtor = global.Node || window.Node;
+
+      contratoPaginas.forEach((paginaOriginal) => {
+        const contratoConteudoOriginal = paginaOriginal.querySelector(".contrato-content");
+        if (!contratoConteudoOriginal) {
+          paginaOriginal.dataset.contratoPaginado = "true";
+          return;
+        }
+
+        const parent = paginaOriginal.parentNode;
+        if (!parent) {
+          return;
+        }
+
+        const placeholder = document.createComment("contrato-placeholder");
+        parent.insertBefore(placeholder, paginaOriginal);
+
+        const nodes = Array.from(contratoConteudoOriginal.childNodes || []);
+
+        parent.removeChild(paginaOriginal);
+
+        const paginaClasses = Array.from(paginaOriginal.classList || []);
+        if (!paginaClasses.includes("page-relatorio")) paginaClasses.push("page-relatorio");
+        if (!paginaClasses.includes("contrato-page")) paginaClasses.push("contrato-page");
+
+        const criarPaginaContrato = () => {
+          const page = document.createElement("div");
+          paginaClasses.forEach((cls) => page.classList.add(cls));
+          this.copiarAtributosElemento(paginaOriginal, page, {
+            ignorar: ["class", "data-contrato-paginado", "id"],
+          });
+          const content = document.createElement("div");
+          content.classList.add("content");
+          page.appendChild(content);
+
+          const wrapper = document.createElement("div");
+          const originalClassName = contratoConteudoOriginal.className || "contrato-content";
+          if (originalClassName) {
+            wrapper.className = originalClassName;
+          }
+          if (!wrapper.classList.contains("contrato-content")) {
+            wrapper.classList.add("contrato-content");
+          }
+
+          this.copiarAtributosElemento(contratoConteudoOriginal, wrapper, {
+            ignorar: ["id", "class"],
+          });
+
+          content.appendChild(wrapper);
+          page.dataset.contratoPaginado = "true";
+          return { page, content, wrapper };
+        };
+
+        const paginasGeradas = [];
+
+        const iniciarNovaPagina = () => {
+          const novaPagina = criarPaginaContrato();
+          parent.insertBefore(novaPagina.page, placeholder);
+          paginasGeradas.push(novaPagina);
+          return novaPagina;
+        };
+
+        let paginaAtual = iniciarNovaPagina();
+
+        nodes.forEach((node) => {
+          if (!node) return;
+          const isWhitespaceText =
+            node.nodeType === (NodeCtor ? NodeCtor.TEXT_NODE : 3) &&
+            node.textContent &&
+            node.textContent.trim().length === 0;
+
+          if (isWhitespaceText && paginaAtual.wrapper.childNodes.length === 0) {
+            return;
+          }
+
+          paginaAtual.wrapper.appendChild(node);
+
+          const excedeuLimite = paginaAtual.wrapper.scrollHeight > limite;
+          if (excedeuLimite) {
+            paginaAtual.wrapper.removeChild(node);
+
+            paginaAtual = iniciarNovaPagina();
+            paginaAtual.wrapper.appendChild(node);
+
+            if (paginaAtual.wrapper.scrollHeight > limite) {
+              // Se mesmo após nova página exceder, mantemos para evitar loop
+              // Isso normalmente acontece com elementos maiores que uma página inteira
+            }
+          }
+        });
+
+        if (contratoConteudoOriginal.id && paginasGeradas.length) {
+          paginasGeradas[0].wrapper.id = contratoConteudoOriginal.id;
+        }
+
+        parent.removeChild(placeholder);
+      });
+    },
+
+    renderHeaderMarkup(paginaNumero) {
+      const headerComponent = ComponentRegistry?.get("layout.header");
+      if (!headerComponent) return "";
+      try {
+        return headerComponent.render({
+          dados: this.dados,
+          config: this.config,
+          pagina: paginaNumero,
+        });
+      } catch (error) {
+        console.warn("Falha ao renderizar header:", error);
+        return "";
+      }
+    },
+
+    renderFooterMarkup(paginaNumero, totalPaginas) {
+      const footerComponent = ComponentRegistry?.get("layout.footer");
+      if (!footerComponent) return "";
+
+      const footerConf = this.config?.components?.footer || null;
+      const footerEnabled = footerConf?.enabled !== false && footerConf?.type !== "none";
+      if (footerConf && !footerEnabled) {
+        return "";
+      }
+
+      const blueprint = footerConf?.blueprint;
+      const tokens = footerConf?.tokens || {};
+
+      if (blueprint && global.DynamicRenderer?.renderToString) {
+        try {
+          const runtimeContext = {
+            dados: this.dados,
+            config: this.config,
+            tokens,
+            codigoPais: this.dados.licenca?.pais,
+            pagina: paginaNumero,
+            totalPaginas,
+          };
+          let html = global.DynamicRenderer.renderToString(blueprint, runtimeContext) || "";
+          if (typeof html === "string") {
+            const hasFooterTag = /<footer\b/i.test(html);
+            const hasFooterClass = /class=["'][^"']*\bfooter\b[^"']*["']/i.test(html);
+            if (!hasFooterTag && !hasFooterClass) {
+              html = `<footer class="footer">${html}</footer>`;
+            }
+          }
+          return html;
+        } catch (error) {
+          console.warn("Falha ao renderizar footer blueprint; usando padrão.", error);
+        }
+      }
+
+      try {
+        return footerComponent.render({
+          licenca: this.dados.licenca || {},
+          pagina: paginaNumero,
+          totalPaginas,
+          codigoPais: this.dados.licenca?.pais,
+        });
+      } catch (error) {
+        console.warn("Falha ao renderizar footer padrão:", error);
+        return "";
+      }
+    },
+
+    reaplicarLayoutEGerarPaginacao() {
+      const paginas = Array.from(document.querySelectorAll(".page-relatorio"))
+        .filter((page) => page && page.id !== "capa" && page.getAttribute("data-role") !== "back-cover");
+
+      if (!paginas.length) {
+        return;
+      }
+
+      const totalPaginas = paginas.length;
+
+      paginas.forEach((pagina, index) => {
+        const paginaNumero = index + 1;
+
+        pagina.classList.add("page-relatorio");
+
+        Array.from(pagina.children || [])
+          .filter((elemento) =>
+            elemento &&
+            ((elemento.tagName && elemento.tagName.toLowerCase() === "header") ||
+              elemento.classList?.contains?.("footer"))
+          )
+          .forEach((elemento) => elemento.remove());
+
+        let content = pagina.querySelector(".content");
+        if (!content) {
+          const contentWrapper = document.createElement("div");
+          contentWrapper.className = "content";
+          while (pagina.firstChild) {
+            contentWrapper.appendChild(pagina.firstChild);
+          }
+          pagina.appendChild(contentWrapper);
+          content = contentWrapper;
+        }
+
+        const headerMarkup = this.renderHeaderMarkup(paginaNumero);
+        if (headerMarkup) {
+          pagina.insertAdjacentHTML("afterbegin", headerMarkup);
+        }
+
+        const footerMarkup = this.renderFooterMarkup(paginaNumero, totalPaginas);
+        if (footerMarkup) {
+          pagina.insertAdjacentHTML("beforeend", footerMarkup);
+        }
+
+        const footerNumber = pagina.querySelector(".footer-page-number span");
+        if (footerNumber) {
+          footerNumber.textContent = `${paginaNumero} / ${totalPaginas}`;
+        }
+      });
     },
   };
 
