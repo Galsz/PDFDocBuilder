@@ -2658,13 +2658,12 @@
 
         pagina.classList.add("page-relatorio");
 
-        Array.from(pagina.children || [])
-          .filter((elemento) =>
-            elemento &&
-            ((elemento.tagName && elemento.tagName.toLowerCase() === "header") ||
-              elemento.classList?.contains?.("footer"))
-          )
-          .forEach((elemento) => elemento.remove());
+        Array.from(pagina.children || []).forEach((elemento) => {
+          if (!elemento) return;
+          if (elemento.classList?.contains("content")) return;
+          if (elemento.classList?.contains("timbre-background")) return;
+          elemento.remove();
+        });
 
         let content = pagina.querySelector(".content");
         if (!content) {
