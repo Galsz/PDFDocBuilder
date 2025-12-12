@@ -3,6 +3,7 @@
   "templateId": "modern",
   "config": {
     "manifestVersion": "v1",
+    "moeda": "BRL",
     "imprimirParcelas": true,
     "imprimirPromissorias": false,
     "cover": {

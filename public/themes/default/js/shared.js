@@ -202,6 +202,79 @@
         language: "es",
       },
     },
+
+    _moedaOverride: null,
+    _normalizeCurrency(value) {
+      if (value === null || value === undefined) return null;
+      const code = String(value).trim().toUpperCase();
+      if (!code) return null;
+      if (!/^[A-Z]{3}$/.test(code)) return null;
+      return code;
+    },
+    setMoeda(moeda) {
+      this._moedaOverride = this._normalizeCurrency(moeda);
+    },
+    getMoeda() {
+      return this._moedaOverride;
+    },
+    _getBasePaisConfig(codigoPais) {
+      let cfg = this.paisesConfig[1058];
+      if (codigoPais && this.paisesConfig[codigoPais]) cfg = this.paisesConfig[codigoPais];
+      return cfg;
+    },
+    _getBaseMoedaConfig(currency) {
+      const normalized = this._normalizeCurrency(currency);
+      if (!normalized) return this.paisesConfig[1058];
+      const keys = Object.keys(this.paisesConfig);
+      for (let i = 0; i < keys.length; i += 1) {
+        const cfg = this.paisesConfig[keys[i]];
+        if (cfg && cfg.currency === normalized) return cfg;
+      }
+      return this.paisesConfig[1058];
+    },
+    _getCurrencyMeta(locale, currency) {
+      const result = { symbol: null, fractionDigits: null };
+      if (!currency) return result;
+      try {
+        const nf = new Intl.NumberFormat(locale || "pt-BR", {
+          style: "currency",
+          currency,
+          currencyDisplay: "narrowSymbol",
+        });
+        const parts = typeof nf.formatToParts === "function" ? nf.formatToParts(0) : null;
+        if (parts) {
+          const c = parts.find((p) => p.type === "currency");
+          if (c && c.value) result.symbol = c.value;
+        }
+        const opts = nf.resolvedOptions ? nf.resolvedOptions() : null;
+        if (opts && typeof opts.maximumFractionDigits === "number") {
+          result.fractionDigits = opts.maximumFractionDigits;
+        }
+      } catch (e) {
+        // ignore
+      }
+
+      if (!result.symbol) {
+        // Fallback: tenta aproveitar símbolos já cadastrados por país
+        Object.keys(this.paisesConfig).some((k) => {
+          const cfg = this.paisesConfig[k];
+          if (cfg && cfg.currency === currency && cfg.symbol) {
+            result.symbol = cfg.symbol;
+            return true;
+          }
+          return false;
+        });
+      }
+      return result;
+    },
+    getCurrencySymbol(codigoPais = null, moeda = null) {
+      const currency =
+        this._normalizeCurrency(moeda) || this.getMoeda() || this.paisesConfig[1058].currency;
+      const base = this._getBaseMoedaConfig(currency);
+      const meta = this._getCurrencyMeta(base.locale, currency);
+      return meta.symbol || base.symbol || "R$";
+    },
+
     setText(id, texto) {
       const el = document.getElementById(id);
       if (el) el.textContent = texto;
@@ -231,16 +304,21 @@
       return telefone;
     },
     formatarValor(valor, comSimbolo = true, codigoPais = null) {
-      // Seleciona configuração do país
-      let config = this.paisesConfig[1058];
-      if (codigoPais && this.paisesConfig[codigoPais]) {
-        config = this.paisesConfig[codigoPais];
-      }
+      // Moeda do relatório é definida apenas via config.moeda (Utils.setMoeda)
+      const currency = this.getMoeda() || this.paisesConfig[1058].currency;
+      const base = this._getBaseMoedaConfig(currency);
+      const meta = this._getCurrencyMeta(base.locale, currency);
 
-      // Moedas sem casas decimais (PYG: Guarani, JPY: Iene, KRW: Won, etc.)
-      const zeroDecimalCurrencies = new Set(["PYG", "JPY", "KRW"]);
-      const minFrac = zeroDecimalCurrencies.has(config.currency) ? 0 : 2;
-      const maxFrac = minFrac;
+      // Casas decimais por moeda (preferindo Intl quando disponível)
+      const zeroDecimalFallback = new Set(["PYG", "JPY", "KRW"]);
+      let fracDigits = 2;
+      if (typeof meta.fractionDigits === "number") {
+        fracDigits = meta.fractionDigits;
+      } else if (zeroDecimalFallback.has(currency)) {
+        fracDigits = 0;
+      }
+      const minFrac = fracDigits;
+      const maxFrac = fracDigits;
 
       // Normaliza valor
       let parsed = valor;
@@ -254,17 +332,17 @@
       }
 
       const numero = Number(parsed);
-      const valorFormatado = numero.toLocaleString(config.locale, {
+      const valorFormatado = numero.toLocaleString(base.locale, {
         style: "decimal",
         minimumFractionDigits: minFrac,
         maximumFractionDigits: maxFrac,
       });
 
-      return comSimbolo ? `${config.symbol} ${valorFormatado}` : valorFormatado;
+      const symbol = meta.symbol || base.symbol || "R$";
+      return comSimbolo ? `${symbol} ${valorFormatado}` : valorFormatado;
     },
     _localeFromPais(codigoPais) {
-      let cfg = this.paisesConfig[1058];
-      if (codigoPais && this.paisesConfig[codigoPais]) cfg = this.paisesConfig[codigoPais];
+      const cfg = this._getBasePaisConfig(codigoPais);
       return cfg.locale || "pt-BR";
     },
     _coerceDate(value) {

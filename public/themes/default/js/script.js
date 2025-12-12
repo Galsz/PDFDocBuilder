@@ -294,12 +294,17 @@
       // Special tokens for cover blueprints
       try {
         const codigoPais = aggregate?.dados?.licenca?.pais ?? aggregate?.config?.codigoPais ?? null;
+        const moeda = aggregate?.config?.moeda ?? null;
         const now = new Date();
         const locale = Utils?.paisesConfig?.[codigoPais]?.locale || Utils?.paisesConfig?.[1058]?.locale || "pt-BR";
         const dateStr = new Intl.DateTimeFormat(locale, { dateStyle: "short" }).format(now);
         const timeStr = new Intl.DateTimeFormat(locale, { timeStyle: "short" }).format(now);
         const dateTimeStr = new Intl.DateTimeFormat(locale, { dateStyle: "short", timeStyle: "short" }).format(now);
-        const currencySymbol = (Utils?.paisesConfig?.[codigoPais]?.symbol) || (Utils?.paisesConfig?.[1058]?.symbol) || "R$";
+        const currencySymbol =
+          (Utils?.getCurrencySymbol && Utils.getCurrencySymbol(codigoPais, moeda)) ||
+          (Utils?.paisesConfig?.[codigoPais]?.symbol) ||
+          (Utils?.paisesConfig?.[1058]?.symbol) ||
+          "R$";
 
         const registerSpecial = (k, v) => {
           const n = String(k).trim().toLowerCase();
@@ -1842,6 +1847,15 @@
       this.cores = this.dados.cores;
       this.config = config ?? {};
       this.queryParams = queryParams || {};
+
+      // Override de moeda (ex.: config.moeda = "EUR", "PYG", "USD")
+      try {
+        if (window.Utils && typeof window.Utils.setMoeda === "function") {
+          window.Utils.setMoeda(this.config.moeda ?? null);
+        }
+      } catch (e) {
+        // ignore
+      }
 
       // Normaliza array de componentes (quando fornecido) para os pontos esperados pela engine
       this.normalizarComponentesDaConfig();
