@@ -4,6 +4,7 @@
   "config": {
     "manifestVersion": "v1",
     "moeda": "BRL",
+    "idioma": "pt-BR",
     "imprimirParcelas": true,
     "imprimirPromissorias": false,
     "cover": {

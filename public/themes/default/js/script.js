@@ -1848,6 +1848,15 @@
       this.config = config ?? {};
       this.queryParams = queryParams || {};
 
+      // Override de idioma/locale (ex.: config.idioma = "pt-BR", "es-PY", "en-US")
+      try {
+        if (window.I18N && typeof window.I18N.setIdioma === "function") {
+          window.I18N.setIdioma(this.config.idioma ?? null);
+        }
+      } catch (e) {
+        // ignore
+      }
+
       // Override de moeda (ex.: config.moeda = "EUR", "PYG", "USD")
       try {
         if (window.Utils && typeof window.Utils.setMoeda === "function") {

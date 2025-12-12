@@ -10,6 +10,31 @@
       639: "es",
       5860: "es",
     },
+    _idiomaOverride: null,
+    _defaultIdioma: "pt-BR",
+    _normalizeIdioma(value) {
+      if (value === null || value === undefined) return null;
+      let v = String(value).trim();
+      if (!v) return null;
+      v = v.replace(/_/g, "-");
+      // normaliza BCP-47 simples: ll or ll-RR
+      const m = v.match(/^([a-zA-Z]{2,3})(?:-([a-zA-Z]{2}))?$/);
+      if (!m) return null;
+      const lang = m[1].toLowerCase();
+      const region = m[2] ? m[2].toUpperCase() : null;
+      return region ? `${lang}-${region}` : lang;
+    },
+    setIdioma(idioma) {
+      this._idiomaOverride = this._normalizeIdioma(idioma);
+    },
+    getIdioma() {
+      return this._idiomaOverride || this._defaultIdioma;
+    },
+    _idiomaToLang(idioma) {
+      const norm = this._normalizeIdioma(idioma);
+      if (!norm) return null;
+      return String(norm).split("-")[0] || null;
+    },
     dict: {
       pt: {
         client: "Cliente",
@@ -142,7 +167,8 @@
       },
     },
     getLang(codigoPais) {
-      return this.countryToLang[codigoPais] || "pt";
+      const overrideLang = this._idiomaToLang(this.getIdioma());
+      return overrideLang || this.countryToLang[codigoPais] || "pt";
     },
     t(codigoPais, key, fallback = null) {
       const lang = this.getLang(codigoPais);
@@ -342,6 +368,9 @@
       return comSimbolo ? `${symbol} ${valorFormatado}` : valorFormatado;
     },
     _localeFromPais(codigoPais) {
+      // Locale do relatório pode ser definido via config.idioma (I18N.setIdioma)
+      const overrideLocale = global?.I18N?.getIdioma?.();
+      if (overrideLocale) return overrideLocale;
       const cfg = this._getBasePaisConfig(codigoPais);
       return cfg.locale || "pt-BR";
     },

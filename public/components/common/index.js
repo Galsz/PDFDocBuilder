@@ -131,12 +131,22 @@
       // Special tokens (date/time/currency symbol)
       try {
         const codigoPais = aggregate?.dados?.licenca?.pais ?? aggregate?.config?.codigoPais ?? null;
+        const idioma = aggregate?.config?.idioma ?? null;
+        const moeda = aggregate?.config?.moeda ?? null;
         const now = new Date();
-        const locale = Utils?.paisesConfig?.[codigoPais]?.locale || Utils?.paisesConfig?.[1058]?.locale || "pt-BR";
+        const locale =
+          (typeof idioma === "string" && idioma.trim().length ? idioma.trim() : null) ||
+          (I18N?.getIdioma && I18N.getIdioma()) ||
+          (Utils?.paisesConfig?.[codigoPais]?.locale) ||
+          (Utils?.paisesConfig?.[1058]?.locale) ||
+          "pt-BR";
         const dateStr = new Intl.DateTimeFormat(locale, { dateStyle: "short" }).format(now);
         const timeStr = new Intl.DateTimeFormat(locale, { timeStyle: "short" }).format(now);
         const dateTimeStr = new Intl.DateTimeFormat(locale, { dateStyle: "short", timeStyle: "short" }).format(now);
-        const currencySymbol = (Utils?.paisesConfig?.[codigoPais]?.symbol) || (Utils?.paisesConfig?.[1058]?.symbol) || "R$";
+        const currencySymbol =
+          (Utils?.getCurrencySymbol && Utils.getCurrencySymbol(null, moeda)) ||
+          (Utils?.paisesConfig?.[1058]?.symbol) ||
+          "R$";
 
         // register lower-case keys; lookup lowercases expressions
         register("now", dateTimeStr);
