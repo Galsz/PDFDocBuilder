@@ -141,6 +141,7 @@ POST /gerar-pdf         (Content-Type: application/json)
 | `imprimirParcelas`      | bool | `true`  | Inclui tabela de parcelas/pagamentos     |
 | `imprimirValorTotal`    | bool | `true`  | Exibe bloco de totais (com desconto)     |
 | `imprimirVariaveis`     | bool | `true`  | Lista variáveis do projeto               |
+| `imprimirServicos`      | bool | `true`  | Lista serviços do projeto                |
 | `imprimirTimbre`        | bool | `false` | Adiciona imagem de timbre em cada página |
 | `imprimirLogoEmTodas`   | bool | `false` | Exibe logo também nas páginas seguintes  |
 

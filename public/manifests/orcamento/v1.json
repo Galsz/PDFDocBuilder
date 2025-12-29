@@ -41,6 +41,20 @@
             },
             {
               "type": "component",
+              "component": "projeto.servicos",
+              "when": {
+                "allOf": [
+                  "@config.imprimirServicos",
+                  "@item.servicos.length"
+                ]
+              },
+              "props": {
+                "servicos": "@item.servicos",
+                "config": "@config"
+              }
+            },
+            {
+              "type": "component",
               "component": "projeto.variaveis",
               "when": {
                 "allOf": [

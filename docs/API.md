@@ -52,6 +52,7 @@ Content-Type: application/json
     "imprimirValorTotal": boolean,
     "imprimirDesconto": boolean,
     "imprimirVariaveis": boolean,
+    "imprimirServicos": boolean,
     "imprimirValorUnitario": boolean,
     "imprimirMedidas": boolean,
     "imprimirVendaItens": boolean,

@@ -15,6 +15,7 @@ const DEFAULT_CONFIG = {
   imprimirValorTotal: true,
   imprimirDesconto: true,
   imprimirVariaveis: true,
+  imprimirServicos: true,
   imprimirValorUnitario: true,
   imprimirMedidas: true,
   imprimirVendaItens: false,
@@ -36,6 +37,23 @@ const normalizeProjetoVariaveis = (raw) =>
       return accumulator;
     }
     accumulator.push({ nome, valor });
+    return accumulator;
+  }, []);
+
+const normalizeProjetoServicos = (raw) =>
+  normalizeList(raw).reduce((accumulator, entry) => {
+    if (typeof entry === "string") {
+      accumulator.push({ cod: "", nome: entry, qtd: 0 });
+      return accumulator;
+    }
+    const servico = ensureObject(entry);
+    const cod = ensureString(servico.cod || servico.codigo || servico.code || servico.id || "");
+    const nome = ensureString(servico.nome || servico.descricao || servico.label || servico.name || "");
+    const qtd = ensureNumber(servico.qtd || servico.quantidade || servico.qty || 0, 0);
+    if (!cod && !nome && !qtd) {
+      return accumulator;
+    }
+    accumulator.push({ cod, nome, qtd });
     return accumulator;
   }, []);
 
@@ -61,6 +79,9 @@ const normalizeProjetos = (raw) =>
       imagem: ensureString(projeto.imagem || projeto.imagemUrl || projeto.image || ""),
       observacoes: ensureString(projeto.observacoes || projeto.obs || ""),
       variaveis: normalizeProjetoVariaveis(projeto.variaveis || projeto.variables),
+      servicos: normalizeProjetoServicos(
+        projeto.servicos || projeto.servicos || projeto.services || projeto.serviceItems
+      ),
     };
   });
 

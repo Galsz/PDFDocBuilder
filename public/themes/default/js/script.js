@@ -2100,13 +2100,19 @@
           blocos.push(...blocosObservacoes);
         }
 
+        if (projeto.servicos?.length && this.config.imprimirServicos) {
+          pushBlock("projeto.servicos", {
+            servicos: projeto.servicos,
+            config: this.config,
+          });
+        }
+
         if (projeto.variaveis?.length && this.config.imprimirVariaveis) {
           pushBlock("projeto.variaveis", {
             variaveis: projeto.variaveis,
             config: this.config,
           });
         }
-
 
         pushBlock("projeto.divisor");
       });

@@ -120,4 +120,31 @@
       `;
     },
   });
+
+  registry.register("projeto.servicos", {
+    render({ servicos, config = {} } = {}) {
+      if (!servicos || !servicos.length || !config.imprimirServicos) return "";
+
+      return `
+        <div class="item-variaveis">
+          <span class="variaveis-titulo">Serviços</span>
+          <table class="tabela-variaveis">
+            <tbody>
+              ${servicos
+                .map(
+                  (servico) => `
+                  <tr>
+                    <td>${servico.cod ?? ""}</td>
+                    <td>${servico.nome ?? ""}</td>
+                    <td>${servico.qtd ?? ""}</td>
+                  </tr>
+                `
+                )
+                .join("")}
+            </tbody>
+          </table>
+        </div>
+      `;
+    },
+  });
 })(window);
