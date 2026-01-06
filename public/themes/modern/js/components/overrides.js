@@ -27,6 +27,7 @@
       }
 
       const mostrarMedidas = config.imprimirMedidas !== false;
+      const mostrarM2 = config.imprimirM2 !== false;
       const mostrarValorUnitario = config.imprimirValorUnitario !== false;
 
       const medidas = mostrarMedidas
@@ -35,6 +36,11 @@
             <span>${I18N.t(codigoPais, "width")} × ${I18N.t(codigoPais, "height")}</span>
             <strong>${projeto.largura || "-"} × ${projeto.altura || "-"}</strong>
           </div>
+        `
+        : "";
+      
+      const m2 = mostrarM2
+        ? `
           <div class="projeto-item__metric">
             <span>M²</span>
             <strong>${projeto.m2 || "-"}</strong>
@@ -112,6 +118,7 @@
               <strong>${projeto.qtd || "-"}</strong>
             </div>
             ${medidas}
+            ${m2}
             ${valores}
             ${total}
           </div>

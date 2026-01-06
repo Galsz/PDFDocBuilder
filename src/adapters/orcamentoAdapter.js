@@ -18,6 +18,7 @@ const DEFAULT_CONFIG = {
   imprimirServicos: true,
   imprimirValorUnitario: true,
   imprimirMedidas: true,
+  imprimirM2: true,
   imprimirVendaItens: false,
   imprimirTimbre: false,
   imprimirContrato: false,

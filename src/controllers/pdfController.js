@@ -16,6 +16,7 @@ const BOOLEAN_CONFIG_FIELDS = [
   "imprimirServicos",
   "imprimirValorUnitario",
   "imprimirMedidas",
+  "imprimirM2",
   "imprimirVendaItens",
   "imprimirTimbre",
   "imprimirContrato",

@@ -32,10 +32,14 @@
                       <div class="tabela-item-header">
                         <span class="col-tipo"><strong>${I18N.t(codigoPais, "type")}:</strong></span>
                         <span class="col-qtd"><strong>${I18N.t(codigoPais, "qty")}:</strong></span>
+                        ${config.imprimirM2
+                          ? `<span class="col-qtd"><strong>M2:</strong></span>`
+                          : ""
+                        }
                         ${
                           config.imprimirMedidas
                             ? `
-                          <span class="col-qtd"><strong>M2:</strong></span>
+                          
                           <span class="col-l"><strong>${I18N.t(codigoPais, "width")}:</strong></span>
                           <span class="col-h"><strong>${I18N.t(codigoPais, "height")}:</strong></span>`
                             : ""
@@ -51,10 +55,15 @@
                       <div class="tabela-item-dados">
                         <span class="col-tipo">${projeto.tipo}</span>
                         <span class="col-qtd">${projeto.qtd}</span>
+                        
+                        ${
+                          config.imprimirM2
+                            ? `<span class="col-qtd">${projeto.m2}</span>`
+                            : ""
+                        }
                         ${
                           config.imprimirMedidas
                             ? `
-                          <span class="col-qtd">${projeto.m2}</span>
                           <span class="col-l">${projeto.largura}</span>
                           <span class="col-h">${projeto.altura}</span>`
                             : ""

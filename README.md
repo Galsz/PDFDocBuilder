@@ -136,6 +136,7 @@ POST /gerar-pdf         (Content-Type: application/json)
 | ----------------------- | ---- | ------- | ---------------------------------------- |
 | `imprimirContrato`      | bool | `false` | Inclui página(s) de contrato             |
 | `imprimirMedidas`       | bool | `true`  | Mostra colunas **L** e **H** na tabela   |
+| `imprimirM2`            | bool | `true`  | Mostra coluna **M2** na tabela   |
 | `imprimirValorUnitario` | bool | `true`  | Mostra colunas de valores unitários      |
 | `imprimirVendaItens`    | bool | `false` | Anexa bloco “Venda de materiais”         |
 | `imprimirParcelas`      | bool | `true`  | Inclui tabela de parcelas/pagamentos     |

@@ -28,7 +28,8 @@ async function run() {
       imprimirPromissorias: false,
       imprimirVariaveis: true,
       imprimirValorUnitario: true,
-      imprimirMedidas: true
+      imprimirMedidas: true,
+      imprimirM2: true
     }
   };
 
